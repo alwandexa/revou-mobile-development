@@ -11,12 +11,14 @@ type TypographyProps = {
     | 'small'
     | 'xsmall'
     | 'xxsmall';
+  style?: TextStyle;
   children: React.ReactNode;
 };
 
 export default function Typography({
   type = 'paragraph',
   size = 'medium',
+  style,
   children,
 }: TypographyProps) {
   const getStyle = (): TextStyle => {
@@ -39,7 +41,7 @@ export default function Typography({
 
   return (
     <View>
-      <Text style={getStyle()}>{children}</Text>
+      <Text style={[getStyle(), style]}>{children}</Text>
     </View>
   );
 }
