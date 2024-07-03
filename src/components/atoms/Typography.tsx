@@ -26,6 +26,14 @@ export default function Typography({
       // @ts-ignore
       styles[`${type}${size.charAt(0).toUpperCase() + size.slice(1)}`] || {};
 
+    if (Object.keys(sizeStyle).length === 0) {
+      if (__DEV__) {
+        console.warn(
+          `Style for type "${type}" and size "${size}" does not exist.`,
+        );
+      }
+    }
+
     return {...baseStyle, ...sizeStyle};
   };
 
