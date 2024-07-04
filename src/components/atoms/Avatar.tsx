@@ -5,14 +5,7 @@ import {COLORS} from '../../constants/colors';
 
 type AvatarProps = {
   source?: ImageSourcePropType;
-  size?:
-    | 'xxlarge'
-    | 'xlarge'
-    | 'large'
-    | 'medium'
-    | 'small'
-    | 'xsmall'
-    | 'xxsmall';
+  size?: 'xxlarge' | 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
 };
 
 const Avatar: React.FC<AvatarProps> = ({source, size: size = 'medium'}) => {
