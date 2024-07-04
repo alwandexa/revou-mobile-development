@@ -1,40 +1,55 @@
 import React from "react";
-import {StyleSheet, TouchableOpacity} from "react-native";
+import {StyleSheet, TouchableOpacity, ViewStyle} from "react-native";
 
-import Heart from "../../assets/images/Heart";
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 
 type ButtonProps = {
-  type: "primary" | "outline" | "tertiary" | "link";
+  variant: "primary" | "outline" | "tertiary" | "link";
   size: "large" | "medium" | "small";
-  disabled?: Boolean;
-  customStyle?: StyleMedia;
+  type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
+  icon?: React.ComponentType<{width: number; height: number; fill: string}>;
+  iconPosition?: "left" | "right";
+  disabled?: boolean;
+  customStyle?: ViewStyle;
   children?: React.ReactNode;
 };
 
 type ButtonTextSize = "medium" | "small" | "xsmall";
 
-const Button = ({type, size, disabled, customStyle, children}: ButtonProps) => {
+const Button = ({
+  variant = "primary",
+  size = "medium",
+  icon: IconComponent,
+  iconPosition = "left",
+  disabled,
+  customStyle,
+  children,
+}: ButtonProps) => {
   const getButtonStyles = () => {
     const sizeStyle = sizeStyles[size] || {};
-    const typeStyle = typeStyles[type] || {};
+    const typeStyle = typeStyles[variant] || {};
 
-    if (disabled) {
-      const disabledButtonStyle = disabledButtonStyles[type] || {};
-      return {...disabledButtonStyle, ...sizeStyle};
+    let iconStyle = {};
+    if (!children && IconComponent) {
+      iconStyle = {width: sizeStyle.height};
     }
 
-    return {...typeStyle, ...sizeStyle};
+    if (disabled) {
+      const disabledButtonStyle = disabledButtonStyles[variant] || {};
+      return {...disabledButtonStyle, ...sizeStyle, ...iconStyle};
+    }
+
+    return {...typeStyle, ...sizeStyle, ...iconStyle};
   };
 
   const getTextStyle = () => {
     if (disabled) {
-      const disabledTextStyle = disabledTextStyles[type] || {};
+      const disabledTextStyle = disabledTextStyles[variant] || {};
       return disabledTextStyle;
     }
 
-    const textStyle = textStyles[type] || {};
+    const textStyle = textStyles[variant] || {};
 
     return textStyle;
   };
@@ -61,13 +76,32 @@ const Button = ({type, size, disabled, customStyle, children}: ButtonProps) => {
 
   return (
     <TouchableOpacity
-      style={[typeStyles.button, getButtonStyles(), customStyle]}>
-      <Typography
-        type="heading"
-        size={getTypographySize()}
-        style={getTextStyle()}>
-        {children}
-      </Typography>
+      style={[typeStyles.button, getButtonStyles(), customStyle]}
+      disabled={disabled}>
+      {IconComponent && iconPosition === "left" ? (
+        <IconComponent
+          width={getIconSize()}
+          height={getIconSize()}
+          fill={getTextStyle().color}
+        />
+      ) : null}
+      {children ? (
+        <Typography
+          type="heading"
+          size={getTypographySize()}
+          style={getTextStyle()}>
+          {children}
+        </Typography>
+      ) : (
+        ""
+      )}
+      {IconComponent && iconPosition === "right" ? (
+        <IconComponent
+          width={getIconSize()}
+          height={getIconSize()}
+          fill={getTextStyle().color}
+        />
+      ) : null}
     </TouchableOpacity>
   );
 };
@@ -76,13 +110,12 @@ export default Button;
 
 const typeStyles = StyleSheet.create({
   button: {
-    minWidth: 160,
     borderRadius: 32,
     flexDirection: "row",
     alignItems: "center",
+    alignContent: "center",
     justifyContent: "center",
     textAlign: "center",
-    alignContent: "center",
     gap: 8,
   },
   primary: {
