@@ -2,7 +2,6 @@ import React from 'react';
 import {Image, ImageSourcePropType, StyleSheet, View} from 'react-native';
 import Person from '../../assets/images/Person';
 import {COLORS} from '../../constants/colors';
-import {capitalizeFirstChar} from '../../utils';
 
 type AvatarProps = {
   source?: ImageSourcePropType;
@@ -17,7 +16,7 @@ type AvatarProps = {
 };
 
 const Avatar: React.FC<AvatarProps> = ({source, size: size = 'medium'}) => {
-  const componentSize = capitalizeFirstChar(size) as keyof typeof personStyles;
+  const componentSize = size as keyof typeof personStyles;
 
   return (
     <View style={styles[componentSize]}>
@@ -49,54 +48,54 @@ const styles = StyleSheet.create({
   imageStyle: {
     borderRadius: 80,
   },
-  Xxlarge: {
+  xxlarge: {
     width: 64,
     height: 64,
   },
-  Xlarge: {
+  xlarge: {
     width: 52,
     height: 52,
   },
-  Large: {
+  large: {
     width: 40,
     height: 40,
   },
-  Medium: {
+  medium: {
     width: 32,
     height: 32,
   },
-  Small: {
+  small: {
     width: 24,
     height: 24,
   },
-  Xsmall: {
+  xsmall: {
     width: 16,
     height: 16,
   },
 });
 
 const personStyles = StyleSheet.create({
-  Xxlarge: {
+  xxlarge: {
     width: 32,
     height: 32,
   },
-  Xlarge: {
+  xlarge: {
     width: 28,
     height: 28,
   },
-  Large: {
+  large: {
     width: 24,
     height: 24,
   },
-  Medium: {
+  medium: {
     width: 20,
     height: 20,
   },
-  Small: {
+  small: {
     width: 16,
     height: 16,
   },
-  Xsmall: {
+  xsmall: {
     width: 12,
     height: 12,
   },
