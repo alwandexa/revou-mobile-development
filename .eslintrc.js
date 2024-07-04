@@ -1,12 +1,13 @@
 module.exports = {
   root: true,
-  extends: '@react-native',
+  extends: "@react-native",
   rules: {
-    'prettier/prettier': [
-      'error',
+    "prettier/prettier": [
+      "error",
       {
-        endOfLine: 'auto',
+        endOfLine: "auto",
       },
     ],
+    quotes: "double",
   },
 };
