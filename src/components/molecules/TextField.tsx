@@ -69,13 +69,15 @@ const TextField = ({
           </TouchableOpacity>
         )}
       </View>
-      {state === "negative" && (
+      {componentState === "negative" ? (
         <Typography
           type="paragraph"
           size="small"
           style={{color: COLORS.red500}}>
           {message || "Something wrong"}
         </Typography>
+      ) : (
+        ""
       )}
     </View>
   );
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textInput: {
+    flex: 1,
     fontSize: 14,
     fontFamily: "Inter-Regular",
     paddingVertical: 0,
