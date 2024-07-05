@@ -1,14 +1,15 @@
-import React from "react";
-import {StyleSheet, TextInput, View} from "react-native";
+import React, {useState} from "react";
+import {StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
+
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
-import Label from "./Label";
+import Eye from "../atoms/icon/Eye";
+import EyeSlash from "../atoms/icon/EyeSlash";
 
 type TextFieldProps = {
-  state?: "default" | "positive" | "negative" | "focused" | "filled";
+  state?: "default" | "positive" | "negative" | "filled" | "focused";
   type?: "text" | "password";
   placeholder?: string;
-  visible?: boolean;
   disabled?: boolean;
   label?: string;
   message?: string;
@@ -22,9 +23,11 @@ const TextField = ({
   label,
   message,
 }: TextFieldProps) => {
+  const [componentState, setComponentState] = useState(state);
+  const [isVisible, setIsVisible] = useState(false);
+
   const getLabelStyle = () => {
     if (disabled) {
-      console.log("disabled");
       return labelStyles.disabled;
     }
 
@@ -33,31 +36,46 @@ const TextField = ({
 
   return (
     <View style={styles.container}>
-      {label ? (
+      {label && (
         <Typography type="heading" size="small" style={getLabelStyle()}>
           {label}
         </Typography>
-      ) : (
-        ""
       )}
-      <TextInput
-        placeholder={placeholder}
-        editable={!disabled}
-        placeholderTextColor={COLORS.neutral400}
+      <View
         style={[
-          styles.textField,
-          stateStyles[state as keyof typeof stateStyles],
-        ]}
-      />
-      {state === "negative" ? (
+          styles.textFieldContainer,
+          stateStyles[componentState as keyof typeof stateStyles],
+        ]}>
+        <TextInput
+          secureTextEntry={type === "password" && !isVisible}
+          placeholder={placeholder}
+          editable={!disabled}
+          placeholderTextColor={COLORS.neutral400}
+          onFocus={() => {
+            setComponentState("focused");
+          }}
+          onBlur={() => {
+            setComponentState("default");
+          }}
+          style={styles.textInput}
+        />
+        {type === "password" && (
+          <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
+            {isVisible ? (
+              <EyeSlash width={16} height={16} fill={COLORS.neutral700} />
+            ) : (
+              <Eye width={16} height={16} fill={COLORS.neutral700} />
+            )}
+          </TouchableOpacity>
+        )}
+      </View>
+      {state === "negative" && (
         <Typography
           type="paragraph"
           size="small"
           style={{color: COLORS.red500}}>
           {message || "Something wrong"}
         </Typography>
-      ) : (
-        ""
       )}
     </View>
   );
@@ -69,14 +87,20 @@ const styles = StyleSheet.create({
   container: {
     gap: 8,
   },
-  textField: {
+  textFieldContainer: {
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    fontSize: 14,
     height: 40,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  textInput: {
+    fontSize: 14,
     fontFamily: "Inter-Regular",
+    paddingVertical: 0,
   },
 });
 
