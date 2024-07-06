@@ -1,14 +1,15 @@
-import React from 'react';
-import {Image, ImageSourcePropType, StyleSheet, View} from 'react-native';
-import Person from '../../assets/images/Person';
-import {COLORS} from '../../constants/colors';
+import React from "react";
+import {Image, ImageSourcePropType, StyleSheet, View} from "react-native";
+
+import {COLORS} from "../../constants/colors";
+import Icon from "./icon/Icon";
 
 type AvatarProps = {
   source?: ImageSourcePropType;
-  size?: 'xxlarge' | 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
+  size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
 };
 
-const Avatar: React.FC<AvatarProps> = ({source, size: size = 'medium'}) => {
+const Avatar: React.FC<AvatarProps> = ({source, size: size = "medium"}) => {
   const componentSize = size as keyof typeof personStyles;
 
   return (
@@ -20,7 +21,8 @@ const Avatar: React.FC<AvatarProps> = ({source, size: size = 'medium'}) => {
         />
       ) : (
         <View style={[styles.placeholder, styles[componentSize]]}>
-          <Person
+          <Icon
+            name="person"
             width={personStyles[componentSize].width}
             height={personStyles[componentSize].height}
           />
@@ -32,8 +34,8 @@ const Avatar: React.FC<AvatarProps> = ({source, size: size = 'medium'}) => {
 
 const styles = StyleSheet.create({
   placeholder: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 80,
     backgroundColor: COLORS.purple600,
     padding: 8,
