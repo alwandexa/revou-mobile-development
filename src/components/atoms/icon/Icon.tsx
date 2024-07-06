@@ -3,7 +3,7 @@ import {StyleSheet} from "react-native";
 
 import {COLORS} from "../../../constants/colors";
 
-type IconName = "eye" | "eye-slash" | "heart" | "person";
+export type IconName = "eye" | "eye-slash" | "heart" | "person";
 
 const iconMap: Record<
   IconName,

@@ -3,12 +3,13 @@ import {StyleSheet, TouchableOpacity, ViewStyle} from "react-native";
 
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
+import Icon, {IconName} from "../atoms/icon/Icon";
 
 type ButtonProps = {
   variant: "primary" | "outline" | "tertiary" | "link";
   size: "large" | "medium" | "small";
   type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
-  icon?: React.ComponentType<{width: number; height: number; fill: string}>;
+  icon?: IconName;
   iconPosition?: "left" | "right";
   disabled?: boolean;
   customStyle?: ViewStyle;
@@ -20,7 +21,7 @@ type ButtonTextSize = "medium" | "small" | "xsmall";
 const Button = ({
   variant = "primary",
   size = "medium",
-  icon: IconComponent,
+  icon,
   iconPosition = "left",
   disabled,
   customStyle,
@@ -31,7 +32,7 @@ const Button = ({
     const typeStyle = typeStyles[variant] || {};
 
     let iconStyle = {};
-    if (!children && IconComponent) {
+    if (!children && icon) {
       iconStyle = {width: sizeStyle.height};
     }
 
@@ -78,8 +79,9 @@ const Button = ({
     <TouchableOpacity
       style={[typeStyles.button, getButtonStyles(), customStyle]}
       disabled={disabled}>
-      {IconComponent && iconPosition === "left" ? (
-        <IconComponent
+      {icon && iconPosition === "left" ? (
+        <Icon
+          name={icon}
           width={getIconSize()}
           height={getIconSize()}
           fill={getTextStyle().color}
@@ -95,8 +97,9 @@ const Button = ({
       ) : (
         ""
       )}
-      {IconComponent && iconPosition === "right" ? (
-        <IconComponent
+      {icon && iconPosition === "right" ? (
+        <Icon
+          name={icon}
           width={getIconSize()}
           height={getIconSize()}
           fill={getTextStyle().color}
