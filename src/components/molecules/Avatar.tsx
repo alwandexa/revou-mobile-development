@@ -2,7 +2,7 @@ import React from "react";
 import {Image, ImageSourcePropType, StyleSheet, View} from "react-native";
 
 import {COLORS} from "../../constants/colors";
-import Icon from "./icon/Icon";
+import Icon from "../atoms/icon/Icon";
 
 type AvatarProps = {
   source?: ImageSourcePropType;
