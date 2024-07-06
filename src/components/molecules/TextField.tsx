@@ -3,8 +3,7 @@ import {StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
-import Eye from "../atoms/icon/Eye";
-import EyeSlash from "../atoms/icon/EyeSlash";
+import Icon from "../atoms/icon/Icon";
 
 type TextFieldProps = {
   state?: "default" | "positive" | "negative" | "filled" | "focused";
@@ -62,9 +61,19 @@ const TextField = ({
         {type === "password" && (
           <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
             {isVisible ? (
-              <EyeSlash width={16} height={16} fill={COLORS.neutral700} />
+              <Icon
+                name="eye-slash"
+                width={16}
+                height={16}
+                fill={COLORS.neutral700}
+              />
             ) : (
-              <Eye width={16} height={16} fill={COLORS.neutral700} />
+              <Icon
+                name="eye"
+                width={16}
+                height={16}
+                fill={COLORS.neutral700}
+              />
             )}
           </TouchableOpacity>
         )}
