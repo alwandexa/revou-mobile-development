@@ -4,6 +4,7 @@ import {StyleSheet} from "react-native";
 import {COLORS} from "../../../constants/colors";
 
 export type IconName =
+  | "bell"
   | "eye"
   | "eye-slash"
   | "heart"
@@ -15,6 +16,7 @@ const iconMap: Record<
   IconName,
   React.FC<{width?: number; height?: number; fill?: string}>
 > = {
+  bell: require("./Bell").default,
   eye: require("./Eye").default,
   "eye-slash": require("./EyeSlash").default,
   heart: require("./Heart").default,
