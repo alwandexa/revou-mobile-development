@@ -7,7 +7,7 @@ import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import {COLORS} from "../constants/colors";
 
-export const LoginHeader = () => {
+export const LoginHeader = ({navigation}: {navigation: any}) => {
   return (
     <View style={styles.headerContainer}>
       <View
@@ -18,7 +18,10 @@ export const LoginHeader = () => {
         }}>
         <Icon name="chevron-left" />
         <Image source={require("../assets/images/ic_investly.png")} />
-        <Button variant="link" size="small">
+        <Button
+          variant="link"
+          size="small"
+          onPress={() => navigation.navigate("HomeTab")}>
           Lewati
         </Button>
       </View>
@@ -36,7 +39,7 @@ export const LoginHeader = () => {
   );
 };
 
-const Login = () => {
+const Login = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView style={styles.bodyContainer}>
       <View style={{gap: 24}}>
@@ -53,7 +56,10 @@ const Login = () => {
           Lupa Password
         </Button>
       </View>
-      <Button variant="primary" size="medium">
+      <Button
+        variant="primary"
+        size="medium"
+        onPress={() => navigation.navigate("HomeTab")}>
         Masuk
       </Button>
     </SafeAreaView>
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
     justifyContent: "space-between",
-    padding: 20,
+    padding: 24,
     gap: 24,
     backgroundColor: COLORS.neutral100,
   },
