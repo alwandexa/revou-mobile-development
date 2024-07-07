@@ -1,17 +1,21 @@
 import React from "react";
-import {StyleSheet, TouchableOpacity, ViewStyle} from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
+} from "react-native";
 
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 import Icon, {IconName} from "../atoms/icon/Icon";
 
-type ButtonProps = {
+type ButtonProps = TouchableOpacityProps & {
   variant: "primary" | "outline" | "tertiary" | "link";
   size: "large" | "medium" | "small";
   type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
   icon?: IconName;
   iconPosition?: "left" | "right";
-  disabled?: boolean;
   customStyle?: ViewStyle;
   children?: React.ReactNode;
 };
@@ -26,6 +30,7 @@ const Button = ({
   disabled,
   customStyle,
   children,
+  ...props
 }: ButtonProps) => {
   const getButtonStyles = () => {
     const sizeStyle = sizeStyles[size] || {};
@@ -78,7 +83,8 @@ const Button = ({
   return (
     <TouchableOpacity
       style={[typeStyles.button, getButtonStyles(), customStyle]}
-      disabled={disabled}>
+      disabled={disabled}
+      {...props}>
       {icon && iconPosition === "left" ? (
         <Icon
           name={icon}
@@ -94,9 +100,7 @@ const Button = ({
           style={getTextStyle()}>
           {children}
         </Typography>
-      ) : (
-        ""
-      )}
+      ) : null}
       {icon && iconPosition === "right" ? (
         <Icon
           name={icon}
