@@ -1,11 +1,17 @@
 import React, {useState} from "react";
-import {StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  TextInputProps,
+} from "react-native";
 
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 import Icon from "../atoms/icon/Icon";
 
-type TextFieldProps = {
+type TextFieldProps = TextInputProps & {
   state?: "default" | "positive" | "negative" | "filled" | "focused";
   type?: "text" | "password";
   placeholder?: string;
@@ -21,6 +27,7 @@ const TextField = ({
   disabled = false,
   label,
   message,
+  ...rest
 }: TextFieldProps) => {
   const [componentState, setComponentState] = useState(state);
   const [isVisible, setIsVisible] = useState(false);
@@ -57,6 +64,7 @@ const TextField = ({
             setComponentState("default");
           }}
           style={styles.textInput}
+          {...rest}
         />
         {type === "password" && (
           <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
@@ -96,6 +104,7 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: 8,
   },
   textFieldContainer: {
@@ -109,7 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textInput: {
-    flex: 1,
+    // flex: 1,
     fontSize: 14,
     fontFamily: "Inter-Regular",
     paddingVertical: 0,
