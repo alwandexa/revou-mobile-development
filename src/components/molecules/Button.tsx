@@ -1,6 +1,7 @@
 import React from "react";
 import {
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
@@ -16,6 +17,8 @@ type ButtonProps = TouchableOpacityProps & {
   type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
   icon?: IconName;
   iconPosition?: "left" | "right";
+  iconColor?: string;
+  textStyle?: TextStyle;
   customStyle?: ViewStyle;
   children?: React.ReactNode;
 };
@@ -27,7 +30,9 @@ const Button = ({
   size = "medium",
   icon,
   iconPosition = "left",
+  iconColor,
   disabled,
+  textStyle,
   customStyle,
   children,
   ...props
@@ -55,9 +60,9 @@ const Button = ({
       return disabledTextStyle;
     }
 
-    const textStyle = textStyles[variant] || {};
+    const buttonTextStyle = textStyles[variant] || {};
 
-    return textStyle;
+    return {...buttonTextStyle, ...textStyle};
   };
 
   const getTypographySize = (): ButtonTextSize => {
@@ -90,7 +95,7 @@ const Button = ({
           name={icon}
           width={getIconSize()}
           height={getIconSize()}
-          fill={getTextStyle().color}
+          fill={iconColor ? iconColor : (getTextStyle().color as string)}
         />
       ) : null}
       {children ? (
@@ -106,7 +111,7 @@ const Button = ({
           name={icon}
           width={getIconSize()}
           height={getIconSize()}
-          fill={getTextStyle().color}
+          fill={iconColor ? iconColor : (getTextStyle().color as string)}
         />
       ) : null}
     </TouchableOpacity>
