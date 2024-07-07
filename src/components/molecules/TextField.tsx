@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   TextInputProps,
+  ViewStyle,
 } from "react-native";
 
 import {COLORS} from "../../constants/colors";
@@ -18,6 +19,7 @@ type TextFieldProps = TextInputProps & {
   disabled?: boolean;
   label?: string;
   message?: string;
+  containerStyle?: ViewStyle;
 };
 
 const TextField = ({
@@ -27,6 +29,7 @@ const TextField = ({
   disabled = false,
   label,
   message,
+  containerStyle,
   ...rest
 }: TextFieldProps) => {
   const [componentState, setComponentState] = useState(state);
@@ -41,7 +44,7 @@ const TextField = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {label && (
         <Typography type="heading" size="small" style={getLabelStyle()}>
           {label}
@@ -104,7 +107,6 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     gap: 8,
   },
   textFieldContainer: {
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textInput: {
-    // flex: 1,
+    flex: 1,
     fontSize: 14,
     fontFamily: "Inter-Regular",
     paddingVertical: 0,
