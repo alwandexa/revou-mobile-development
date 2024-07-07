@@ -3,7 +3,13 @@ import {StyleSheet} from "react-native";
 
 import {COLORS} from "../../../constants/colors";
 
-export type IconName = "eye" | "eye-slash" | "heart" | "person";
+export type IconName =
+  | "eye"
+  | "eye-slash"
+  | "heart"
+  | "person"
+  | "arrow-left"
+  | "chevron-left";
 
 const iconMap: Record<
   IconName,
@@ -13,6 +19,8 @@ const iconMap: Record<
   "eye-slash": require("./EyeSlash").default,
   heart: require("./Heart").default,
   person: require("./Person").default,
+  "arrow-left": require("./ArrowLeft").default,
+  "chevron-left": require("./ChevronLeft").default,
 };
 
 type IconProps = {
