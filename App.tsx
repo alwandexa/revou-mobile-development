@@ -3,9 +3,8 @@ import React, {FunctionComponent} from "react";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
-import Onboarding from "./src/screeens/Onboarding";
-import Login, {LoginHeader} from "./src/screeens/Login";
-import Icon from "./src/components/atoms/icon/Icon";
+import Login, {LoginHeader} from "./src/screens/Login";
+import Onboarding from "./src/screens/Onboarding";
 
 const Stack = createNativeStackNavigator();
 
