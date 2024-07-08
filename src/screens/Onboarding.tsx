@@ -40,7 +40,7 @@ const onboardingData = [
   },
 ];
 
-const Onboarding = () => {
+const Onboarding = ({navigation}: {navigation: any}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
@@ -65,9 +65,10 @@ const Onboarding = () => {
         animated: true,
       });
       setCurrentIndex(currentIndex + 1);
-    } else {
-      console.log("Onboarding completed");
+      return;
     }
+
+    navigation.navigate("Login");
   };
 
   return (
