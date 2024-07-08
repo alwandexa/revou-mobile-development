@@ -1,3 +1,4 @@
+import React, {FunctionComponent} from "react";
 import {
   Image,
   SafeAreaView,
@@ -6,24 +7,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, {FunctionComponent} from "react";
-import Icon from "../components/atoms/icon/Icon";
-import {COLORS} from "../constants/colors";
-import Avatar from "../components/molecules/Avatar";
-import TextField from "../components/molecules/TextField";
-import Button from "../components/molecules/Button";
 
-export const HomeHeader: FunctionComponent = () => {
+import Icon from "../components/atoms/icon/Icon";
+import Avatar from "../components/molecules/Avatar";
+import Button from "../components/molecules/Button";
+import TextField from "../components/molecules/TextField";
+import {COLORS} from "../constants/colors";
+
+export const HomeHeader = ({navigation}: {navigation: any}) => {
   return (
     <View style={styles.headerContainer}>
       <Image source={require("../assets/images/investly-logo.png")} />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Icon name="bell" fill={COLORS.purple600} />
       </TouchableOpacity>
     </View>
   );
 };
-const Home: FunctionComponent = () => {
+
+const Home = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView>
       <View style={styles.modalContainer}>
@@ -33,10 +35,14 @@ const Home: FunctionComponent = () => {
             paddingHorizontal: 12,
             paddingVertical: 16,
             borderRadius: 16,
+            gap: 16,
           }}>
-          <View style={{gap: 8, flexDirection: "row"}}>
+          <View style={{gap: 8, flexDirection: "row", alignItems: "center"}}>
             <Avatar />
-            <TextField placeholder="Apa yang ingin kamu tanyakan?" />
+            <TextField
+              placeholder="Apa yang ingin kamu tanyakan?"
+              containerStyle={{flex: 1}}
+            />
           </View>
           <View
             style={{
@@ -44,17 +50,28 @@ const Home: FunctionComponent = () => {
               justifyContent: "space-around",
               alignItems: "center",
             }}>
-            <Button icon="bell" size="small" variant="link">
+            <Button
+              icon="bell"
+              iconColor={COLORS.yellow600}
+              textStyle={{color: COLORS.neutral700}}
+              size="small"
+              variant="link">
               Pertanyaan
             </Button>
             <Text>|</Text>
-            <Button icon="bell" size="small" variant="link">
+            <Button
+              icon="bell"
+              iconColor={COLORS.green600}
+              textStyle={{color: COLORS.neutral700}}
+              size="small"
+              variant="link"
+              onPress={() => navigation.navigate("Login")}>
               Post
             </Button>
           </View>
         </View>
       </View>
-      <View></View>
+      <View style={{flex: 1, backgroundColor: COLORS.neutral100}}></View>
     </SafeAreaView>
   );
 };
@@ -66,6 +83,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
     flexDirection: "row",
+    backgroundColor: COLORS.neutral100,
   },
   bodyContainer: {},
   modalContainer: {
