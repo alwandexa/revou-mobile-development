@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,6 +11,13 @@ import {
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 import Icon from "../atoms/icon/Icon";
+
+export type TextFieldState =
+  | "default"
+  | "positive"
+  | "negative"
+  | "filled"
+  | "focused";
 
 type TextFieldProps = TextInputProps & {
   state?: "default" | "positive" | "negative" | "filled" | "focused";
@@ -32,14 +39,17 @@ const TextField = ({
   containerStyle,
   ...rest
 }: TextFieldProps) => {
-  const [componentState, setComponentState] = useState(state);
   const [isVisible, setIsVisible] = useState(false);
+  const [currentState, setCurrentState] = useState(state);
+
+  useEffect(() => {
+    setCurrentState(state);
+  }, [state]);
 
   const getLabelStyle = () => {
     if (disabled) {
       return labelStyles.disabled;
     }
-
     return labelStyles.enabled;
   };
 
@@ -53,7 +63,7 @@ const TextField = ({
       <View
         style={[
           styles.textFieldContainer,
-          stateStyles[componentState as keyof typeof stateStyles],
+          stateStyles[currentState as keyof typeof stateStyles],
         ]}>
         <TextInput
           secureTextEntry={type === "password" && !isVisible}
@@ -61,10 +71,10 @@ const TextField = ({
           editable={!disabled}
           placeholderTextColor={COLORS.neutral400}
           onFocus={() => {
-            setComponentState("focused");
+            if (!disabled) setCurrentState("focused");
           }}
           onBlur={() => {
-            setComponentState("default");
+            if (!disabled) setCurrentState(state);
           }}
           style={styles.textInput}
           {...rest}
@@ -89,15 +99,13 @@ const TextField = ({
           </TouchableOpacity>
         )}
       </View>
-      {componentState === "negative" ? (
+      {currentState === "negative" && (
         <Typography
           type="paragraph"
           size="small"
           style={{color: COLORS.red500}}>
           {message || "Something wrong"}
         </Typography>
-      ) : (
-        ""
       )}
     </View>
   );
