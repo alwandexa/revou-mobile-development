@@ -10,6 +10,7 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
 } from "@react-navigation/material-top-tabs";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/atoms/icon/Icon";
 import Avatar from "../components/molecules/Avatar";
@@ -20,8 +21,30 @@ import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import HomeTabBar from "../components/molecules/HomeTabBar";
 import Typography from "../components/atoms/Typography";
+import Profil from "./Profil";
 
-const Tab = createMaterialTopTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
+const BottomTab = createBottomTabNavigator();
+
+export const HomeTab = () => {
+  return (
+    <BottomTab.Navigator>
+      <BottomTab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerShown: true,
+          header: HomeHeader,
+        }}
+      />
+      <BottomTab.Screen
+        name="Profil"
+        component={Profil}
+        options={{headerShown: false}}
+      />
+    </BottomTab.Navigator>
+  );
+};
 
 export const HomeHeader = ({navigation}: {navigation: any}) => {
   return (
@@ -78,7 +101,7 @@ const Home = ({navigation}: {navigation: any}) => {
         </View>
       </View>
       <View style={styles.tabContainer}>
-        <Tab.Navigator
+        <TopTab.Navigator
           tabBar={props => <HomeTabBar {...props} />}
           screenOptions={(): MaterialTopTabNavigationOptions => ({
             tabBarStyle: {
@@ -88,9 +111,9 @@ const Home = ({navigation}: {navigation: any}) => {
               borderBottomColor: COLORS.neutral300,
             },
           })}>
-          <Tab.Screen name="Trending" component={HomeTrending} />
-          <Tab.Screen name="Terbaru" component={HomeTerbaru} />
-        </Tab.Navigator>
+          <TopTab.Screen name="Trending" component={HomeTrending} />
+          <TopTab.Screen name="Terbaru" component={HomeTerbaru} />
+        </TopTab.Navigator>
       </View>
       <View style={styles.loginBanner}>
         <Image source={require("../assets/images/investly-mascot-1.png")} />
