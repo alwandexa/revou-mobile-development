@@ -35,52 +35,48 @@ export const HomeHeader = ({navigation}: {navigation: any}) => {
 
 const Home = ({navigation}: {navigation: any}) => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.modalContainer}>
-        <View
-          style={{
-            backgroundColor: COLORS.neutral100,
-            paddingHorizontal: 12,
-            paddingVertical: 16,
-            borderRadius: 16,
-            gap: 16,
-          }}>
-          <View style={{gap: 8, flexDirection: "row", alignItems: "center"}}>
+        <View style={styles.inputContainer}>
+          <View style={styles.inputRow}>
             <Avatar />
             <TextField
               placeholder="Apa yang ingin kamu tanyakan?"
               containerStyle={{flex: 1}}
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}>
-            <Button
-              icon="question-circle"
-              iconColor={COLORS.yellow600}
-              textStyle={{color: COLORS.neutral700}}
-              size="small"
-              variant="link"
-              style={{flex: 2, alignItems: "center"}}>
-              Pertanyaan
-            </Button>
-            <View style={styles.separator} />
-            <Button
-              icon="plus"
-              iconColor={COLORS.green600}
-              textStyle={{color: COLORS.neutral700}}
-              size="small"
-              variant="link"
-              style={{flex: 2, alignItems: "center"}}>
-              Post
-            </Button>
+          <View style={styles.buttonRow}>
+            <View
+              style={{
+                flex: 2,
+                height: 20,
+                borderRightWidth: 1,
+                borderColor: COLORS.neutral300,
+                justifyContent: "center",
+              }}>
+              <Button
+                icon="question-circle"
+                iconColor={COLORS.yellow600}
+                textStyle={{color: COLORS.neutral700}}
+                size="small"
+                variant="link">
+                Pertanyaan
+              </Button>
+            </View>
+            <View style={{flex: 2, height: 20, justifyContent: "center"}}>
+              <Button
+                icon="plus"
+                iconColor={COLORS.green600}
+                textStyle={{color: COLORS.neutral700}}
+                size="small"
+                variant="link">
+                Post
+              </Button>
+            </View>
           </View>
         </View>
       </View>
-      <View style={{backgroundColor: COLORS.neutral100, height: "100%"}}>
+      <View style={styles.tabContainer}>
         <Tab.Navigator
           tabBar={props => <HomeTabBar {...props} />}
           screenOptions={(): MaterialTopTabNavigationOptions => ({
@@ -102,21 +98,44 @@ const Home = ({navigation}: {navigation: any}) => {
 export default Home;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   headerContainer: {
     padding: 20,
     justifyContent: "space-between",
     flexDirection: "row",
     backgroundColor: COLORS.neutral100,
   },
-  bodyContainer: {},
   modalContainer: {
     padding: 10,
     gap: 10,
+  },
+  inputContainer: {
+    backgroundColor: COLORS.neutral100,
+    paddingHorizontal: 12,
+    paddingVertical: 16,
+    borderRadius: 16,
+    gap: 16,
+  },
+  inputRow: {
+    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   separator: {
     borderWidth: 1,
     borderColor: COLORS.neutral300,
     height: 20,
     flex: 1,
+  },
+  tabContainer: {
+    flex: 1,
+    backgroundColor: COLORS.neutral100,
   },
 });
