@@ -1,14 +1,174 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from "react";
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
+import Avatar from "../components/molecules/Avatar"; // Make sure the path is correct
+import Icon from "../components/atoms/icon/Icon"; // Make sure the path is correct
+import {COLORS} from "../constants/colors";
+import Typography from "../components/atoms/Typography";
+import Label from "../components/molecules/Label";
+
+const feedData = [
+  {
+    avatar_url: "https://example.com/avatar1.png",
+    name: "Tilamuta",
+    headline: "Financial Enthusiast",
+    created_at: "2023-07-08T12:00:00Z",
+    post_header: "Buat yang pegang GoTo",
+    post_content: "Mau beli milikta pake 5 lembar GoTo 😢",
+    post_topic: "Investasi",
+    post_upvote: 0,
+    post_downvote: 0,
+    post_comment: 0,
+  },
+  {
+    avatar_url: "https://example.com/avatar2.png",
+    name: "Aldo",
+    headline: "Software Engineer",
+    created_at: "2023-07-08T12:00:00Z",
+    post_header: "Sektor terbaik",
+    post_content:
+      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
+    post_topic: "Sector Update",
+    post_upvote: 0,
+    post_downvote: 0,
+    post_comment: 0,
+  },
+  {
+    avatar_url: "https://example.com/avatar2.png",
+    name: "Aldo",
+    headline: "Software Engineer",
+    created_at: "2023-07-08T12:00:00Z",
+    post_header: "Sektor terbaik",
+    post_content:
+      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
+    post_topic: "Sector Update",
+    post_upvote: 0,
+    post_downvote: 0,
+    post_comment: 0,
+  },
+  {
+    avatar_url: "https://example.com/avatar2.png",
+    name: "Aldo",
+    headline: "Software Engineer",
+    created_at: "2023-07-08T12:00:00Z",
+    post_header: "Sektor terbaik",
+    post_content:
+      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
+    post_topic: "Sector Update",
+    post_upvote: 0,
+    post_downvote: 0,
+    post_comment: 0,
+  },
+  {
+    avatar_url: "https://example.com/avatar2.png",
+    name: "Aldo",
+    headline: "Software Engineer",
+    created_at: "2023-07-08T12:00:00Z",
+    post_header: "Sektor terbaik",
+    post_content:
+      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
+    post_topic: "Sector Update",
+    post_upvote: 0,
+    post_downvote: 0,
+    post_comment: 0,
+  },
+];
 
 const HomeTrending = () => {
-  return (
-    <View>
-      <Text>HomeTrending</Text>
+  const renderItem = ({item}: any) => (
+    <View style={styles.postContainer}>
+      <View style={styles.header}>
+        <Avatar size="large" />
+        <View style={styles.headerText}>
+          <Typography
+            type="heading"
+            size="xsmall"
+            style={{color: COLORS.neutral700}}>
+            {item.name}
+          </Typography>
+          <Typography type="paragraph" size="small">
+            {item.headline}
+          </Typography>
+          <Typography type="paragraph" size="xsmall">
+            {new Date(item.created_at).toLocaleString()}
+          </Typography>
+        </View>
+      </View>
+      <View style={{gap: 4}}>
+        <Typography
+          type="heading"
+          size="medium"
+          style={{color: COLORS.neutral700}}>
+          {item.post_header}
+        </Typography>
+        <Typography type="paragraph" size="medium">
+          {item.post_content}
+        </Typography>
+      </View>
+      <View style={styles.footer}>
+        <Label variant="tertiary" color="green">
+          {item.post_topic}
+        </Label>
+      </View>
     </View>
-  )
-}
+  );
 
-export default HomeTrending
+  return (
+    <FlatList
+      data={feedData}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      ListFooterComponent={
+        <Typography
+          type="paragraph"
+          size="small"
+          style={{color: COLORS.neutral500}}>
+          Semua feed sudah kamu lihat 🎉
+        </Typography>
+      }
+      ListFooterComponentStyle={{
+        gap: 24,
+        marginVertical: 24,
+        alignItems: "center",
+      }}
+    />
+  );
+};
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  postContainer: {
+    backgroundColor: COLORS.neutral100,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    gap: 12,
+  },
+  header: {
+    flexDirection: "row",
+    marginBottom: 8,
+    gap: 12,
+  },
+  headerText: {
+    flex: 1,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
+
+export default HomeTrending;
