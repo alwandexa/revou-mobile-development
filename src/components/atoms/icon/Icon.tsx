@@ -4,29 +4,41 @@ import {StyleSheet} from "react-native";
 import {COLORS} from "../../../constants/colors";
 
 export type IconName =
+  | "arrow-down"
+  | "arrow-left"
+  | "arrow-up"
   | "bell"
+  | "comment"
+  | "chevron-left"
+  | "ellipsis"
   | "eye"
   | "eye-slash"
   | "heart"
+  | "house"
   | "person"
-  | "arrow-left"
-  | "chevron-left"
+  | "plus"
   | "question-circle"
-  | "plus";
+  | "retweet";
 
 const iconMap: Record<
   IconName,
   React.FC<{width?: number; height?: number; fill?: string}>
 > = {
+  "arrow-down": require("./ArrowDown").default,
+  "arrow-left": require("./ArrowLeft").default,
+  "arrow-up": require("./ArrowUp").default,
   bell: require("./Bell").default,
+  comment: require("./Comment").default,
+  "chevron-left": require("./ChevronLeft").default,
+  ellipsis: require("./Ellipsis").default,
   eye: require("./Eye").default,
   "eye-slash": require("./EyeSlash").default,
   heart: require("./Heart").default,
+  house: require("./House").default,
   person: require("./Person").default,
-  "arrow-left": require("./ArrowLeft").default,
-  "chevron-left": require("./ChevronLeft").default,
-  "question-circle": require("./QuestionCircle").default,
   plus: require("./Plus").default,
+  "question-circle": require("./QuestionCircle").default,
+  retweet: require("./Retweet").default,
 };
 
 type IconProps = {
