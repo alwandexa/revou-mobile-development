@@ -25,6 +25,7 @@ const Avatar: React.FC<AvatarProps> = ({source, size: size = "medium"}) => {
             name="person"
             width={personStyles[componentSize].width}
             height={personStyles[componentSize].height}
+            fill={COLORS.neutral100}
           />
         </View>
       )}

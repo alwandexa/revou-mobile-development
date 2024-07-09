@@ -1,19 +1,20 @@
-import * as React from 'react';
+import * as React from "react";
+import Svg, {SvgProps, G, Path, Defs, ClipPath} from "react-native-svg";
 
-import Svg, {SvgProps, G, Path, Defs, ClipPath} from 'react-native-svg';
-const Person = ({width, height, fill = 'none'}: SvgProps) => (
-  <Svg width={width} height={height} fill={fill} viewBox="0 0 32 32">
+const Person = ({width, height, fill, ...props}: SvgProps) => (
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <G clipPath="url(#a)">
       <Path
-        fill="#fff"
-        d="M16 16a7 7 0 0 0 7-7 7 7 0 0 0-7-7 7 7 0 0 0-7 7 7 7 0 0 0 7 7Zm4.9 1.75h-.913a9.53 9.53 0 0 1-3.987.875 9.549 9.549 0 0 1-3.987-.875H11.1a7.352 7.352 0 0 0-7.35 7.35v2.275A2.626 2.626 0 0 0 6.375 30h19.25a2.626 2.626 0 0 0 2.625-2.625V25.1a7.352 7.352 0 0 0-7.35-7.35Z"
+        fill={fill}
+        d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm3.5 1.25h-.652a6.808 6.808 0 0 1-5.696 0H8.5a5.251 5.251 0 0 0-5.25 5.25v1.625C3.25 21.16 4.09 22 5.125 22h13.75c1.035 0 1.875-.84 1.875-1.875V18.5a5.251 5.251 0 0 0-5.25-5.25Z"
       />
     </G>
     <Defs>
       <ClipPath id="a">
-        <Path fill="#fff" d="M3.75 2h24.5v28H3.75z" />
+        <Path fill="#fff" d="M3.25 2h17.5v20H3.25z" />
       </ClipPath>
     </Defs>
   </Svg>
 );
+
 export default Person;
