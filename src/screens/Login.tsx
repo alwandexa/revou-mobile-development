@@ -6,6 +6,7 @@ import TextField, {TextFieldState} from "../components/molecules/TextField";
 import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import {COLORS} from "../constants/colors";
+import Label from "../components/molecules/Label";
 
 export const LoginHeader = ({navigation}: {navigation: any}) => {
   return (
@@ -49,6 +50,8 @@ const Login = ({navigation}: {navigation: any}) => {
   const [passwordState, setPasswordState] = useState<TextFieldState>("default");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  const [loginError, setLoginError] = useState("");
 
   const validateEmail = (email: string) => {
     email = email.trim();
@@ -126,18 +129,39 @@ const Login = ({navigation}: {navigation: any}) => {
     return isEmailValid && isPasswordValid ? false : true;
   };
 
+  const validateCredential = () => {
+    return email === "alwanwirawan@test.app" && password === "TestApp123!"
+      ? true
+      : false;
+  };
+
   const handleSubmit = () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
+    const isCredentialValid = validateCredential();
 
     if (isEmailValid && isPasswordValid) {
-      navigation.navigate("HomeTab");
+      if (isCredentialValid) {
+        setLoginError("");
+        navigation.navigate("HomeTab");
+      } else {
+        setLoginError("Email atau password salah. Silakan coba lagi.");
+
+        setTimeout(() => {
+          setLoginError("");
+        }, 3000);
+      }
     }
   };
 
   return (
     <SafeAreaView style={styles.bodyContainer}>
       <View style={{gap: 24}}>
+        {loginError ? (
+          <Label variant="tertiary" color="red">
+            {loginError}
+          </Label>
+        ) : null}
         <TextField
           label="Email"
           placeholder="Email"
