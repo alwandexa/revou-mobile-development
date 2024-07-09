@@ -90,30 +90,30 @@ const Button = ({
       style={[typeStyles.button, getButtonStyles(), customStyle]}
       disabled={disabled}
       {...props}>
-      {icon && iconPosition === "left" ? (
+      {icon && iconPosition === "left" && (
         <Icon
           name={icon}
           width={getIconSize()}
           height={getIconSize()}
           fill={iconColor ? iconColor : (getTextStyle().color as string)}
         />
-      ) : null}
-      {children ? (
+      )}
+      {children && (
         <Typography
           type="heading"
           size={getTypographySize()}
           style={getTextStyle()}>
           {children}
         </Typography>
-      ) : null}
-      {icon && iconPosition === "right" ? (
+      )}
+      {icon && iconPosition === "right" && (
         <Icon
           name={icon}
           width={getIconSize()}
           height={getIconSize()}
           fill={iconColor ? iconColor : (getTextStyle().color as string)}
         />
-      ) : null}
+      )}
     </TouchableOpacity>
   );
 };
