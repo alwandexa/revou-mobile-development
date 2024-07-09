@@ -1,3 +1,8 @@
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationOptions,
+} from "@react-navigation/material-top-tabs";
 import React from "react";
 import {
   Image,
@@ -6,21 +11,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabNavigationOptions,
-} from "@react-navigation/material-top-tabs";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/atoms/icon/Icon";
+import Typography from "../components/atoms/Typography";
 import Avatar from "../components/molecules/Avatar";
 import Button from "../components/molecules/Button";
+import HomeTabBar from "../components/molecules/HomeTabBar";
 import TextField from "../components/molecules/TextField";
 import {COLORS} from "../constants/colors";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
-import HomeTabBar from "../components/molecules/HomeTabBar";
-import Typography from "../components/atoms/Typography";
 import Profil from "./Profil";
 
 const TopTab = createMaterialTopTabNavigator();
@@ -28,11 +28,25 @@ const BottomTab = createBottomTabNavigator();
 
 export const HomeTab = () => {
   return (
-    <BottomTab.Navigator>
+    <BottomTab.Navigator screenOptions={{tabBarShowLabel: false}}>
       <BottomTab.Screen
         name="Home"
         component={Home}
         options={{
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: "center", justifyContent: "center"}}>
+              <Icon
+                name="house"
+                fill={focused ? COLORS.purple600 : COLORS.neutral400}
+              />
+              <Typography
+                type="heading"
+                size="xsmall"
+                style={{color: focused ? COLORS.purple600 : COLORS.neutral400}}>
+                Home
+              </Typography>
+            </View>
+          ),
           headerShown: true,
           header: HomeHeader,
         }}
@@ -40,7 +54,23 @@ export const HomeTab = () => {
       <BottomTab.Screen
         name="Profil"
         component={Profil}
-        options={{headerShown: false}}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: "center", justifyContent: "center"}}>
+              <Icon
+                name="person"
+                fill={focused ? COLORS.purple600 : COLORS.neutral700}
+              />
+              <Typography
+                type="heading"
+                size="xsmall"
+                style={{color: focused ? COLORS.purple600 : COLORS.neutral400}}>
+                Profil
+              </Typography>
+            </View>
+          ),
+          headerShown: false,
+        }}
       />
     </BottomTab.Navigator>
   );
