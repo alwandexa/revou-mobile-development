@@ -43,6 +43,12 @@ const Login = ({navigation}: {navigation: any}) => {
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<TextFieldState>("default");
   const [emailMessage, setEmailMessage] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [passwordState, setPasswordState] = useState<TextFieldState>("default");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const validateEmail = (email: string) => {
     email = email.trim();
@@ -51,39 +57,80 @@ const Login = ({navigation}: {navigation: any}) => {
 
     if (email.length > 254) {
       setEmailState("negative");
-      setEmailMessage("Email address is too long (max 254 characters)");
+      setEmailMessage("Email terlalu panjang (max 254 karakter)");
       return false;
     }
 
     const illegalChars = /[(),<>:;\[\]"]/;
     if (illegalChars.test(email)) {
       setEmailState("negative");
-      setEmailMessage("Email contains illegal characters");
+      setEmailMessage("Email mengandung karakter ilegal ((),<>:;[])");
       return false;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       setEmailState("negative");
-      setEmailMessage(
-        "Invalid email format. Please use pattern: name@domain.com",
+      setEmailMessage("Format email salah (nama@domain.com)");
+      return false;
+    }
+
+    setEmailState("positive");
+    setEmailMessage("");
+    setIsEmailValid(true);
+
+    return true;
+  };
+
+  const validatePassword = (password: string) => {
+    const MIN_LENGTH = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
+      password,
+    );
+
+    if (password.length < MIN_LENGTH) {
+      setPasswordState("negative");
+      setPasswordMessage(`Password minimal ${MIN_LENGTH} karakter`);
+      return false;
+    }
+
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+      setPasswordState("negative");
+      setPasswordMessage(
+        "Password harus mengandung huruf besar-kecil, angka, dan karakter khusus",
       );
       return false;
     }
 
-    setEmailState("filled");
-    setEmailMessage("");
+    setPasswordState("positive");
+    setPasswordMessage("");
+    setIsPasswordValid(true);
+
     return true;
   };
 
   const handleEmailChange = (text: string) => {
     setEmail(text);
-    validateEmail(email);
+    validateEmail(text);
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    validatePassword(text);
+  };
+
+  const isLoginEnabled = () => {
+    return isEmailValid && isPasswordValid ? false : true;
   };
 
   const handleSubmit = () => {
-    console.log("email", email);
-    if (validateEmail(email)) {
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (isEmailValid && isPasswordValid) {
       navigation.navigate("HomeTab");
     }
   };
@@ -100,10 +147,13 @@ const Login = ({navigation}: {navigation: any}) => {
           onChangeText={text => handleEmailChange(text)}
         />
         <TextField
-          state="default"
           label="Password"
           placeholder="Masukkan password"
           type="password"
+          state={passwordState}
+          message={passwordMessage}
+          value={password}
+          onChangeText={handlePasswordChange}
         />
         <Button
           variant="link"
@@ -112,7 +162,11 @@ const Login = ({navigation}: {navigation: any}) => {
           Lupa Password
         </Button>
       </View>
-      <Button variant="primary" size="medium" onPress={handleSubmit}>
+      <Button
+        variant="primary"
+        size="medium"
+        onPress={handleSubmit}
+        disabled={isLoginEnabled()}>
         Masuk
       </Button>
     </SafeAreaView>
