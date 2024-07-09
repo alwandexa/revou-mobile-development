@@ -19,6 +19,7 @@ const feedData = [
     post_upvote: 0,
     post_downvote: 0,
     post_comment: 0,
+    post_retweet: 2,
   },
   {
     avatar_url: "https://example.com/avatar2.png",
@@ -32,6 +33,7 @@ const feedData = [
     post_upvote: 0,
     post_downvote: 0,
     post_comment: 0,
+    post_retweet: 2,
   },
   {
     avatar_url: "https://example.com/avatar2.png",
@@ -45,6 +47,7 @@ const feedData = [
     post_upvote: 0,
     post_downvote: 0,
     post_comment: 0,
+    post_retweet: 2,
   },
   {
     avatar_url: "https://example.com/avatar2.png",
@@ -58,6 +61,7 @@ const feedData = [
     post_upvote: 0,
     post_downvote: 0,
     post_comment: 0,
+    post_retweet: 2,
   },
   {
     avatar_url: "https://example.com/avatar2.png",
@@ -71,6 +75,7 @@ const feedData = [
     post_upvote: 0,
     post_downvote: 0,
     post_comment: 0,
+    post_retweet: 2,
   },
 ];
 
@@ -78,20 +83,29 @@ const HomeTrending = () => {
   const renderItem = ({item}: any) => (
     <View style={styles.postContainer}>
       <View style={styles.header}>
-        <Avatar size="large" />
-        <View style={styles.headerText}>
-          <Typography
-            type="heading"
-            size="xsmall"
-            style={{color: COLORS.neutral700}}>
-            {item.name}
-          </Typography>
-          <Typography type="paragraph" size="small">
-            {item.headline}
-          </Typography>
-          <Typography type="paragraph" size="xsmall">
-            {new Date(item.created_at).toLocaleString()}
-          </Typography>
+        <View style={styles.headerContent}>
+          <Avatar size="large" />
+          <View style={styles.headerText}>
+            <Typography
+              type="heading"
+              size="xsmall"
+              style={{color: COLORS.neutral700}}>
+              {item.name}
+            </Typography>
+            <Typography type="paragraph" size="small">
+              {item.headline}
+            </Typography>
+            <Typography type="paragraph" size="xsmall">
+              {new Date(item.created_at).toLocaleString()}
+            </Typography>
+          </View>
+          <Button
+            icon="ellipsis"
+            variant="outline"
+            size="medium"
+            style={{borderWidth: 0}}
+            textStyle={{color: COLORS.neutral400}}
+          />
         </View>
       </View>
       <View style={{gap: 4}}>
@@ -112,19 +126,32 @@ const HomeTrending = () => {
       </View>
       <View style={styles.footerActions}>
         <View style={[styles.actionButton, styles.groupActionButton]}>
-          <View style={{borderColor: COLORS.neutral300}}>
+          <View style={{borderColor: COLORS.neutral300, width: 16}}>
             <Button
               variant="link"
               size="medium"
               icon="arrow-up"
               textStyle={{color: COLORS.neutral700}}>
-              0
+              <Typography
+                type="paragraph"
+                size="small"
+                style={{color: COLORS.neutral700}}>
+                {item.post_upvote}
+              </Typography>
             </Button>
           </View>
+          <View
+            style={{
+              height: 16,
+              borderRightWidth: 1,
+              borderColor: COLORS.neutral400,
+            }}
+          />
           <Button
             variant="link"
             size="medium"
             icon="arrow-down"
+            style={{width: 16}}
             textStyle={{color: COLORS.neutral700}}
           />
         </View>
@@ -134,7 +161,12 @@ const HomeTrending = () => {
           icon="comment"
           style={styles.actionButton}
           textStyle={{color: COLORS.neutral700, lineHeight: 20}}>
-          0
+          <Typography
+            type="paragraph"
+            size="small"
+            style={{color: COLORS.neutral700}}>
+            {item.post_comment}
+          </Typography>
         </Button>
         <Button
           variant="link"
@@ -142,7 +174,12 @@ const HomeTrending = () => {
           icon="retweet"
           style={styles.actionButton}
           textStyle={{color: COLORS.neutral700, lineHeight: 20}}>
-          0
+          <Typography
+            type="paragraph"
+            size="small"
+            style={{color: COLORS.neutral700}}>
+            {item.post_retweet}
+          </Typography>
         </Button>
       </View>
     </View>
@@ -186,6 +223,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     gap: 12,
   },
+  headerContent: {
+    flexDirection: "row",
+    flex: 2,
+    gap: 12,
+  },
   headerText: {
     flex: 1,
   },
@@ -211,7 +253,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   groupActionButton: {
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
 });
 
