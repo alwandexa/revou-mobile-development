@@ -10,7 +10,9 @@ export type IconName =
   | "heart"
   | "person"
   | "arrow-left"
-  | "chevron-left";
+  | "chevron-left"
+  | "question-circle"
+  | "plus";
 
 const iconMap: Record<
   IconName,
@@ -23,6 +25,8 @@ const iconMap: Record<
   person: require("./Person").default,
   "arrow-left": require("./ArrowLeft").default,
   "chevron-left": require("./ChevronLeft").default,
+  "question-circle": require("./QuestionCircle").default,
+  plus: require("./Plus").default,
 };
 
 type IconProps = {
