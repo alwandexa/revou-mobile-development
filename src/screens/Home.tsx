@@ -19,6 +19,7 @@ import {COLORS} from "../constants/colors";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import HomeTabBar from "../components/molecules/HomeTabBar";
+import Typography from "../components/atoms/Typography";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -91,6 +92,17 @@ const Home = ({navigation}: {navigation: any}) => {
           <Tab.Screen name="Terbaru" component={HomeTerbaru} />
         </Tab.Navigator>
       </View>
+      <View style={styles.loginBanner}>
+        <Image source={require("../assets/images/investly-mascot-1.png")} />
+        <View style={styles.bannerTextContainer}>
+          <Typography type="paragraph" size="small">
+            Temukan inspirasi investasi,{" "}
+          </Typography>
+          <Button variant="link" size="small">
+            Masuk Yuk!
+          </Button>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -117,6 +129,20 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 16,
     gap: 16,
+  },
+  loginBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 52,
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: COLORS.purple100,
+  },
+  bannerTextContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   inputRow: {
     gap: 8,
