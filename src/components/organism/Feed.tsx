@@ -1,5 +1,5 @@
 import React, {memo} from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View, TouchableOpacity} from "react-native";
 
 import {COLORS} from "../../constants/colors";
 import {formatRelativeTime} from "../../utils";
@@ -7,6 +7,7 @@ import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
 import Label from "../molecules/Label";
 import ProtectedButton from "../molecules/ProtectedButton";
+import withAuthInteraction from "../hoc/withAuthInteraction";
 
 export type FeedItem = {
   avatar_url: string;
@@ -21,6 +22,21 @@ export type FeedItem = {
   post_comment: number;
   post_retweet: number;
 };
+
+const FeedContent = withAuthInteraction(
+  ({item, ...props}: {item: FeedItem}) => {
+    return (
+      <TouchableOpacity style={styles.postContent} {...props}>
+        <Typography type="heading" size="medium" style={styles.postHeader}>
+          {item.post_header}
+        </Typography>
+        <Typography type="paragraph" size="medium">
+          {item.post_content}
+        </Typography>
+      </TouchableOpacity>
+    );
+  },
+);
 
 export const Feed = memo(
   ({item}: {item: FeedItem}) => (
@@ -48,14 +64,7 @@ export const Feed = memo(
           />
         </View>
       </View>
-      <View style={styles.postContent}>
-        <Typography type="heading" size="medium" style={styles.postHeader}>
-          {item.post_header}
-        </Typography>
-        <Typography type="paragraph" size="medium">
-          {item.post_content}
-        </Typography>
-      </View>
+      <FeedContent item={item} />
       <View style={styles.footer}>
         <Label variant="tertiary" color="green">
           {item.post_topic}
