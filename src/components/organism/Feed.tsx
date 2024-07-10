@@ -6,6 +6,7 @@ import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
 import Button from "../molecules/Button";
 import Label from "../molecules/Label";
+import {formatRelativeTime} from "../../utils";
 
 export type FeedItem = {
   avatar_url: string;
@@ -35,7 +36,7 @@ export const feed = useCallback(
               {item.headline}
             </Typography>
             <Typography type="paragraph" size="xsmall">
-              {new Date(item.created_at).toLocaleString()}
+              {formatRelativeTime(item.created_at)}
             </Typography>
           </View>
           <Button
