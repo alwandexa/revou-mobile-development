@@ -1,14 +1,66 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {memo, useCallback, useMemo} from "react";
+import {FlatList, StyleSheet} from "react-native";
 
-const HomeTerbaru = () => {
-  return (
-    <View>
-      <Text>HomeTerbaru</Text>
-    </View>
-  )
-}
+import Typography from "../components/atoms/Typography";
+import {FeedItem, feed} from "../components/organism/Feed";
+import {COLORS} from "../constants/colors";
+import {generateFeedData} from "../utils";
+import {HomeScreenProps} from "./Home";
 
-export default HomeTerbaru
+const HomeTerbaru: React.FC<HomeScreenProps> = memo(
+  ({feedData, refreshing, setFeedData, setRefreshing}) => {
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      const newFeed = generateFeedData(100);
+      setFeedData(newFeed);
+      setRefreshing(false);
+    }, [setRefreshing, setFeedData]);
 
-const styles = StyleSheet.create({})
+    const keyExtractor = useCallback(
+      (item: FeedItem, index: number) => index.toString(),
+      [],
+    );
+
+    const FeedFooter = useMemo(
+      () => (
+        <Typography type="paragraph" size="small" style={styles.footerText}>
+          Semua feed sudah kamu lihat 🎉
+        </Typography>
+      ),
+      [],
+    );
+
+    const sortedFeedData = useMemo(
+      () =>
+        [...feedData].sort(
+          (a, b) =>
+            new Date(b.created_at).getMilliseconds() -
+            new Date(a.created_at).getMilliseconds(),
+        ),
+      [feedData],
+    );
+
+    return (
+      <FlatList
+        data={sortedFeedData}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        renderItem={feed}
+        keyExtractor={keyExtractor}
+        ListFooterComponent={FeedFooter}
+        ListFooterComponentStyle={styles.listFooter}
+      />
+    );
+  },
+);
+
+const styles = StyleSheet.create({
+  footerText: {color: COLORS.neutral500},
+  listFooter: {
+    gap: 24,
+    marginVertical: 24,
+    alignItems: "center",
+  },
+});
+
+export default HomeTerbaru;

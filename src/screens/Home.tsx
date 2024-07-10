@@ -1,9 +1,6 @@
+import React, {useState} from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabNavigationOptions,
-} from "@react-navigation/material-top-tabs";
-import React from "react";
+import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {
   Image,
   SafeAreaView,
@@ -16,12 +13,20 @@ import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import Avatar from "../components/molecules/Avatar";
 import Button from "../components/molecules/Button";
-import HomeTabBar from "../components/molecules/HomeTabBar";
 import TextField from "../components/molecules/TextField";
+import {FeedItem} from "../components/organism/Feed";
 import {COLORS} from "../constants/colors";
+import {generateFeedData} from "../utils";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import Profil from "./Profil";
+
+export type HomeScreenProps = {
+  feedData: FeedItem[];
+  refreshing: boolean;
+  setFeedData: React.Dispatch<React.SetStateAction<FeedItem[]>>;
+  setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const TopTab = createMaterialTopTabNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -88,6 +93,9 @@ export const HomeHeader = ({navigation}: {navigation: any}) => {
 };
 
 const Home = ({navigation}: {navigation: any}) => {
+  const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
+  const [refreshing, setRefreshing] = useState(false);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.modalContainer}>
@@ -131,18 +139,29 @@ const Home = ({navigation}: {navigation: any}) => {
         </View>
       </View>
       <View style={styles.tabContainer}>
-        <TopTab.Navigator
-          tabBar={props => <HomeTabBar {...props} />}
-          screenOptions={(): MaterialTopTabNavigationOptions => ({
-            tabBarStyle: {
-              elevation: 0,
-              shadowOpacity: 0,
-              borderBottomWidth: 1,
-              borderBottomColor: COLORS.neutral300,
-            },
-          })}>
-          <TopTab.Screen name="Trending" component={HomeTrending} />
-          <TopTab.Screen name="Terbaru" component={HomeTerbaru} />
+        <TopTab.Navigator>
+          <TopTab.Screen
+            name="Trending"
+            children={() => (
+              <HomeTrending
+                feedData={feedData}
+                refreshing={refreshing}
+                setFeedData={setFeedData}
+                setRefreshing={setRefreshing}
+              />
+            )}
+          />
+          <TopTab.Screen
+            name="Terbaru"
+            children={() => (
+              <HomeTerbaru
+                feedData={feedData}
+                refreshing={refreshing}
+                setFeedData={setFeedData}
+                setRefreshing={setRefreshing}
+              />
+            )}
+          />
         </TopTab.Navigator>
       </View>
       <View style={styles.loginBanner}>
