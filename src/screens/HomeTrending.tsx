@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo, useCallback} from "react";
 import {FlatList, StyleSheet, View} from "react-native";
 import {faker} from "@faker-js/faker";
 
@@ -7,6 +7,20 @@ import Avatar from "../components/molecules/Avatar";
 import Button from "../components/molecules/Button";
 import Label from "../components/molecules/Label";
 import {COLORS} from "../constants/colors";
+
+type FeedItem = {
+  avatar_url: string;
+  name: string;
+  headline: string;
+  created_at: string;
+  post_header: string;
+  post_content: string;
+  post_topic: string;
+  post_upvote: number;
+  post_downvote: number;
+  post_comment: number;
+  post_retweet: number;
+};
 
 const generateFeedItem = () => {
   return {
@@ -33,135 +47,127 @@ const generateFeedData = (count = 5) => {
   return Array.from({length: count}, generateFeedItem);
 };
 
-const feedData = generateFeedData(100);
+const HomeTrending = React.memo(() => {
+  const feedData = useMemo(() => generateFeedData(100), []);
 
-const HomeTrending = () => {
-  const renderItem = ({item}: any) => (
-    <View style={styles.postContainer}>
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Avatar size="large" source={{uri: item.avatar_url}} />
-          <View style={styles.headerText}>
-            <Typography
-              type="heading"
-              size="xsmall"
-              style={{color: COLORS.neutral700}}>
-              {item.name}
-            </Typography>
-            <Typography type="paragraph" size="small">
-              {item.headline}
-            </Typography>
-            <Typography type="paragraph" size="xsmall">
-              {new Date(item.created_at).toLocaleString()}
-            </Typography>
+  const renderItem = useCallback(
+    ({item}: any) => (
+      <View style={styles.postContainer}>
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <Avatar size="large" source={{uri: item.avatar_url}} />
+            <View style={styles.headerText}>
+              <Typography type="heading" size="xsmall" style={styles.name}>
+                {item.name}
+              </Typography>
+              <Typography type="paragraph" size="small">
+                {item.headline}
+              </Typography>
+              <Typography type="paragraph" size="xsmall">
+                {new Date(item.created_at).toLocaleString()}
+              </Typography>
+            </View>
+            <Button
+              icon="ellipsis"
+              variant="outline"
+              size="medium"
+              style={styles.ellipsisButton}
+              textStyle={styles.ellipsisButtonText}
+            />
           </View>
-          <Button
-            icon="ellipsis"
-            variant="outline"
-            size="medium"
-            style={{borderWidth: 0}}
-            textStyle={{color: COLORS.neutral400}}
-          />
         </View>
-      </View>
-      <View style={{gap: 4}}>
-        <Typography
-          type="heading"
-          size="medium"
-          style={{color: COLORS.neutral700}}>
-          {item.post_header}
-        </Typography>
-        <Typography type="paragraph" size="medium">
-          {item.post_content}
-        </Typography>
-      </View>
-      <View style={styles.footer}>
-        <Label variant="tertiary" color="green">
-          {item.post_topic}
-        </Label>
-      </View>
-      <View style={styles.footerActions}>
-        <View style={[styles.actionButton, styles.groupActionButton]}>
-          <View style={{borderColor: COLORS.neutral300, width: 16}}>
+        <View style={styles.postContent}>
+          <Typography type="heading" size="medium" style={styles.postHeader}>
+            {item.post_header}
+          </Typography>
+          <Typography type="paragraph" size="medium">
+            {item.post_content}
+          </Typography>
+        </View>
+        <View style={styles.footer}>
+          <Label variant="tertiary" color="green">
+            {item.post_topic}
+          </Label>
+        </View>
+        <View style={styles.footerActions}>
+          <View style={[styles.actionButton, styles.groupActionButton]}>
             <Button
               variant="link"
               size="medium"
               icon="arrow-up"
-              textStyle={{color: COLORS.neutral700}}>
+              textStyle={styles.actionButtonText}>
               <Typography
                 type="paragraph"
                 size="small"
-                style={{color: COLORS.neutral700}}>
+                style={styles.actionButtonText}>
                 {item.post_upvote}
               </Typography>
             </Button>
+            <View style={styles.divider} />
+            <Button
+              variant="link"
+              size="medium"
+              icon="arrow-down"
+              style={styles.downvoteButton}
+              textStyle={styles.actionButtonText}
+            />
           </View>
-          <View
-            style={{
-              height: 16,
-              borderRightWidth: 1,
-              borderColor: COLORS.neutral400,
-            }}
-          />
           <Button
             variant="link"
             size="medium"
-            icon="arrow-down"
-            style={{width: 16}}
-            textStyle={{color: COLORS.neutral700}}
-          />
+            icon="comment"
+            style={styles.actionButton}
+            textStyle={styles.actionButtonText}>
+            <Typography
+              type="paragraph"
+              size="small"
+              style={styles.actionButtonText}>
+              {item.post_comment}
+            </Typography>
+          </Button>
+          <Button
+            variant="link"
+            size="medium"
+            icon="retweet"
+            style={styles.actionButton}
+            textStyle={styles.actionButtonText}>
+            <Typography
+              type="paragraph"
+              size="small"
+              style={styles.actionButtonText}>
+              {item.post_retweet}
+            </Typography>
+          </Button>
         </View>
-        <Button
-          variant="link"
-          size="medium"
-          icon="comment"
-          style={styles.actionButton}
-          textStyle={{color: COLORS.neutral700, lineHeight: 20}}>
-          <Typography
-            type="paragraph"
-            size="small"
-            style={{color: COLORS.neutral700}}>
-            {item.post_comment}
-          </Typography>
-        </Button>
-        <Button
-          variant="link"
-          size="medium"
-          icon="retweet"
-          style={styles.actionButton}
-          textStyle={{color: COLORS.neutral700, lineHeight: 20}}>
-          <Typography
-            type="paragraph"
-            size="small"
-            style={{color: COLORS.neutral700}}>
-            {item.post_retweet}
-          </Typography>
-        </Button>
       </View>
-    </View>
+    ),
+    [],
+  );
+
+  const keyExtractor = useCallback(
+    (item: FeedItem, index: number) => index.toString(),
+    [],
+  );
+
+  const FeedFooter = useMemo(
+    () => (
+      <Typography type="paragraph" size="small" style={styles.footerText}>
+        Semua feed sudah kamu lihat 🎉
+      </Typography>
+    ),
+    [],
   );
 
   return (
     <FlatList
       data={feedData}
       renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      ListFooterComponent={
-        <Typography
-          type="paragraph"
-          size="small"
-          style={{color: COLORS.neutral500}}>
-          Semua feed sudah kamu lihat 🎉
-        </Typography>
-      }
-      ListFooterComponentStyle={{
-        gap: 24,
-        marginVertical: 24,
-        alignItems: "center",
-      }}
+      keyExtractor={keyExtractor}
+      ListFooterComponent={FeedFooter}
+      ListFooterComponentStyle={styles.listFooter}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   postContainer: {
@@ -210,6 +216,24 @@ const styles = StyleSheet.create({
   },
   groupActionButton: {
     justifyContent: "space-around",
+  },
+  name: {color: COLORS.neutral700},
+  ellipsisButton: {borderWidth: 0},
+  ellipsisButtonText: {color: COLORS.neutral400},
+  postContent: {gap: 4},
+  postHeader: {color: COLORS.neutral700},
+  actionButtonText: {color: COLORS.neutral700},
+  downvoteButton: {width: 16},
+  divider: {
+    height: 16,
+    borderRightWidth: 1,
+    borderColor: COLORS.neutral400,
+  },
+  footerText: {color: COLORS.neutral500},
+  listFooter: {
+    gap: 24,
+    marginVertical: 24,
+    alignItems: "center",
   },
 });
 
