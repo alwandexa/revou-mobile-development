@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {memo} from "react";
 import {StyleSheet, View} from "react-native";
 
 import {COLORS} from "../../constants/colors";
@@ -22,8 +22,8 @@ export type FeedItem = {
   post_retweet: number;
 };
 
-export const feed = useCallback(
-  ({item}: any) => (
+export const Feed = memo(
+  ({item}: {item: FeedItem}) => (
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
@@ -113,7 +113,7 @@ export const feed = useCallback(
       </View>
     </View>
   ),
-  [],
+  (prevProps, nextProps) => prevProps.item === nextProps.item,
 );
 
 const styles = StyleSheet.create({

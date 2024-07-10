@@ -1,14 +1,14 @@
-import React, {memo, useCallback, useMemo} from "react";
+import React, {FC, memo, useCallback, useMemo} from "react";
 import {FlatList, StyleSheet} from "react-native";
 import dayjs from "dayjs";
 
 import Typography from "../components/atoms/Typography";
-import {FeedItem, feed} from "../components/organism/Feed";
+import {FeedItem, Feed} from "../components/organism/Feed";
 import {COLORS} from "../constants/colors";
 import {generateFeedData} from "../utils";
 import {HomeScreenProps} from "./Home";
 
-const HomeTerbaru: React.FC<HomeScreenProps> = memo(
+const HomeTerbaru: FC<HomeScreenProps> = memo(
   ({feedData, refreshing, setFeedData, setRefreshing}) => {
     const onRefresh = useCallback(() => {
       setRefreshing(true);
@@ -38,12 +38,13 @@ const HomeTerbaru: React.FC<HomeScreenProps> = memo(
         ),
       [feedData],
     );
+
     return (
       <FlatList
         data={sortedFeedData}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        renderItem={feed}
+        renderItem={({item}) => <Feed item={item} />}
         keyExtractor={keyExtractor}
         ListFooterComponent={FeedFooter}
         ListFooterComponentStyle={styles.listFooter}
