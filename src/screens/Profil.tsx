@@ -3,6 +3,7 @@ import {Image, SafeAreaView, StyleSheet} from "react-native";
 
 import Typography from "../components/atoms/Typography";
 import {COLORS} from "../constants/colors";
+import { withAuth } from "../contexts/AuthContext";
 
 const Profil: FunctionComponent = () => {
   return (
@@ -18,7 +19,7 @@ const Profil: FunctionComponent = () => {
   );
 };
 
-export default Profil;
+export default withAuth(Profil);
 
 const styles = StyleSheet.create({
   container: {
