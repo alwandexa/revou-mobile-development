@@ -1,5 +1,6 @@
 import React, {memo, useCallback, useMemo} from "react";
 import {FlatList, StyleSheet} from "react-native";
+import dayjs from "dayjs";
 
 import Typography from "../components/atoms/Typography";
 import {FeedItem, feed} from "../components/organism/Feed";
@@ -32,14 +33,11 @@ const HomeTerbaru: React.FC<HomeScreenProps> = memo(
 
     const sortedFeedData = useMemo(
       () =>
-        [...feedData].sort(
-          (a, b) =>
-            new Date(b.created_at).getMilliseconds() -
-            new Date(a.created_at).getMilliseconds(),
+        [...feedData].sort((a, b) =>
+          dayjs(b.created_at).diff(dayjs(a.created_at)),
         ),
       [feedData],
     );
-
     return (
       <FlatList
         data={sortedFeedData}

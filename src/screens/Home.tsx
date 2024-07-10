@@ -20,6 +20,7 @@ import {generateFeedData} from "../utils";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import Profil from "./Profil";
+import HomeTabBar from "../components/molecules/HomeTabBar";
 
 export type HomeScreenProps = {
   feedData: FeedItem[];
@@ -139,7 +140,7 @@ const Home = ({navigation}: {navigation: any}) => {
         </View>
       </View>
       <View style={styles.tabContainer}>
-        <TopTab.Navigator>
+        <TopTab.Navigator tabBar={HomeTabBar}>
           <TopTab.Screen
             name="Trending"
             children={() => (
