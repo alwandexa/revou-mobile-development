@@ -13,14 +13,15 @@ import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import Avatar from "../components/molecules/Avatar";
 import Button from "../components/molecules/Button";
+import HomeTabBar from "../components/molecules/HomeTabBar";
 import TextField from "../components/molecules/TextField";
 import {FeedItem} from "../components/organism/Feed";
 import {COLORS} from "../constants/colors";
+import {useAuth} from "../contexts/AuthContext";
 import {generateFeedData} from "../utils";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import Profil from "./Profil";
-import HomeTabBar from "../components/molecules/HomeTabBar";
 
 export type HomeScreenProps = {
   feedData: FeedItem[];
@@ -86,14 +87,18 @@ export const HomeHeader = ({navigation}: {navigation: any}) => {
   return (
     <View style={styles.headerContainer}>
       <Image source={require("../assets/images/investly-logo.png")} />
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Icon name="bell" fill={COLORS.purple600} />
-      </TouchableOpacity>
+      <View style={{flexDirection: "row"}}>
+        <TouchableOpacity>
+          <Icon name="bell" fill={COLORS.purple600} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const Home = ({navigation}: {navigation: any}) => {
+  const {user} = useAuth();
+
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
 
@@ -165,17 +170,19 @@ const Home = ({navigation}: {navigation: any}) => {
           />
         </TopTab.Navigator>
       </View>
-      <View style={styles.loginBanner}>
-        <Image source={require("../assets/images/investly-mascot-1.png")} />
-        <View style={styles.bannerTextContainer}>
-          <Typography type="paragraph" size="small">
-            Temukan inspirasi investasi,{" "}
-          </Typography>
-          <Button variant="link" size="small">
-            Masuk Yuk!
-          </Button>
+      {!user && (
+        <View style={styles.loginBanner}>
+          <Image source={require("../assets/images/investly-mascot-1.png")} />
+          <View style={styles.bannerTextContainer}>
+            <Typography type="paragraph" size="small">
+              Temukan inspirasi investasi,{" "}
+            </Typography>
+            <Button variant="link" size="small">
+              Masuk Yuk!
+            </Button>
+          </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 };

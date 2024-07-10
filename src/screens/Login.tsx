@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {FC, useState} from "react";
 import {Image, SafeAreaView, StyleSheet, View} from "react-native";
 
+import {useAuth} from "../contexts/AuthContext";
 import Button from "../components/molecules/Button";
 import TextField, {TextFieldState} from "../components/molecules/TextField";
 import Icon from "../components/atoms/icon/Icon";
@@ -40,7 +41,7 @@ export const LoginHeader = ({navigation}: {navigation: any}) => {
   );
 };
 
-const Login = ({navigation}: {navigation: any}) => {
+const Login: FC<{navigation: any}> = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<TextFieldState>("default");
   const [emailMessage, setEmailMessage] = useState("");
@@ -53,10 +54,10 @@ const Login = ({navigation}: {navigation: any}) => {
 
   const [loginError, setLoginError] = useState("");
 
-  const validateEmail = (email: string) => {
-    email = email.trim();
+  const {login} = useAuth();
 
-    email = email.toLowerCase();
+  const validateEmail = (email: string) => {
+    email = email.trim().toLowerCase();
 
     if (email.length > 254) {
       setEmailState("negative");
@@ -130,9 +131,7 @@ const Login = ({navigation}: {navigation: any}) => {
   };
 
   const validateCredential = () => {
-    return email === "alwanwirawan@test.app" && password === "TestApp123!"
-      ? true
-      : false;
+    return email === "alwanwirawan@test.app" && password === "TestApp123!";
   };
 
   const handleSubmit = () => {
@@ -143,6 +142,7 @@ const Login = ({navigation}: {navigation: any}) => {
     if (isEmailValid && isPasswordValid) {
       if (isCredentialValid) {
         setLoginError("");
+        login(email);
         navigation.navigate("HomeTab");
       } else {
         setLoginError("Email atau password salah. Silakan coba lagi.");
@@ -157,18 +157,18 @@ const Login = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView style={styles.bodyContainer}>
       <View style={{gap: 24}}>
-        {loginError ? (
+        {loginError && (
           <Label variant="tertiary" color="red">
             {loginError}
           </Label>
-        ) : null}
+        )}
         <TextField
           label="Email"
           placeholder="Email"
           state={emailState}
           message={emailMessage}
           value={email}
-          onChangeText={text => handleEmailChange(text)}
+          onChangeText={handleEmailChange}
         />
         <TextField
           label="Password"
