@@ -169,7 +169,10 @@ const styles = StyleSheet.create({
   ellipsisButtonText: {color: COLORS.neutral400},
   postContent: {gap: 4},
   postHeader: {color: COLORS.neutral700},
-  actionButtonText: {color: COLORS.neutral700},
+  actionButtonText: {
+    color: COLORS.neutral700,
+    lineHeight: 15,
+  },
   downvoteButton: {width: 16},
   divider: {
     height: 16,
