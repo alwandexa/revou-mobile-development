@@ -1,5 +1,6 @@
 import React from "react";
 import {FlatList, StyleSheet, View} from "react-native";
+import {faker} from "@faker-js/faker";
 
 import Typography from "../components/atoms/Typography";
 import Avatar from "../components/molecules/Avatar";
@@ -7,84 +8,39 @@ import Button from "../components/molecules/Button";
 import Label from "../components/molecules/Label";
 import {COLORS} from "../constants/colors";
 
-const feedData = [
-  {
-    avatar_url: "https://example.com/avatar1.png",
-    name: "Tilamuta",
-    headline: "Financial Enthusiast",
-    created_at: "2023-07-08T12:00:00Z",
-    post_header: "Buat yang pegang GoTo",
-    post_content: "Mau beli milikta pake 5 lembar GoTo 😢",
-    post_topic: "Investasi",
-    post_upvote: 0,
-    post_downvote: 0,
-    post_comment: 0,
-    post_retweet: 2,
-  },
-  {
-    avatar_url: "https://example.com/avatar2.png",
-    name: "Aldo",
-    headline: "Software Engineer",
-    created_at: "2023-07-08T12:00:00Z",
-    post_header: "Sektor terbaik",
-    post_content:
-      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
-    post_topic: "Sector Update",
-    post_upvote: 0,
-    post_downvote: 0,
-    post_comment: 0,
-    post_retweet: 2,
-  },
-  {
-    avatar_url: "https://example.com/avatar2.png",
-    name: "Aldo",
-    headline: "Software Engineer",
-    created_at: "2023-07-08T12:00:00Z",
-    post_header: "Sektor terbaik",
-    post_content:
-      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
-    post_topic: "Sector Update",
-    post_upvote: 0,
-    post_downvote: 0,
-    post_comment: 0,
-    post_retweet: 2,
-  },
-  {
-    avatar_url: "https://example.com/avatar2.png",
-    name: "Aldo",
-    headline: "Software Engineer",
-    created_at: "2023-07-08T12:00:00Z",
-    post_header: "Sektor terbaik",
-    post_content:
-      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
-    post_topic: "Sector Update",
-    post_upvote: 0,
-    post_downvote: 0,
-    post_comment: 0,
-    post_retweet: 2,
-  },
-  {
-    avatar_url: "https://example.com/avatar2.png",
-    name: "Aldo",
-    headline: "Software Engineer",
-    created_at: "2023-07-08T12:00:00Z",
-    post_header: "Sektor terbaik",
-    post_content:
-      "Gaes, menurut kalian sektor mana yang paling aman untuk kondisi saat ini?",
-    post_topic: "Sector Update",
-    post_upvote: 0,
-    post_downvote: 0,
-    post_comment: 0,
-    post_retweet: 2,
-  },
-];
+const generateFeedItem = () => {
+  return {
+    avatar_url: faker.image.avatar(),
+    name: faker.person.firstName(),
+    headline: faker.person.jobTitle(),
+    created_at: faker.date.recent().toISOString(),
+    post_header: faker.lorem.sentence(),
+    post_content: faker.lorem.paragraph(),
+    post_topic: faker.helpers.arrayElement([
+      "Investasi",
+      "Sector Update",
+      "Financial News",
+      "Market Analysis",
+    ]),
+    post_upvote: faker.number.int({min: 0, max: 1000}),
+    post_downvote: faker.number.int({min: 0, max: 1000}),
+    post_comment: faker.number.int({min: 0, max: 100}),
+    post_retweet: faker.number.int({min: 0, max: 50}),
+  };
+};
+
+const generateFeedData = (count = 5) => {
+  return Array.from({length: count}, generateFeedItem);
+};
+
+const feedData = generateFeedData(100);
 
 const HomeTrending = () => {
   const renderItem = ({item}: any) => (
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Avatar size="large" />
+          <Avatar size="large" source={{uri: item.avatar_url}} />
           <View style={styles.headerText}>
             <Typography
               type="heading"
