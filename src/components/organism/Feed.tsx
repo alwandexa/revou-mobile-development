@@ -2,11 +2,11 @@ import React, {memo} from "react";
 import {StyleSheet, View} from "react-native";
 
 import {COLORS} from "../../constants/colors";
+import {formatRelativeTime} from "../../utils";
 import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
-import Button from "../molecules/Button";
 import Label from "../molecules/Label";
-import {formatRelativeTime} from "../../utils";
+import ProtectedButton from "../molecules/ProtectedButton";
 
 export type FeedItem = {
   avatar_url: string;
@@ -39,7 +39,7 @@ export const Feed = memo(
               {formatRelativeTime(item.created_at)}
             </Typography>
           </View>
-          <Button
+          <ProtectedButton
             icon="ellipsis"
             variant="outline"
             size="medium"
@@ -63,7 +63,7 @@ export const Feed = memo(
       </View>
       <View style={styles.footerActions}>
         <View style={[styles.actionButton, styles.groupActionButton]}>
-          <Button
+          <ProtectedButton
             variant="link"
             size="medium"
             icon="arrow-up"
@@ -74,9 +74,9 @@ export const Feed = memo(
               style={styles.actionButtonText}>
               {item.post_upvote}
             </Typography>
-          </Button>
+          </ProtectedButton>
           <View style={styles.divider} />
-          <Button
+          <ProtectedButton
             variant="link"
             size="medium"
             icon="arrow-down"
@@ -84,7 +84,7 @@ export const Feed = memo(
             textStyle={styles.actionButtonText}
           />
         </View>
-        <Button
+        <ProtectedButton
           variant="link"
           size="medium"
           icon="comment"
@@ -96,8 +96,8 @@ export const Feed = memo(
             style={styles.actionButtonText}>
             {item.post_comment}
           </Typography>
-        </Button>
-        <Button
+        </ProtectedButton>
+        <ProtectedButton
           variant="link"
           size="medium"
           icon="retweet"
@@ -109,7 +109,7 @@ export const Feed = memo(
             style={styles.actionButtonText}>
             {item.post_retweet}
           </Typography>
-        </Button>
+        </ProtectedButton>
       </View>
     </View>
   ),

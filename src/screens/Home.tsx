@@ -1,6 +1,4 @@
-import React, {useState} from "react";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
+import React, {FunctionComponent, useState} from "react";
 import {
   Image,
   SafeAreaView,
@@ -8,13 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 
 import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import Avatar from "../components/molecules/Avatar";
-import Button from "../components/molecules/Button";
 import HomeTabBar from "../components/molecules/HomeTabBar";
-import TextField from "../components/molecules/TextField";
+import ProtectedButton from "../components/molecules/ProtectedButton";
+import ProtectedTextField from "../components/molecules/ProtectedTextField";
 import {FeedItem} from "../components/organism/Feed";
 import {COLORS} from "../constants/colors";
 import {useAuth} from "../contexts/AuthContext";
@@ -83,7 +83,7 @@ export const HomeTab = () => {
   );
 };
 
-export const HomeHeader = ({navigation}: {navigation: any}) => {
+export const HomeHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <Image source={require("../assets/images/investly-logo.png")} />
@@ -96,7 +96,7 @@ export const HomeHeader = ({navigation}: {navigation: any}) => {
   );
 };
 
-const Home = ({navigation}: {navigation: any}) => {
+const Home: FunctionComponent = () => {
   const {user} = useAuth();
 
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
@@ -108,7 +108,7 @@ const Home = ({navigation}: {navigation: any}) => {
         <View style={styles.inputContainer}>
           <View style={styles.inputRow}>
             <Avatar />
-            <TextField
+            <ProtectedTextField
               placeholder="Apa yang ingin kamu tanyakan?"
               containerStyle={{flex: 1}}
             />
@@ -122,24 +122,24 @@ const Home = ({navigation}: {navigation: any}) => {
                 borderColor: COLORS.neutral300,
                 justifyContent: "center",
               }}>
-              <Button
+              <ProtectedButton
                 icon="question-circle"
                 iconColor={COLORS.yellow600}
                 textStyle={{color: COLORS.neutral700}}
                 size="small"
                 variant="link">
                 Pertanyaan
-              </Button>
+              </ProtectedButton>
             </View>
             <View style={{flex: 2, height: 20, justifyContent: "center"}}>
-              <Button
+              <ProtectedButton
                 icon="plus"
                 iconColor={COLORS.green600}
                 textStyle={{color: COLORS.neutral700}}
                 size="small"
                 variant="link">
                 Post
-              </Button>
+              </ProtectedButton>
             </View>
           </View>
         </View>
@@ -177,9 +177,9 @@ const Home = ({navigation}: {navigation: any}) => {
             <Typography type="paragraph" size="small">
               Temukan inspirasi investasi,{" "}
             </Typography>
-            <Button variant="link" size="small">
+            <ProtectedButton variant="link" size="small">
               Masuk Yuk!
-            </Button>
+            </ProtectedButton>
           </View>
         </View>
       )}
