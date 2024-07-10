@@ -7,6 +7,20 @@ import Avatar from "../molecules/Avatar";
 import Button from "../molecules/Button";
 import Label from "../molecules/Label";
 
+export type FeedItem = {
+  avatar_url: string;
+  name: string;
+  headline: string;
+  created_at: string;
+  post_header: string;
+  post_content: string;
+  post_topic: string;
+  post_upvote: number;
+  post_downvote: number;
+  post_comment: number;
+  post_retweet: number;
+};
+
 export const feed = useCallback(
   ({item}: any) => (
     <View style={styles.postContainer}>
