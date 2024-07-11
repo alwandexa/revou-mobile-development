@@ -1,5 +1,6 @@
-import {SafeAreaView, StyleSheet, Text, View} from "react-native";
 import React from "react";
+import {SafeAreaView, StyleSheet, Text, View} from "react-native";
+
 import {Feed} from "../components/organism/Feed";
 import {useAuth} from "../contexts/AuthContext";
 import TextField from "../components/molecules/TextField";
