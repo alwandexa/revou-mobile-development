@@ -15,6 +15,7 @@ export type IconName =
   | "eye-slash"
   | "heart"
   | "house"
+  | "paper-plane"
   | "person"
   | "plus"
   | "question-circle"
@@ -35,6 +36,7 @@ const iconMap: Record<
   "eye-slash": require("./EyeSlash").default,
   heart: require("./Heart").default,
   house: require("./House").default,
+  "paper-plane": require("./PaperPlane").default,
   person: require("./Person").default,
   plus: require("./Plus").default,
   "question-circle": require("./QuestionCircle").default,
