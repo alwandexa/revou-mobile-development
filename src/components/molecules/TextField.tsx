@@ -20,7 +20,7 @@ export type TextFieldState =
   | "focused";
 
 type TextFieldProps = TextInputProps & {
-  state?: "default" | "positive" | "negative" | "filled" | "focused";
+  state?: TextFieldState;
   type?: "text" | "password";
   placeholder?: string;
   disabled?: boolean;
