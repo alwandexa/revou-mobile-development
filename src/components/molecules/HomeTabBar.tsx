@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.neutral100,
   },
   tab: {
-    marginHorizontal: 12,
     flex: 1,
     alignItems: "center",
     paddingVertical: 8,
