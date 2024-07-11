@@ -134,6 +134,13 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
     return email === "alwanwirawan@test.app" && password === "TestApp123!";
   };
 
+  const getUserData = () => {
+    const avatar =
+      "https://lwfiles.mycourse.app/656ef73b8e59fa6dfcddbe98-public/3073ed5d42a0e38174e311a1a0cb0800.png";
+
+    return avatar;
+  };
+
   const handleSubmit = () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
@@ -142,7 +149,7 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
     if (isEmailValid && isPasswordValid) {
       if (isCredentialValid) {
         setLoginError("");
-        login(email);
+        login(email, getUserData());
         navigation.navigate("HomeTab");
       } else {
         setLoginError("Email atau password salah. Silakan coba lagi.");

@@ -9,8 +9,8 @@ import {useNavigation} from "@react-navigation/native";
 
 type AuthContextType = {
   user: string | null;
-  avatar: string  | null;
-  login: Function;
+  avatar: string | null;
+  login: (user: string, avatar: string) => void;
   logout: () => void;
 };
 
@@ -22,7 +22,7 @@ export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
   const [user, setUser] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
 
-  const login = ({user, avatar}: AuthContextType) => {
+  const login = (user: string, avatar: string) => {
     setUser(user);
     setAvatar(avatar);
   };

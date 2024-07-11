@@ -9,12 +9,22 @@ type AvatarProps = {
   size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
 };
 
-const Avatar: React.FC<AvatarProps> = ({source, size: size = "medium"}) => {
+const Avatar: React.FC<AvatarProps> = ({source, size = "medium"}) => {
   const componentSize = size as keyof typeof personStyles;
+
+  const hasValidSource = () => {
+    if (!source) return false;
+    if (typeof source === "number") return true;
+    if (typeof source === "object" && "uri" in source) {
+      return !!source.uri;
+    }
+
+    return false;
+  };
 
   return (
     <View style={styles[componentSize]}>
-      {source ? (
+      {hasValidSource() ? (
         <Image
           source={source}
           style={[styles.imageStyle, styles[componentSize]]}
