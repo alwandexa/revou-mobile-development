@@ -22,6 +22,7 @@ import {generateFeedData} from "../utils";
 import HomeTerbaru from "./HomeTerbaru";
 import HomeTrending from "./HomeTrending";
 import Profil from "./Profil";
+import {useNavigation} from "@react-navigation/native";
 
 export type HomeScreenProps = {
   feedData: FeedItem[];
@@ -98,9 +99,15 @@ export const HomeHeader = () => {
 
 const Home: FunctionComponent = () => {
   const {user, avatar} = useAuth();
+  const navigation = useNavigation();
 
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
+
+  const handlePostOnPress = () => {
+    // @ts-ignore
+    navigation.navigate("Create Post");
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -137,7 +144,8 @@ const Home: FunctionComponent = () => {
                 iconColor={COLORS.green600}
                 textStyle={{color: COLORS.neutral700}}
                 size="small"
-                variant="link">
+                variant="link"
+                onPress={handlePostOnPress}>
                 Post
               </ProtectedButton>
             </View>

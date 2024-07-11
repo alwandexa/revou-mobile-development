@@ -7,6 +7,7 @@ import {HomeTab} from "./src/screens/Home";
 import Login, {LoginHeader} from "./src/screens/Login";
 import Onboarding from "./src/screens/Onboarding";
 import DetailPost from "./src/screens/DetailPost";
+import CreatePost from "./src/screens/CreatePost";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,11 @@ const App: FC = () => {
             }}
           />
           <Stack.Screen name="Post" component={DetailPost} />
+          <Stack.Screen
+            name="Create Post"
+            component={CreatePost}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
