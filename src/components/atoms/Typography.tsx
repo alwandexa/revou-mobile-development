@@ -1,23 +1,23 @@
-import {View, Text, StyleSheet, TextStyle} from 'react-native';
-import React from 'react';
+import {View, Text, StyleSheet, TextStyle} from "react-native";
+import React from "react";
 
 type TypographyProps = {
-  type: 'heading' | 'paragraph' | 'special';
+  type: "heading" | "paragraph" | "special";
   size:
-    | 'xxlarge'
-    | 'xlarge'
-    | 'large'
-    | 'medium'
-    | 'small'
-    | 'xsmall'
-    | 'xxsmall';
+    | "xxlarge"
+    | "xlarge"
+    | "large"
+    | "medium"
+    | "small"
+    | "xsmall"
+    | "xxsmall";
   style?: TextStyle;
   children: React.ReactNode;
 };
 
 export default function Typography({
-  type = 'paragraph',
-  size = 'medium',
+  type = "paragraph",
+  size = "medium",
   style,
   children,
 }: TypographyProps) {
@@ -39,16 +39,12 @@ export default function Typography({
     return {...baseStyle, ...sizeStyle};
   };
 
-  return (
-    <View>
-      <Text style={[getStyle(), style]}>{children}</Text>
-    </View>
-  );
+  return <Text style={[getStyle(), style]}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
   heading: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   headingXxlarge: {
     fontSize: 28,
@@ -79,7 +75,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   paragraph: {
-    fontWeight: 'regular',
+    fontWeight: "regular",
   },
   paragraphLarge: {
     fontSize: 16,
@@ -98,7 +94,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   special: {
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   specialLarge: {
     fontSize: 16,
