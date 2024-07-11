@@ -7,13 +7,18 @@ import {
   View,
 } from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import dayjs from "dayjs";
 
 import Typography from "../components/atoms/Typography";
 import Button from "../components/molecules/Button";
 import TextField from "../components/molecules/TextField";
 import {COLORS} from "../constants/colors";
+import {FeedItem} from "../components/organism/Feed";
+import {useAuth} from "../contexts/AuthContext";
 
 const CreatePost: FunctionComponent = () => {
+  const {user} = useAuth();
+
   const [topic, setTopic] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -31,6 +36,25 @@ const CreatePost: FunctionComponent = () => {
     }).props.style;
 
     return typographyStyle as TextStyle;
+  };
+
+  const handlePost = () => {
+    const feed: FeedItem = {
+      avatar_url:
+        "https://lwfiles.mycourse.app/656ef73b8e59fa6dfcddbe98-public/3073ed5d42a0e38174e311a1a0cb0800.png",
+      name: user as string,
+      headline: "Mobile Engineer Expert",
+      created_at: dayjs().toISOString(),
+      post_header: topic,
+      post_content: description,
+      post_topic: topic,
+      post_upvote: 0,
+      post_downvote: 0,
+      post_comment: 0,
+      post_retweet: 0,
+    };
+
+    navigation.navigate("Home" as never, feed as never);
   };
 
   return (
@@ -54,7 +78,8 @@ const CreatePost: FunctionComponent = () => {
           variant="primary"
           size="small"
           customStyle={{minWidth: 59}}
-          disabled={topic && title && description ? false : true}>
+          disabled={topic && title && description ? false : true}
+          onPress={handlePost}>
           Post
         </Button>
       </View>
