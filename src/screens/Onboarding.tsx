@@ -73,30 +73,34 @@ const Onboarding = ({navigation}: {navigation: any}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        ref={flatListRef}
-        data={onboardingData}
-        renderItem={renderItem}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={event => {
-          const newIndex = Math.round(
-            event.nativeEvent.contentOffset.x / SCREEN_WIDTH,
-          );
-          setCurrentIndex(newIndex);
-        }}
-      />
-      <View style={styles.indicatorContainer}>
-        {onboardingData.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.indicator,
-              index === currentIndex && styles.activeIndicator,
-            ]}
+      <View style={styles.contentContainer}>
+        <View style={styles.slideContainer}>
+          <FlatList
+            ref={flatListRef}
+            data={onboardingData}
+            renderItem={renderItem}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={event => {
+              const newIndex = Math.round(
+                event.nativeEvent.contentOffset.x / SCREEN_WIDTH,
+              );
+              setCurrentIndex(newIndex);
+            }}
           />
-        ))}
+          <View style={styles.indicatorContainer}>
+            {onboardingData.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.indicator,
+                  index === currentIndex && styles.activeIndicator,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
       </View>
       <Button
         variant="primary"
@@ -113,6 +117,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  slideContainer: {
+    alignItems: "center",
   },
   slide: {
     width: SCREEN_WIDTH,
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 40,
+    marginTop: 20, // Add some space between FlatList and indicators
   },
   indicator: {
     height: 8,
