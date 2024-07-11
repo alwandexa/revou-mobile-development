@@ -97,7 +97,7 @@ export const HomeHeader = () => {
 };
 
 const Home: FunctionComponent = () => {
-  const {user} = useAuth();
+  const {user, avatar} = useAuth();
 
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
@@ -107,7 +107,7 @@ const Home: FunctionComponent = () => {
       <View style={styles.modalContainer}>
         <View style={styles.inputContainer}>
           <View style={styles.inputRow}>
-            <Avatar />
+            <Avatar source={{uri: avatar}} />
             <ProtectedTextField
               placeholder="Apa yang ingin kamu tanyakan?"
               containerStyle={{flex: 1}}
