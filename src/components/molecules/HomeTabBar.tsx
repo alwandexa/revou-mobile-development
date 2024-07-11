@@ -38,17 +38,16 @@ const HomeTabBar: React.FC<HomeTabBarProps> = ({
         };
 
         return (
-          <TouchableOpacity
-            key={index}
-            onPress={onPress}
-            style={[styles.tab, isFocused && styles.activeTab]}>
-            <Typography
-              type="heading"
-              size="small"
-              style={isFocused ? styles.activeLabel : styles.label}>
-              {label as string}
-            </Typography>
-          </TouchableOpacity>
+          <View key={index} style={[styles.tab, isFocused && styles.activeTab]}>
+            <TouchableOpacity onPress={onPress}>
+              <Typography
+                type="heading"
+                size="small"
+                style={isFocused ? styles.activeLabel : styles.label}>
+                {label as string}
+              </Typography>
+            </TouchableOpacity>
+          </View>
         );
       })}
     </View>
@@ -61,9 +60,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.neutral100,
   },
   tab: {
+    marginHorizontal: 12,
     flex: 1,
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   activeTab: {
     borderBottomWidth: 2,
