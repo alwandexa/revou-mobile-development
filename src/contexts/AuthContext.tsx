@@ -6,10 +6,13 @@ import React, {
   useState,
 } from "react";
 import {useNavigation} from "@react-navigation/native";
+import {FeedItem} from "../components/organism/Feed";
 
 type AuthContextType = {
   user: string | null;
   avatar: string | null;
+  selectedItem : FeedItem;
+  setSelectedItem: Function;
   login: (user: string, avatar: string) => void;
   logout: () => void;
 };
@@ -22,6 +25,8 @@ export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
   const [user, setUser] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
 
+  const [selectedItem, setSelectedItem] = useState<FeedItem>({} as FeedItem);
+
   const login = (user: string, avatar: string) => {
     setUser(user);
     setAvatar(avatar);
@@ -32,7 +37,7 @@ export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
   };
 
   return (
-    <AuthContext.Provider value={{user, avatar, login, logout}}>
+    <AuthContext.Provider value={{user, avatar, selectedItem, setSelectedItem, login, logout}}>
       {children}
     </AuthContext.Provider>
   );

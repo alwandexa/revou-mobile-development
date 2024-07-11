@@ -1,5 +1,6 @@
 import React, {memo} from "react";
 import {StyleSheet, View, TouchableOpacity} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 
 import {COLORS} from "../../constants/colors";
 import {formatRelativeTime} from "../../utils";
@@ -8,6 +9,7 @@ import Avatar from "../molecules/Avatar";
 import Label from "../molecules/Label";
 import ProtectedButton from "../molecules/ProtectedButton";
 import withAuthInteraction from "../hoc/withAuthInteraction";
+import {useAuth} from "../../contexts/AuthContext";
 
 export type FeedItem = {
   avatar_url: string;
@@ -39,89 +41,103 @@ const FeedContent = withAuthInteraction(
 );
 
 export const Feed = memo(
-  ({item}: {item: FeedItem}) => (
-    <View style={styles.postContainer}>
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Avatar size="large" source={{uri: item.avatar_url}} />
-          <View style={styles.headerText}>
-            <Typography type="heading" size="xsmall" style={styles.name}>
-              {item.name}
-            </Typography>
-            <Typography type="paragraph" size="small">
-              {item.headline}
-            </Typography>
-            <Typography type="paragraph" size="xsmall">
-              {formatRelativeTime(item.created_at)}
-            </Typography>
+  ({item}: {item: FeedItem}) => {
+    const {setSelectedItem} = useAuth();
+    const navigation = useNavigation();
+
+    const handleFeedContentClicked = (item: FeedItem) => {
+      setSelectedItem(item);
+      // @ts-ignore
+      navigation.navigate("Post");
+    };
+
+    return (
+      <View style={styles.postContainer}>
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <Avatar size="large" source={{uri: item.avatar_url}} />
+            <View style={styles.headerText}>
+              <Typography type="heading" size="xsmall" style={styles.name}>
+                {item.name}
+              </Typography>
+              <Typography type="paragraph" size="small">
+                {item.headline}
+              </Typography>
+              <Typography type="paragraph" size="xsmall">
+                {formatRelativeTime(item.created_at)}
+              </Typography>
+            </View>
+            <ProtectedButton
+              icon="ellipsis"
+              variant="outline"
+              size="medium"
+              style={styles.ellipsisButton}
+              textStyle={styles.ellipsisButtonText}
+            />
           </View>
-          <ProtectedButton
-            icon="ellipsis"
-            variant="outline"
-            size="medium"
-            style={styles.ellipsisButton}
-            textStyle={styles.ellipsisButtonText}
-          />
         </View>
-      </View>
-      <FeedContent item={item} />
-      <View style={styles.footer}>
-        <Label variant="tertiary" color="green">
-          {item.post_topic}
-        </Label>
-      </View>
-      <View style={styles.footerActions}>
-        <View style={[styles.actionButton, styles.groupActionButton]}>
+        <FeedContent
+          item={item}
+          onPress={() => handleFeedContentClicked(item)}
+        />
+        <View style={styles.footer}>
+          <Label variant="tertiary" color="green">
+            {item.post_topic}
+          </Label>
+        </View>
+        <View style={styles.footerActions}>
+          <View style={[styles.actionButton, styles.groupActionButton]}>
+            <ProtectedButton
+              variant="link"
+              size="medium"
+              icon="arrow-up"
+              textStyle={styles.actionButtonText}>
+              <Typography
+                type="paragraph"
+                size="small"
+                style={styles.actionButtonText}>
+                {item.post_upvote}
+              </Typography>
+            </ProtectedButton>
+            <View style={styles.divider} />
+            <ProtectedButton
+              variant="link"
+              size="medium"
+              icon="arrow-down"
+              style={styles.downvoteButton}
+              textStyle={styles.actionButtonText}
+            />
+          </View>
           <ProtectedButton
             variant="link"
             size="medium"
-            icon="arrow-up"
+            icon="comment"
+            style={styles.actionButton}
             textStyle={styles.actionButtonText}>
             <Typography
               type="paragraph"
               size="small"
               style={styles.actionButtonText}>
-              {item.post_upvote}
+              {item.post_comment}
             </Typography>
           </ProtectedButton>
-          <View style={styles.divider} />
           <ProtectedButton
             variant="link"
             size="medium"
-            icon="arrow-down"
-            style={styles.downvoteButton}
-            textStyle={styles.actionButtonText}
-          />
+            icon="retweet"
+            style={styles.actionButton}
+            textStyle={styles.actionButtonText}>
+            <Typography
+              type="paragraph"
+              size="small"
+              style={styles.actionButtonText}>
+              {item.post_retweet}
+            </Typography>
+          </ProtectedButton>
         </View>
-        <ProtectedButton
-          variant="link"
-          size="medium"
-          icon="comment"
-          style={styles.actionButton}
-          textStyle={styles.actionButtonText}>
-          <Typography
-            type="paragraph"
-            size="small"
-            style={styles.actionButtonText}>
-            {item.post_comment}
-          </Typography>
-        </ProtectedButton>
-        <ProtectedButton
-          variant="link"
-          size="medium"
-          icon="retweet"
-          style={styles.actionButton}
-          textStyle={styles.actionButtonText}>
-          <Typography
-            type="paragraph"
-            size="small"
-            style={styles.actionButtonText}>
-            {item.post_retweet}
-          </Typography>
-        </ProtectedButton>
       </View>
-    </View>
-  ),
+    );
+  },
   (prevProps, nextProps) => prevProps.item === nextProps.item,
 );
 

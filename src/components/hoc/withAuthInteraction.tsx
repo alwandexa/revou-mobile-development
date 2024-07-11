@@ -4,8 +4,8 @@ import {useNavigation} from "@react-navigation/native";
 import {useAuth} from "../../contexts/AuthContext";
 
 export type WithAuthInteractionProps = {
-  onPress?: () => void;
-  onFocus?: () => void;
+  onPress?: Function;
+  onFocus?: Function;
 };
 
 const withAuthInteraction = <P extends object>(
@@ -14,7 +14,7 @@ const withAuthInteraction = <P extends object>(
   return ({onPress, onFocus, ...props}: WithAuthInteractionProps) => {
     const {user} = useAuth();
     const navigation = useNavigation();
-
+    
     const handlePress = () => {
       if (!user) {
         // @ts-ignore

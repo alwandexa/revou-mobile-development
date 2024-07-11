@@ -6,6 +6,7 @@ import {AuthProvider} from "./src/contexts/AuthContext";
 import {HomeTab} from "./src/screens/Home";
 import Login, {LoginHeader} from "./src/screens/Login";
 import Onboarding from "./src/screens/Onboarding";
+import DetailPost from "./src/screens/DetailPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const App: FC = () => {
               headerShown: false,
             }}
           />
+          <Stack.Screen name="Post" component={DetailPost} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
