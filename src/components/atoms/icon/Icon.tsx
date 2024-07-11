@@ -8,13 +8,15 @@ export type IconName =
   | "arrow-left"
   | "arrow-up"
   | "bell"
-  | "comment"
   | "chevron-left"
+  | "comment"
   | "ellipsis"
   | "eye"
   | "eye-slash"
   | "heart"
   | "house"
+  | "image"
+  | "paper-clip"
   | "paper-plane"
   | "person"
   | "plus"
@@ -29,13 +31,15 @@ const iconMap: Record<
   "arrow-left": require("./ArrowLeft").default,
   "arrow-up": require("./ArrowUp").default,
   bell: require("./Bell").default,
-  comment: require("./Comment").default,
   "chevron-left": require("./ChevronLeft").default,
+  comment: require("./Comment").default,
   ellipsis: require("./Ellipsis").default,
   eye: require("./Eye").default,
   "eye-slash": require("./EyeSlash").default,
   heart: require("./Heart").default,
   house: require("./House").default,
+  image: require("./Image").default,
+  "paper-clip": require("./PaperClip").default,
   "paper-plane": require("./PaperPlane").default,
   person: require("./Person").default,
   plus: require("./Plus").default,
