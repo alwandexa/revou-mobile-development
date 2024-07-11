@@ -1,13 +1,14 @@
 import React, {FC, useState} from "react";
 import {Image, SafeAreaView, StyleSheet, View} from "react-native";
+import Toast from "react-native-toast-message";
 
-import {useAuth} from "../contexts/AuthContext";
-import Button from "../components/molecules/Button";
-import TextField, {TextFieldState} from "../components/molecules/TextField";
 import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
+import Button from "../components/molecules/Button";
+import TextField, {TextFieldState} from "../components/molecules/TextField";
 import {COLORS} from "../constants/colors";
-import Label from "../components/molecules/Label";
+import {useAuth} from "../contexts/AuthContext";
+import CustomToast from "../components/molecules/CustomToast";
 
 export const LoginHeader = ({navigation}: {navigation: any}) => {
   return (
@@ -148,15 +149,20 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
 
     if (isEmailValid && isPasswordValid) {
       if (isCredentialValid) {
-        setLoginError("");
         login(email, getUserData());
         navigation.navigate("HomeTab");
       } else {
-        setLoginError("Email atau password salah. Silakan coba lagi.");
-
-        setTimeout(() => {
-          setLoginError("");
-        }, 3000);
+        Toast.show({
+          type: "error",
+          text1: "Email atau password salah. Silakan coba lagi.",
+          text1Style: {color: COLORS.red600},
+          // style:{ bodyContainer : {borderLeftColor: COLORS.red600} },
+          visibilityTime: 3000,
+          autoHide: true,
+          position: "bottom",
+          bottomOffset: 100,
+          // topOffset: 1000,
+        });
       }
     }
   };
@@ -164,11 +170,6 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.bodyContainer}>
       <View style={{gap: 24}}>
-        {loginError && (
-          <Label variant="tertiary" color="red">
-            {loginError}
-          </Label>
-        )}
         <TextField
           label="Email"
           placeholder="Email"
@@ -200,6 +201,7 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
         disabled={isLoginEnabled()}>
         Masuk
       </Button>
+      <CustomToast />
     </SafeAreaView>
   );
 };
