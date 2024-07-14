@@ -1,13 +1,13 @@
 import React from "react";
-import {SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {SafeAreaView, StyleSheet, View} from "react-native";
 
-import {Feed} from "../components/organism/Feed";
-import {useAuth} from "../contexts/AuthContext";
-import TextField from "../components/molecules/TextField";
-import Button from "../components/molecules/Button";
-import {COLORS} from "../constants/colors";
-import Typography from "../components/atoms/Typography";
 import {useNavigation} from "@react-navigation/native";
+import Typography from "../components/atoms/Typography";
+import Button from "../components/molecules/Button";
+import TextField from "../components/molecules/TextField";
+import {Feed} from "../components/organism/Feed";
+import {COLORS} from "../constants/colors";
+import {useAuth} from "../contexts/AuthContext";
 
 const DetailPost = () => {
   const {selectedItem} = useAuth();
@@ -16,7 +16,7 @@ const DetailPost = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <View style={{flexDirection: "row", alignItems: "center", gap: 24}}>
+        <View style={styles.titleContainer}>
           <Button
             variant="outline"
             style={{borderWidth: 0}}
@@ -49,13 +49,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.neutral100,
   },
-  bottomBar: {
-    borderTopWidth: 1,
-    borderTopColor: COLORS.neutral300,
-    padding: 16,
-    flexDirection: "row",
-    gap: 12,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -63,5 +56,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     gap: 24,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+  },
+  bottomBar: {
+    borderTopWidth: 1,
+    borderTopColor: COLORS.neutral300,
+    padding: 16,
+    flexDirection: "row",
+    gap: 12,
   },
 });
