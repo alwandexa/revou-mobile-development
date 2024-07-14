@@ -1,29 +1,32 @@
-import React, {FC, useState} from "react";
+import React, {FunctionComponent, useState} from "react";
 import {Image, SafeAreaView, StyleSheet, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
-import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
 import Button from "../components/molecules/Button";
+import CustomToast from "../components/molecules/CustomToast";
 import TextField, {TextFieldState} from "../components/molecules/TextField";
 import {COLORS} from "../constants/colors";
 import {useAuth} from "../contexts/AuthContext";
-import CustomToast from "../components/molecules/CustomToast";
 
-export const LoginHeader = ({navigation}: {navigation: any}) => {
+export const LoginHeader: FunctionComponent = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.headerContainer}>
-      <View
-        style={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-        }}>
-        <Icon name="chevron-left" />
+      <View style={styles.titleContainer}>
+        <Button
+          icon="chevron-left"
+          variant="outline"
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        />
         <Image source={require("../assets/images/ic_investly.png")} />
         <Button
           variant="link"
           size="small"
+          // @ts-ignore
           onPress={() => navigation.navigate("HomeTab")}>
           Lewati
         </Button>
@@ -42,7 +45,9 @@ export const LoginHeader = ({navigation}: {navigation: any}) => {
   );
 };
 
-const Login: FC<{navigation: any}> = ({navigation}) => {
+const Login: FunctionComponent = () => {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<TextFieldState>("default");
   const [emailMessage, setEmailMessage] = useState("");
@@ -52,8 +57,6 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
   const [passwordState, setPasswordState] = useState<TextFieldState>("default");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-
-  const [loginError, setLoginError] = useState("");
 
   const {login} = useAuth();
 
@@ -150,18 +153,17 @@ const Login: FC<{navigation: any}> = ({navigation}) => {
     if (isEmailValid && isPasswordValid) {
       if (isCredentialValid) {
         login(email, getUserData());
+        // @ts-ignore
         navigation.navigate("HomeTab");
       } else {
         Toast.show({
           type: "error",
           text1: "Email atau password salah. Silakan coba lagi.",
           text1Style: {color: COLORS.red600},
-          // style:{ bodyContainer : {borderLeftColor: COLORS.red600} },
           visibilityTime: 3000,
           autoHide: true,
           position: "bottom",
           bottomOffset: 100,
-          // topOffset: 1000,
         });
       }
     }
@@ -220,5 +222,17 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 24,
     backgroundColor: COLORS.neutral100,
+  },
+  titleContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  backButton: {
+    borderColor: COLORS.neutral100,
+    minHeight: 44,
+    minWidth: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
