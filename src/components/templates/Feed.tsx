@@ -8,8 +8,7 @@ import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
 import Label from "../molecules/Label";
 import ProtectedButton from "../molecules/ProtectedButton";
-import WithAuthInteraction from "../hoc/WithAuthInteraction";
-import {useAuth} from "../../contexts/AuthContext";
+import {useAuth, WithAuthInteraction} from "../../contexts/AuthContext";
 
 export type FeedItem = {
   avatar_url: string;

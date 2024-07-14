@@ -17,6 +17,11 @@ type AuthContextType = {
   logout: () => void;
 };
 
+export type WithAuthInteractionProps = {
+  onPress?: Function;
+  onFocus?: Function;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
@@ -70,5 +75,40 @@ export const withAuth = (WrappedComponent: FunctionComponent) => {
     }
 
     return <WrappedComponent {...props} />;
+  };
+};
+
+export const WithAuthInteraction = <P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+): React.FunctionComponent<P & WithAuthInteractionProps> => {
+  return ({onPress, onFocus, ...props}: WithAuthInteractionProps) => {
+    const {user} = useAuth();
+    const navigation = useNavigation();
+
+    const handlePress = () => {
+      if (!user) {
+        // @ts-ignore
+        navigation.navigate("Login");
+      } else if (onPress) {
+        onPress();
+      }
+    };
+
+    const handleFocus = () => {
+      if (!user) {
+        // @ts-ignore
+        navigation.navigate("Login");
+      } else if (onFocus) {
+        onFocus();
+      }
+    };
+
+    return (
+      <WrappedComponent
+        {...(props as P)}
+        onPress={handlePress}
+        onFocus={handleFocus}
+      />
+    );
   };
 };
