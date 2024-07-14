@@ -1,5 +1,6 @@
-import React, {FC, memo, useCallback, useMemo} from "react";
+import React, {FC, memo, useCallback, useEffect, useMemo} from "react";
 import {FlatList, StyleSheet} from "react-native";
+import {useRoute} from "@react-navigation/native";
 import dayjs from "dayjs";
 
 import Typography from "../components/atoms/Typography";
@@ -38,6 +39,14 @@ const HomeTerbaru: FC<HomeScreenProps> = memo(
         ),
       [feedData],
     );
+
+    const route = useRoute();
+
+    useEffect(() => {
+      if (route.params) {
+        setFeedData([...feedData, route.params as FeedItem]);
+      }
+    }, [route.params as FeedItem]);
 
     return (
       <FlatList

@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
-import React, {FunctionComponent, useEffect, useState} from "react";
+import React, {FunctionComponent, useState} from "react";
 import {
   Image,
   SafeAreaView,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation, useRoute} from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
 
 import Icon from "../components/atoms/icon/Icon";
 import Typography from "../components/atoms/Typography";
@@ -100,22 +100,14 @@ export const HomeHeader = () => {
 const Home: FunctionComponent = () => {
   const {user, avatar} = useAuth();
   const navigation = useNavigation();
-  const route = useRoute();
 
-  const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(4));
+  const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
 
   const handlePostOnPress = () => {
     // @ts-ignore
     navigation.navigate("Create Post");
   };
-
-  useEffect(() => {
-    if (route.params) {
-      console.log(route.params as FeedItem);
-      setFeedData([...feedData, route.params as FeedItem]);
-    }
-  }, [route.params as FeedItem]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -126,6 +118,8 @@ const Home: FunctionComponent = () => {
             <ProtectedTextField
               placeholder="Apa yang ingin kamu tanyakan?"
               containerStyle={{flex: 1}}
+              // @ts-ignore
+              onPress={() => navigation.navigate("Post")}
             />
           </View>
           <View style={styles.buttonRow}>
