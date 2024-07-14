@@ -152,7 +152,7 @@ const Login: FunctionComponent = () => {
 
     if (isEmailValid && isPasswordValid) {
       if (isCredentialValid) {
-        login(email, getUserData());
+        login("Alwan Wirawan", getUserData());
         // @ts-ignore
         navigation.navigate("HomeTab");
       } else {
