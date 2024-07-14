@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import Icon from "../components/atoms/icon/Icon";
-import HomeTabBar from "../components/molecules/HomeTabBar";
+import TabBar from "../components/molecules/HomeTabBar";
 import TabBarIcon from "../components/molecules/TabBarIcon";
 import {FeedItem} from "../components/organism/Feed";
 import LoginBanner from "../components/organism/LoginBanner";
@@ -87,7 +87,7 @@ const Home: FunctionComponent = () => {
         />
       </View>
       <View style={styles.tabContainer}>
-        <TopTab.Navigator tabBar={HomeTabBar}>
+        <TopTab.Navigator tabBar={TabBar}>
           <TopTab.Screen
             name="Trending"
             children={() => (

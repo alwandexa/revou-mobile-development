@@ -5,13 +5,9 @@ import {MaterialTopTabBarProps} from "@react-navigation/material-top-tabs";
 import Typography from "../atoms/Typography";
 import {COLORS} from "../../constants/colors";
 
-type HomeTabBarProps = Omit<MaterialTopTabBarProps, "insets">;
+type TabBarProps = Omit<MaterialTopTabBarProps, "insets">;
 
-const HomeTabBar: React.FC<HomeTabBarProps> = ({
-  state,
-  descriptors,
-  navigation,
-}) => {
+const TabBar: React.FC<TabBarProps> = ({state, descriptors, navigation}) => {
   return (
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
@@ -82,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeTabBar;
+export default TabBar;
