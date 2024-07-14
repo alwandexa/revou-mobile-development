@@ -1,16 +1,20 @@
-import {View, Text, StyleSheet, TextStyle} from "react-native";
+import {Text, StyleSheet, TextStyle} from "react-native";
 import React from "react";
+
+type HeadingSize =
+  | "xxlarge"
+  | "xlarge"
+  | "large"
+  | "medium"
+  | "small"
+  | "xsmall"
+  | "xxsmall";
+type ParagraphSize = "large" | "medium" | "small" | "xsmall" | "xxsmall";
+type SpecialSize = "large" | "medium" | "small" | "xsmall" | "xxsmall";
 
 type TypographyProps = {
   type: "heading" | "paragraph" | "special";
-  size:
-    | "xxlarge"
-    | "xlarge"
-    | "large"
-    | "medium"
-    | "small"
-    | "xsmall"
-    | "xxsmall";
+  size: HeadingSize | ParagraphSize | SpecialSize;
   style?: TextStyle;
   children: React.ReactNode;
 };
@@ -22,18 +26,16 @@ export default function Typography({
   children,
 }: TypographyProps) {
   const getStyle = (): TextStyle => {
-    const baseStyle = styles[type] || {};
+    const baseStyle = baseStyles[type] || {};
 
-    const sizeStyle =
-      // @ts-ignore
-      styles[`${type}${size.charAt(0).toUpperCase() + size.slice(1)}`] || {};
+    let sizeStyle: TextStyle = {};
 
-    if (Object.keys(sizeStyle).length === 0) {
-      if (__DEV__) {
-        console.warn(
-          `Style for type "${type}" and size "${size}" does not exist.`,
-        );
-      }
+    if (type === "heading" && headingSize[size as HeadingSize]) {
+      sizeStyle = headingSize[size as HeadingSize];
+    } else if (type === "paragraph" && paragraphSize[size as ParagraphSize]) {
+      sizeStyle = paragraphSize[size as ParagraphSize];
+    } else if (type === "special" && specialSize[size as SpecialSize]) {
+      sizeStyle = specialSize[size as SpecialSize];
     }
 
     return {...baseStyle, ...sizeStyle};
@@ -42,77 +44,90 @@ export default function Typography({
   return <Text style={[getStyle(), style]}>{children}</Text>;
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   heading: {
     fontWeight: "bold",
   },
-  headingXxlarge: {
-    fontSize: 28,
-    lineHeight: 36,
-  },
-  headingXlarge: {
-    fontSize: 24,
-    lineHeight: 32,
-  },
-  headingLarge: {
-    fontSize: 20,
-    lineHeight: 28,
-  },
-  headingMedium: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  headingSmall: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  headingXsmall: {
-    fontSize: 12,
-    lineHeight: 20,
-  },
-  headingXxsmall: {
-    fontSize: 10,
-    lineHeight: 18,
-  },
   paragraph: {
-    fontWeight: "regular",
-  },
-  paragraphLarge: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  paragraphMedium: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  paragraphSmall: {
-    fontSize: 12,
-    lineHeight: 20,
-  },
-  paragraphXsmall: {
-    fontSize: 10,
-    lineHeight: 18,
+    fontWeight: "normal",
   },
   special: {
     fontStyle: "italic",
   },
-  specialLarge: {
+});
+
+const headingSize = StyleSheet.create({
+  xxlarge: {
+    fontSize: 28,
+    lineHeight: 36,
+  },
+  xlarge: {
+    fontSize: 24,
+    lineHeight: 32,
+  },
+  large: {
+    fontSize: 20,
+    lineHeight: 28,
+  },
+  medium: {
     fontSize: 16,
     lineHeight: 24,
   },
-  specialMedium: {
+  small: {
     fontSize: 14,
     lineHeight: 22,
   },
-  specialSmall: {
+  xsmall: {
     fontSize: 12,
     lineHeight: 20,
   },
-  specialXsmall: {
+  xxsmall: {
     fontSize: 10,
     lineHeight: 18,
   },
-  specialXxsmall: {
+});
+
+const paragraphSize = StyleSheet.create({
+  large: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  medium: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  small: {
+    fontSize: 12,
+    lineHeight: 20,
+  },
+  xsmall: {
+    fontSize: 10,
+    lineHeight: 18,
+  },
+  xxsmall: {
+    fontSize: 8,
+    lineHeight: 12,
+  },
+});
+
+const specialSize = StyleSheet.create({
+  large: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  medium: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  small: {
+    fontSize: 12,
+    lineHeight: 20,
+  },
+  xsmall: {
+    fontSize: 10,
+    lineHeight: 18,
+  },
+  xxsmall: {
     fontSize: 8,
     lineHeight: 12,
   },
