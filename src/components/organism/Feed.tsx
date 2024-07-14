@@ -67,13 +67,15 @@ export const Feed = memo(
                 {formatRelativeTime(item.created_at)}
               </Typography>
             </View>
-            <ProtectedButton
-              icon="ellipsis"
-              variant="outline"
-              size="medium"
-              style={styles.ellipsisButton}
-              textStyle={styles.ellipsisButtonText}
-            />
+            <View>
+              <ProtectedButton
+                icon="ellipsis"
+                variant="outline"
+                size="medium"
+                style={styles.ellipsisButton}
+                textStyle={styles.ellipsisButtonText}
+              />
+            </View>
           </View>
         </View>
         <FeedContent
@@ -190,7 +192,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   name: {color: COLORS.neutral700},
-  ellipsisButton: {borderWidth: 0},
+  ellipsisButton: {
+    borderWidth: 0,
+    minWidth: 44,
+    minHeight: 44,
+    alignItems: "flex-end",
+  },
   ellipsisButtonText: {color: COLORS.neutral400},
   postContent: {gap: 4},
   postHeader: {color: COLORS.neutral700},
