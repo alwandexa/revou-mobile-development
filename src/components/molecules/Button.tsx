@@ -10,7 +10,7 @@ import {
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 import Icon, {IconName} from "../atoms/icon/Icon";
-import { WithAuthInteractionProps } from "../hoc/withAuthInteraction";
+import { WithAuthInteractionProps } from "../hoc/WithAuthInteraction";
 
 export type ButtonProps = TouchableOpacityProps & WithAuthInteractionProps & {
   variant?: "primary" | "outline" | "tertiary" | "link";

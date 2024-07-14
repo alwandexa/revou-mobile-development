@@ -8,7 +8,7 @@ import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
 import Label from "../molecules/Label";
 import ProtectedButton from "../molecules/ProtectedButton";
-import withAuthInteraction from "../hoc/withAuthInteraction";
+import WithAuthInteraction from "../hoc/WithAuthInteraction";
 import {useAuth} from "../../contexts/AuthContext";
 
 export type FeedItem = {
@@ -27,7 +27,7 @@ export type FeedItem = {
 
 const MAX_CONTENT_LENGTH = 120;
 
-const FeedContent = withAuthInteraction(
+const FeedContent = WithAuthInteraction(
   ({item, ...props}: {item: FeedItem}) => {
     const [expanded, setExpanded] = useState(false);
 

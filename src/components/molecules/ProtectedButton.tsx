@@ -1,8 +1,8 @@
 import {FunctionComponent} from "react";
-import withAuthInteraction from "../hoc/withAuthInteraction";
+import WithAuthInteraction from "../hoc/WithAuthInteraction";
 import Button, {ButtonProps} from "./Button";
 
 const ProtectedButton: FunctionComponent<ButtonProps> =
-  withAuthInteraction(Button);
+  WithAuthInteraction(Button);
 
 export default ProtectedButton;

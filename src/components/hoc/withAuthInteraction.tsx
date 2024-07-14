@@ -8,7 +8,7 @@ export type WithAuthInteractionProps = {
   onFocus?: Function;
 };
 
-const withAuthInteraction = <P extends object>(
+const WithAuthInteraction = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ): React.FunctionComponent<P & WithAuthInteractionProps> => {
   return ({onPress, onFocus, ...props}: WithAuthInteractionProps) => {
@@ -43,4 +43,4 @@ const withAuthInteraction = <P extends object>(
   };
 };
 
-export default withAuthInteraction;
+export default WithAuthInteraction;

@@ -1,6 +1,6 @@
-import withAuthInteraction from "../hoc/withAuthInteraction";
+import WithAuthInteraction from "../hoc/WithAuthInteraction";
 import TextField from "./TextField";
 
-const ProtectedTextField = withAuthInteraction(TextField);
+const ProtectedTextField = WithAuthInteraction(TextField);
 
 export default ProtectedTextField;
