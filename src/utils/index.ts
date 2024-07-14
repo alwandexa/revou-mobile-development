@@ -40,7 +40,7 @@ export const generateFeedData = (count = 5) => {
       headline: faker.person.jobTitle(),
       created_at: faker.date.recent().toISOString(),
       post_header: faker.lorem.sentence(),
-      post_content: faker.lorem.paragraph(),
+      post_content: faker.lorem.paragraph(5),
       post_topic: faker.helpers.arrayElement([
         "Investasi",
         "Sector Update",
