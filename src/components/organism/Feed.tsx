@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {StyleSheet, View, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 
@@ -25,16 +25,44 @@ export type FeedItem = {
   post_retweet: number;
 };
 
+const MAX_CONTENT_LENGTH = 120;
+
 const FeedContent = withAuthInteraction(
   ({item, ...props}: {item: FeedItem}) => {
+    const [expanded, setExpanded] = useState(false);
+
+    const toggleExpand = () => {
+      setExpanded(!expanded);
+    };
+
+    const shouldShowReadMore = item.post_content.length > MAX_CONTENT_LENGTH;
+    const displayContent = expanded
+      ? item.post_content
+      : item.post_content.slice(0, MAX_CONTENT_LENGTH) + "...";
+
     return (
       <TouchableOpacity style={styles.postContent} {...props}>
         <Typography type="heading" size="medium" style={styles.postHeader}>
           {item.post_header}
         </Typography>
-        <Typography type="paragraph" size="medium">
-          {item.post_content}
+        <Typography
+          type="paragraph"
+          size="medium"
+          style={{color: COLORS.neutral700}}>
+          {displayContent}
         </Typography>
+        {shouldShowReadMore && (
+          <TouchableOpacity
+            onPress={toggleExpand}
+            style={styles.readMoreButton}>
+            <Typography
+              type="paragraph"
+              size="medium"
+              style={styles.readMoreText}>
+              {expanded ? "Baca Lebih Sedikit" : "Baca Lebih Lanjut"}
+            </Typography>
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
     );
   },
@@ -216,5 +244,11 @@ const styles = StyleSheet.create({
     gap: 24,
     marginVertical: 24,
     alignItems: "center",
+  },
+  readMoreButton: {
+    marginTop: 8,
+  },
+  readMoreText: {
+    color: COLORS.neutral500,
   },
 });
