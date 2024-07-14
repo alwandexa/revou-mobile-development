@@ -80,7 +80,9 @@ const TextField = ({
           {...rest}
         />
         {type === "password" && (
-          <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
+          <TouchableOpacity
+            style={styles.eyeButton}
+            onPress={() => setIsVisible(!isVisible)}>
             {isVisible ? (
               <Icon
                 name="eye-slash"
@@ -120,8 +122,6 @@ const styles = StyleSheet.create({
   textFieldContainer: {
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     height: 40,
     justifyContent: "space-between",
     alignItems: "center",
@@ -131,7 +131,15 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontFamily: "Inter-Regular",
-    paddingVertical: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  eyeButton: {
+    minHeight: 44,
+    minWidth: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16,
   },
 });
 
