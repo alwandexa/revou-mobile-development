@@ -2,7 +2,7 @@ import React, {FC, memo, useCallback, useMemo} from "react";
 import {FlatList, StyleSheet} from "react-native";
 
 import Typography from "../components/atoms/Typography";
-import {FeedItem, Feed} from "../components/organism/Feed";
+import {FeedItem, Feed} from "../components/templates/Feed";
 import {COLORS} from "../constants/colors";
 import {generateFeedData} from "../utils";
 import {HomeScreenProps} from "./Home";

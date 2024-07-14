@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import {useNavigation} from "@react-navigation/native";
-import {FeedItem} from "../components/organism/Feed";
+import {FeedItem} from "../components/templates/Feed";
 
 type AuthContextType = {
   user: string | null;

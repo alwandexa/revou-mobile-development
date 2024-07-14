@@ -13,7 +13,7 @@ import Typography from "../components/atoms/Typography";
 import Button from "../components/molecules/Button";
 import TextField from "../components/molecules/TextField";
 import {COLORS} from "../constants/colors";
-import {FeedItem} from "../components/organism/Feed";
+import {FeedItem} from "../components/templates/Feed";
 import {useAuth} from "../contexts/AuthContext";
 
 const CreatePost: FunctionComponent = () => {

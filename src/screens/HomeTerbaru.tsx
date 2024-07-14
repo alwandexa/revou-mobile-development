@@ -4,7 +4,7 @@ import {useRoute} from "@react-navigation/native";
 import dayjs from "dayjs";
 
 import Typography from "../components/atoms/Typography";
-import {FeedItem, Feed} from "../components/organism/Feed";
+import {FeedItem, Feed} from "../components/templates/Feed";
 import {COLORS} from "../constants/colors";
 import {generateFeedData} from "../utils";
 import {HomeScreenProps} from "./Home";

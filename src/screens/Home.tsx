@@ -13,7 +13,7 @@ import {
 import Icon from "../components/atoms/icon/Icon";
 import TabBar from "../components/molecules/TabBar";
 import TabBarIcon from "../components/molecules/TabBarIcon";
-import {FeedItem} from "../components/organism/Feed";
+import {FeedItem} from "../components/templates/Feed";
 import LoginBanner from "../components/organism/LoginBanner";
 import PostInput from "../components/organism/PostInput";
 import {COLORS} from "../constants/colors";

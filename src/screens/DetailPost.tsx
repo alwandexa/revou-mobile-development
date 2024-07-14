@@ -5,7 +5,7 @@ import {useNavigation} from "@react-navigation/native";
 import Typography from "../components/atoms/Typography";
 import Button from "../components/molecules/Button";
 import TextField from "../components/molecules/TextField";
-import {Feed} from "../components/organism/Feed";
+import {Feed} from "../components/templates/Feed";
 import {COLORS} from "../constants/colors";
 import {useAuth} from "../contexts/AuthContext";
 
