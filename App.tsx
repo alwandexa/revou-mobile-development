@@ -1,17 +1,17 @@
-import React, {FC} from "react";
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import React, { FunctionComponent } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import {AuthProvider} from "./src/contexts/AuthContext";
-import {HomeTab} from "./src/screens/Home";
-import Login, {LoginHeader} from "./src/screens/Login";
-import Onboarding from "./src/screens/Onboarding";
-import DetailPost from "./src/screens/DetailPost";
+import { AuthProvider } from "./src/contexts/AuthContext";
 import CreatePost from "./src/screens/CreatePost";
+import DetailPost from "./src/screens/DetailPost";
+import { HomeTab } from "./src/screens/Home";
+import Login, { LoginHeader } from "./src/screens/Login";
+import Onboarding from "./src/screens/Onboarding";
 
 const Stack = createNativeStackNavigator();
 
-const App: FC = () => {
+const App: FunctionComponent = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
