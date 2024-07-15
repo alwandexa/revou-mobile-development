@@ -1,79 +1,62 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Social Media App with React Native
 
-# Getting Started
+## Project Description
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+This project is a simple social media app built using React Native. It features a Login page, Home page, Detail post page, and Create post page. The app demonstrates proficiency in React Native layouts, components, state management, routing, and performance optimization.
 
-## Step 1: Start the Metro Server
+## Features
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- **Onboarding Page**: 
+  - Pixel-perfect UI with 3 scrollable illustrations
+  - Dynamic button label based on scroll position
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- **Login Page**:
+  - Email and password validation
+  - Toggle password visibility
+  - Conditional navigation based on credentials
 
-```bash
-# using npm
-npm start
+- **Home Page**:
+  - Guest and Logged-in modes
+  - Display of 100 dummy posts
+  - "Trending" and "Terbaru" tabs with different sorting
+  - Infinite scroll with refresh functionality
 
-# OR using Yarn
-yarn start
-```
+- **Design System**:
+  - Implemented based on provided Figma designs
+  - Includes color palette, typography, avatars, buttons, text fields, labels, and icons
+  - Structured using Atomic Design principles
 
-## Step 2: Start your Application
+- **Performance Optimization**:
+  - Utilizes memo, useCallback, and useMemo
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+- **Routing**:
+  - Navigation between Onboarding, Login, and Home screens
 
-### For Android
+## Technical Stack
 
-```bash
-# using npm
-npm run android
+- React Native
+- React Navigation
+- Faker.js (for generating dummy data)
 
-# OR using Yarn
-yarn android
-```
+## Installation
 
-### For iOS
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npx react-native run-android` or `npx react-native run-ios` to start the app
 
-```bash
-# using npm
-npm run ios
+## Usage
 
-# OR using Yarn
-yarn ios
-```
+- Launch the app to view the Onboarding screen
+- Navigate through the Login process
+- Explore the Home page in both Guest and Logged-in modes
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## Best Practices Implemented
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+- React and React Native best practices
+- Performance optimization techniques
+- Reusable component design
+- Clean and maintainable code structure
 
-## Step 3: Modifying your App
+## Demo
 
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+A demo video showcasing the app's functionalities, best practices, and performance optimizations will be added.
