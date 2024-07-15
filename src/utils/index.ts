@@ -1,4 +1,4 @@
-import {faker, tr} from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 

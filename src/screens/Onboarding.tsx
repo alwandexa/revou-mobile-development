@@ -7,17 +7,13 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
+import {useNavigation} from "@react-navigation/native";
+
 import Typography from "../components/atoms/Typography";
 import Button from "../components/molecules/Button";
 import {COLORS} from "../constants/colors";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-
-type OnboardingList = {
-  title: string;
-  description: string;
-  image: string;
-};
 
 const onboardingData = [
   {
@@ -40,7 +36,8 @@ const onboardingData = [
   },
 ];
 
-const Onboarding = ({navigation}: {navigation: any}) => {
+const Onboarding = () => {
+  const navigation = useNavigation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
@@ -68,6 +65,7 @@ const Onboarding = ({navigation}: {navigation: any}) => {
       return;
     }
 
+    // @ts-ignore
     navigation.navigate("Login");
   };
 

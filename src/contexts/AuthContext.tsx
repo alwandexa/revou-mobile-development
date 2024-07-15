@@ -1,3 +1,4 @@
+import {useNavigation} from "@react-navigation/native";
 import React, {
   createContext,
   FunctionComponent,
@@ -5,7 +6,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {useNavigation} from "@react-navigation/native";
 import {FeedItem} from "../components/templates/Feed";
 
 type AuthContextType = {
@@ -82,7 +82,9 @@ export const WithAuthInteraction = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ): React.FunctionComponent<P & WithAuthInteractionProps> => {
   return ({onPress, onFocus, ...props}: WithAuthInteractionProps) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const {user} = useAuth();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigation = useNavigation();
 
     const handlePress = () => {

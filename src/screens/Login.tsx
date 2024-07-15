@@ -1,6 +1,6 @@
+import {useNavigation} from "@react-navigation/native";
 import React, {FunctionComponent, useState} from "react";
 import {Image, SafeAreaView, StyleSheet, View} from "react-native";
-import {useNavigation} from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 import Typography from "../components/atoms/Typography";

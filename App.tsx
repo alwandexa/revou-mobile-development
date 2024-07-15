@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, {FunctionComponent} from "react";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
-import { AuthProvider } from "./src/contexts/AuthContext";
+import {AuthProvider} from "./src/contexts/AuthContext";
 import CreatePost from "./src/screens/CreatePost";
 import DetailPost from "./src/screens/DetailPost";
-import { HomeTab } from "./src/screens/Home";
-import Login, { LoginHeader } from "./src/screens/Login";
+import {HomeTab} from "./src/screens/Home";
+import Login, {LoginHeader} from "./src/screens/Login";
 import Onboarding from "./src/screens/Onboarding";
 
 const Stack = createNativeStackNavigator();

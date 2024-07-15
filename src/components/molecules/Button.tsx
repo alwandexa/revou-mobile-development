@@ -10,19 +10,20 @@ import {
 import {COLORS} from "../../constants/colors";
 import Typography from "../atoms/Typography";
 import Icon, {IconName} from "../atoms/icon/Icon";
-import { WithAuthInteractionProps } from "../../contexts/AuthContext";
+import {WithAuthInteractionProps} from "../../contexts/AuthContext";
 
-export type ButtonProps = TouchableOpacityProps & WithAuthInteractionProps & {
-  variant?: "primary" | "outline" | "tertiary" | "link";
-  size?: "large" | "medium" | "small";
-  type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
-  icon?: IconName;
-  iconPosition?: "left" | "right";
-  iconColor?: string;
-  textStyle?: TextStyle;
-  customStyle?: ViewStyle;
-  children?: React.ReactNode;
-};
+export type ButtonProps = TouchableOpacityProps &
+  WithAuthInteractionProps & {
+    variant?: "primary" | "outline" | "tertiary" | "link";
+    size?: "large" | "medium" | "small";
+    type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
+    icon?: IconName;
+    iconPosition?: "left" | "right";
+    iconColor?: string;
+    textStyle?: TextStyle;
+    customStyle?: ViewStyle;
+    children?: React.ReactNode;
+  };
 
 type ButtonTextSize = "medium" | "small" | "xsmall";
 

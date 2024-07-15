@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View} from "react-native";
 import React, {FunctionComponent} from "react";
+import {View} from "react-native";
 
-import Icon, {IconName} from "../atoms/icon/Icon";
-import Typography from "../atoms/Typography";
 import {COLORS} from "../../constants/colors";
+import Typography from "../atoms/Typography";
+import Icon, {IconName} from "../atoms/icon/Icon";
 
 export type TabBarIconProps = {
   name: IconName;

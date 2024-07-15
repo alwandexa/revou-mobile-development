@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, {SvgProps, Path, Rect, G, Defs, ClipPath} from "react-native-svg";
+import Svg, {ClipPath, Defs, G, Path, SvgProps} from "react-native-svg";
 
 const QuestionCircle = ({width, height, fill, ...props}: SvgProps) => (
   <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>

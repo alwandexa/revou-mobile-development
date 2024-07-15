@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, {SvgProps, G, Path, Defs, ClipPath} from "react-native-svg";
 
 const ArrowDown = ({width, height, fill, ...props}: SvgProps) => (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <G clipPath="url(#a)">
       <Path
         fill={fill}

@@ -1,5 +1,4 @@
 import React from "react";
-import {StyleSheet} from "react-native";
 
 import {COLORS} from "../../../constants/colors";
 
@@ -67,5 +66,3 @@ const Icon = ({
 };
 
 export default Icon;
-
-const styles = StyleSheet.create({});
