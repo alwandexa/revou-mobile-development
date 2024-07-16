@@ -53,7 +53,7 @@ const CreatePost: FunctionComponent = () => {
       post_retweet: 0,
     };
 
-    navigation.navigate("Terbaru" as never, feed as never);
+    navigation.navigate("Home" as never, feed as never);
   };
 
   return (

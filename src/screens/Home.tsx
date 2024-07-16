@@ -1,7 +1,17 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
-import {NavigationProp, useNavigation} from "@react-navigation/native";
-import React, {FunctionComponent, useCallback, useMemo, useState} from "react";
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {FlatList, Image, SafeAreaView, StyleSheet, View} from "react-native";
 import dayjs from "dayjs";
 
@@ -81,6 +91,16 @@ const Home: FunctionComponent = () => {
     setFeedData(newFeed);
     setRefreshing(false);
   }, [setRefreshing, setFeedData]);
+
+  const route = useRoute();
+
+  useEffect(() => {
+    if (route.params) {
+      const newFeedItem = route.params as FeedItem;
+      setFeedData(prevFeedData => [newFeedItem, ...prevFeedData]);
+      navigation.navigate("Terbaru");
+    }
+  }, [navigation, route.params]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
