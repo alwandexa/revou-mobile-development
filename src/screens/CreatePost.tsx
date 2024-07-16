@@ -9,12 +9,11 @@ import {
 import {useNavigation} from "@react-navigation/native";
 import dayjs from "dayjs";
 
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import TextField from "../components/molecules/TextField";
-import {COLORS} from "../constants/colors";
-import {FeedItem} from "../components/templates/Feed";
-import {useAuth} from "../contexts/AuthContext";
+import {useAuth} from "@contexts/AuthContext";
+import {Typography} from "@components/atoms";
+import {FeedItem} from "@components/templates/Feed";
+import {Button, TextField} from "@components/molecules";
+import {COLORS} from "@constants/colors";
 
 const CreatePost: FunctionComponent = () => {
   const {user} = useAuth();

@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from "react";
 import {Image, SafeAreaView, StyleSheet} from "react-native";
 
-import Typography from "../components/atoms/Typography";
-import {COLORS} from "../constants/colors";
-import {WithAuth} from "../contexts/AuthContext";
+import {Colors} from "react-native/Libraries/NewAppScreen";
+import {Typography} from "@components/atoms";
+import {WithAuth} from "@contexts/AuthContext";
 
 const Profil: FunctionComponent = () => {
   return (
@@ -12,7 +12,7 @@ const Profil: FunctionComponent = () => {
       <Typography
         type="heading"
         size="xxlarge"
-        style={{color: COLORS.neutral700}}>
+        style={{color: Colors.neutral700}}>
         Coming soon
       </Typography>
     </SafeAreaView>

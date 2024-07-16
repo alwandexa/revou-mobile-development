@@ -8,10 +8,9 @@ import {
   Dimensions,
 } from "react-native";
 import {useNavigation} from "@react-navigation/native";
-
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import {COLORS} from "../constants/colors";
+import {Typography} from "@components/atoms";
+import {Button} from "@components/molecules";
+import {COLORS} from "@constants/colors";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20, // Add some space between FlatList and indicators
+    marginTop: 20,
   },
   indicator: {
     height: 8,
