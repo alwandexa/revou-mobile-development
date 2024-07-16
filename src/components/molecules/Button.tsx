@@ -16,7 +16,6 @@ export type ButtonProps = TouchableOpacityProps &
   WithAuthInteractionProps & {
     variant?: "primary" | "outline" | "tertiary" | "link";
     size?: "large" | "medium" | "small";
-    type?: "text-only" | "icon-left" | "icon-right" | "icon-only";
     icon?: IconName;
     iconPosition?: "left" | "right";
     iconColor?: string;
@@ -39,21 +38,26 @@ const Button = ({
   children,
   ...props
 }: ButtonProps) => {
-  const getButtonStyles = () => {
-    const sizeStyle = sizeStyles[size] || {};
-    const typeStyle = typeStyles[variant] || {};
+  const getSizeStyle = (): ViewStyle => {
+    return sizeStyles[size] || {};
+  };
 
-    let iconStyle = {};
+  const getTypeStyle = (): ViewStyle => {
+    return variantStyles[variant] || {};
+  };
+
+  const getIconStyle = (): ViewStyle => {
     if (!children && icon) {
-      iconStyle = {width: sizeStyle.height};
+      return {width: sizeStyles[size].height};
     }
+    return {};
+  };
 
+  const getDisabledStyle = (): ViewStyle => {
     if (disabled) {
-      const disabledButtonStyle = disabledButtonStyles[variant] || {};
-      return {...disabledButtonStyle, ...sizeStyle, ...iconStyle};
+      return disabledButtonStyles[variant] || {};
     }
-
-    return {...typeStyle, ...sizeStyle, ...iconStyle};
+    return {};
   };
 
   const getTextStyle = () => {
@@ -89,7 +93,14 @@ const Button = ({
 
   return (
     <TouchableOpacity
-      style={[typeStyles.button, getButtonStyles(), customStyle]}
+      style={[
+        variantStyles.button,
+        getTypeStyle(),
+        getSizeStyle(),
+        getIconStyle(),
+        getDisabledStyle(),
+        customStyle,
+      ]}
       disabled={disabled}
       {...props}>
       {icon && iconPosition === "left" && (
@@ -122,7 +133,7 @@ const Button = ({
 
 export default Button;
 
-const typeStyles = StyleSheet.create({
+const variantStyles = StyleSheet.create({
   button: {
     borderRadius: 32,
     flexDirection: "row",
