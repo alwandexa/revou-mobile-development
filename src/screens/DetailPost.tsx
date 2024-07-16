@@ -7,7 +7,7 @@ import Button from "../components/molecules/Button";
 import TextField from "../components/molecules/TextField";
 import {Feed} from "../components/templates/Feed";
 import {COLORS} from "../constants/colors";
-import {useAuth} from "../contexts/AuthContext";
+import {useAuth, WithAuth} from "../contexts/AuthContext";
 
 const DetailPost = () => {
   const {selectedItem} = useAuth();
@@ -42,7 +42,7 @@ const DetailPost = () => {
   );
 };
 
-export default DetailPost;
+export default WithAuth(DetailPost);
 
 const styles = StyleSheet.create({
   container: {

@@ -6,6 +6,8 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import {ActivityIndicator, View} from "react-native";
+
 import {FeedItem} from "../components/templates/Feed";
 
 type AuthContextType = {
@@ -58,24 +60,45 @@ export const useAuth = () => {
   return context;
 };
 
-export const withAuth = (WrappedComponent: FunctionComponent) => {
-  return (props: any) => {
+export const WithAuth = (WrappedComponent: React.ComponentType<any>) => {
+  // This is the wrapper component that uses hooks
+  const AuthWrapper: React.FC<any> = props => {
     const {user} = useAuth();
     const navigation = useNavigation();
+    const [isChecking, setIsChecking] = useState(true);
 
     useEffect(() => {
-      if (!user) {
-        // @ts-ignore
-        navigation.navigate("Login");
-      }
+      const checkAuthAndNavigate = async () => {
+        // Simulate a brief delay to allow for any necessary data fetching
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (!user) {
+          navigation.navigate("Login" as never);
+        }
+
+        setIsChecking(false);
+      };
+
+      checkAuthAndNavigate();
     }, [user, navigation]);
 
+    if (isChecking) {
+      return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
+
     if (!user) {
-      return null;
+      return null; // Don't render anything if there's no user
     }
 
     return <WrappedComponent {...props} />;
   };
+
+  // This is the HOC that returns our wrapper
+  return (props: any) => <AuthWrapper {...props} />;
 };
 
 export const WithAuthInteraction = <P extends object>(

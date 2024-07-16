@@ -1,14 +1,14 @@
-import React, {memo, useState} from "react";
-import {StyleSheet, View, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import React, {memo, useState} from "react";
+import {StyleSheet, TouchableOpacity, View} from "react-native";
 
 import {COLORS} from "../../constants/colors";
+import {useAuth} from "../../contexts/AuthContext";
 import {formatRelativeTime} from "../../utils";
 import Typography from "../atoms/Typography";
 import Avatar from "../molecules/Avatar";
 import Label from "../molecules/Label";
 import ProtectedButton from "../molecules/ProtectedButton";
-import {useAuth, WithAuthInteraction} from "../../contexts/AuthContext";
 
 export type FeedItem = {
   avatar_url: string;
@@ -26,46 +26,42 @@ export type FeedItem = {
 
 const MAX_CONTENT_LENGTH = 120;
 
-const FeedContent = WithAuthInteraction(
-  ({item, ...props}: {item: FeedItem}) => {
-    const [expanded, setExpanded] = useState(false);
+const FeedContent = ({item, ...props}: {item: FeedItem}) => {
+  const [expanded, setExpanded] = useState(false);
 
-    const toggleExpand = () => {
-      setExpanded(!expanded);
-    };
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
 
-    const shouldShowReadMore = item.post_content.length > MAX_CONTENT_LENGTH;
-    const displayContent = expanded
-      ? item.post_content
-      : item.post_content.slice(0, MAX_CONTENT_LENGTH) + "...";
+  const shouldShowReadMore = item.post_content.length > MAX_CONTENT_LENGTH;
+  const displayContent = expanded
+    ? item.post_content
+    : item.post_content.slice(0, MAX_CONTENT_LENGTH) + "...";
 
-    return (
-      <TouchableOpacity style={styles.postContent} {...props}>
-        <Typography type="heading" size="medium" style={styles.postHeader}>
-          {item.post_header}
-        </Typography>
-        <Typography
-          type="paragraph"
-          size="medium"
-          style={{color: COLORS.neutral700}}>
-          {displayContent}
-        </Typography>
-        {shouldShowReadMore && (
-          <TouchableOpacity
-            onPress={toggleExpand}
-            style={styles.readMoreButton}>
-            <Typography
-              type="paragraph"
-              size="medium"
-              style={styles.readMoreText}>
-              {expanded ? "Baca Lebih Sedikit" : "Baca Lebih Lanjut"}
-            </Typography>
-          </TouchableOpacity>
-        )}
-      </TouchableOpacity>
-    );
-  },
-);
+  return (
+    <View style={styles.postContent} {...props}>
+      <Typography type="heading" size="medium" style={styles.postHeader}>
+        {item.post_header}
+      </Typography>
+      <Typography
+        type="paragraph"
+        size="medium"
+        style={{color: COLORS.neutral700}}>
+        {displayContent}
+      </Typography>
+      {shouldShowReadMore && (
+        <TouchableOpacity onPress={toggleExpand} style={styles.readMoreButton}>
+          <Typography
+            type="paragraph"
+            size="medium"
+            style={styles.readMoreText}>
+            {expanded ? "Baca Lebih Sedikit" : "Baca Lebih Lanjut"}
+          </Typography>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
 
 export const Feed = memo(
   ({item}: {item: FeedItem}) => {
@@ -79,7 +75,9 @@ export const Feed = memo(
     };
 
     return (
-      <View style={styles.postContainer}>
+      <TouchableOpacity
+        style={styles.postContainer}
+        onPress={() => handleFeedContentClicked(item)}>
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Avatar size="large" source={{uri: item.avatar_url}} />
@@ -105,10 +103,7 @@ export const Feed = memo(
             </View>
           </View>
         </View>
-        <FeedContent
-          item={item}
-          onPress={() => handleFeedContentClicked(item)}
-        />
+        <FeedContent item={item} />
         <View style={styles.footer}>
           <Label variant="tertiary" color="green">
             {item.post_topic}
@@ -133,9 +128,9 @@ export const Feed = memo(
               variant="link"
               size="medium"
               icon="arrow-down"
-              style={styles.downvoteButton}
-              textStyle={styles.actionButtonText}
-            />
+              textStyle={styles.actionButtonText}>
+              {" "}
+            </ProtectedButton>
           </View>
           <ProtectedButton
             variant="link"
@@ -164,7 +159,7 @@ export const Feed = memo(
             </Typography>
           </ProtectedButton>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   },
   (prevProps, nextProps) => prevProps.item === nextProps.item,
@@ -174,10 +169,6 @@ const styles = StyleSheet.create({
   postContainer: {
     backgroundColor: COLORS.neutral100,
     padding: 16,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
     gap: 12,
     marginTop: 1,
   },
