@@ -7,10 +7,10 @@ import {
   ViewStyle,
 } from "react-native";
 
-import {COLORS} from "../../constants/colors";
-import Typography from "../atoms/Typography";
-import Icon, {IconName} from "../atoms/icon/Icon";
-import {WithAuthInteractionProps} from "../../contexts/AuthContext";
+import {Typography} from "@components/atoms";
+import Icon, {IconName} from "@components/atoms/Icon/Icon";
+import {COLORS} from "@constants/colors";
+import {WithAuthInteractionProps} from "contexts/AuthContext";
 
 export type ButtonProps = TouchableOpacityProps &
   WithAuthInteractionProps & {

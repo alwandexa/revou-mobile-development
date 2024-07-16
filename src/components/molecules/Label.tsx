@@ -1,8 +1,8 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
 
-import {COLORS} from "../../constants/colors";
-import Typography from "../atoms/Typography";
+import {Typography} from "@components/atoms";
+import {COLORS} from "@constants/colors";
 
 interface LabelProps {
   variant?: "primary" | "outline" | "tertiary";

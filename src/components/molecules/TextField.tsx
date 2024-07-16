@@ -8,9 +8,8 @@ import {
   ViewStyle,
 } from "react-native";
 
-import {COLORS} from "../../constants/colors";
-import Typography from "../atoms/Typography";
-import Icon from "../atoms/icon/Icon";
+import {COLORS} from "@constants/colors";
+import {Icon, Typography} from "@components/atoms";
 
 export type TextFieldState =
   | "default"

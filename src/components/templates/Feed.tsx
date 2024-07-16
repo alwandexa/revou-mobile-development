@@ -63,7 +63,7 @@ const FeedContent = ({item, ...props}: {item: FeedItem}) => {
   );
 };
 
-export const Feed = memo(
+const Feed = memo(
   ({item}: {item: FeedItem}) => {
     const {setSelectedItem} = useAuth();
     const navigation = useNavigation();
@@ -164,6 +164,8 @@ export const Feed = memo(
   },
   (prevProps, nextProps) => prevProps.item === nextProps.item,
 );
+
+export default Feed;
 
 const styles = StyleSheet.create({
   postContainer: {

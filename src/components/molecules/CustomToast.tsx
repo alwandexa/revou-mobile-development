@@ -6,8 +6,7 @@ import Toast, {
   ToastConfig,
 } from "react-native-toast-message";
 
-import {COLORS} from "../../constants/colors";
-
+import {COLORS} from "@constants/colors";
 interface ToastStyles {
   borderLeftColor: string;
   backgroundColor: string;
