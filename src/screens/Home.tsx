@@ -1,47 +1,44 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import React, {FunctionComponent, useState} from "react";
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, {FunctionComponent, useCallback, useMemo, useState} from "react";
+import {FlatList, Image, SafeAreaView, StyleSheet, View} from "react-native";
+import dayjs from "dayjs";
 
-import Icon from "../components/atoms/icon/Icon";
+import Typography from "../components/atoms/Typography";
+import Button from "../components/molecules/Button";
 import TabBar from "../components/molecules/TabBar";
 import TabBarIcon from "../components/molecules/TabBarIcon";
-import {FeedItem} from "../components/templates/Feed";
 import LoginBanner from "../components/organism/LoginBanner";
 import PostInput from "../components/organism/PostInput";
+import {Feed, FeedItem} from "../components/templates/Feed";
 import {COLORS} from "../constants/colors";
 import {useAuth} from "../contexts/AuthContext";
 import {generateFeedData} from "../utils";
-import HomeTerbaru from "./HomeTerbaru";
-import HomeTrending from "./HomeTrending";
 import Profil from "./Profil";
-
-export type HomeScreenProps = {
-  feedData: FeedItem[];
-  refreshing: boolean;
-  setFeedData: React.Dispatch<React.SetStateAction<FeedItem[]>>;
-  setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const TopTab = createMaterialTopTabNavigator();
 const BottomTab = createBottomTabNavigator();
 
-export const HomeTab: FunctionComponent = () => (
+type TabBarIconProps = {
+  focused: boolean;
+};
+
+const homeTabBarIcon = ({focused}: TabBarIconProps) => (
+  <TabBarIcon name="house" label="Home" focused={focused} />
+);
+
+const profilTabBarIcon = ({focused}: TabBarIconProps) => (
+  <TabBarIcon name="person" label="Profil" focused={focused} />
+);
+
+export const HomeTab: React.FC = () => (
   <BottomTab.Navigator screenOptions={{tabBarShowLabel: false}}>
     <BottomTab.Screen
       name="Home"
       component={Home}
       options={{
-        tabBarIcon: ({focused}) => (
-          <TabBarIcon name="house" label="Home" focused={focused} />
-        ),
+        tabBarIcon: homeTabBarIcon,
         headerShown: false,
       }}
     />
@@ -49,9 +46,7 @@ export const HomeTab: FunctionComponent = () => (
       name="Profil"
       component={Profil}
       options={{
-        tabBarIcon: ({focused}) => (
-          <TabBarIcon name="person" label="Profil" focused={focused} />
-        ),
+        tabBarIcon: profilTabBarIcon,
         headerShown: false,
       }}
     />
@@ -69,15 +64,37 @@ const Home: FunctionComponent = () => {
     navigation.navigate("Create Post");
   };
 
+  const FeedFooter = useMemo(
+    () => (
+      <Typography type="paragraph" size="small" style={styles.footerText}>
+        Semua feed sudah kamu lihat 🎉
+      </Typography>
+    ),
+    [],
+  );
+
+  const keyExtractor = useCallback(
+    (item: FeedItem, index: number) => index.toString(),
+    [],
+  );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const newFeed = generateFeedData(100);
+    setFeedData(newFeed);
+    setRefreshing(false);
+  }, [setRefreshing, setFeedData]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <Image source={require("../assets/images/investly-logo.png")} />
-        <View style={{flexDirection: "row"}}>
-          <TouchableOpacity>
-            <Icon name="bell" fill={COLORS.purple600} />
-          </TouchableOpacity>
-        </View>
+        <Button
+          icon="bell"
+          variant="outline"
+          size="large"
+          customStyle={styles.bellButton}
+        />
       </View>
       <View style={styles.modalContainer}>
         <PostInput
@@ -91,22 +108,32 @@ const Home: FunctionComponent = () => {
           <TopTab.Screen
             name="Trending"
             children={() => (
-              <HomeTrending
-                feedData={feedData}
+              <FlatList
+                data={[...feedData].sort(
+                  (a, b) => b.post_upvote - a.post_upvote,
+                )}
                 refreshing={refreshing}
-                setFeedData={setFeedData}
-                setRefreshing={setRefreshing}
+                onRefresh={onRefresh}
+                renderItem={({item}) => <Feed item={item} />}
+                keyExtractor={keyExtractor}
+                ListFooterComponent={FeedFooter}
+                ListFooterComponentStyle={styles.listFooter}
               />
             )}
           />
           <TopTab.Screen
             name="Terbaru"
             children={() => (
-              <HomeTerbaru
-                feedData={feedData}
+              <FlatList
+                data={[...feedData].sort((a, b) =>
+                  dayjs(b.created_at).diff(dayjs(a.created_at)),
+                )}
                 refreshing={refreshing}
-                setFeedData={setFeedData}
-                setRefreshing={setRefreshing}
+                onRefresh={onRefresh}
+                renderItem={({item}) => <Feed item={item} />}
+                keyExtractor={keyExtractor}
+                ListFooterComponent={FeedFooter}
+                ListFooterComponentStyle={styles.listFooter}
               />
             )}
           />
@@ -124,10 +151,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
     justifyContent: "space-between",
+    alignItems: "center",
     flexDirection: "row",
     backgroundColor: COLORS.neutral100,
+  },
+  bellButton: {
+    width: 44,
+    height: 44,
+    borderWidth: 0,
   },
   modalContainer: {
     padding: 10,
@@ -136,5 +170,11 @@ const styles = StyleSheet.create({
   tabContainer: {
     flex: 1,
     backgroundColor: COLORS.neutral100,
+  },
+  footerText: {color: COLORS.neutral500},
+  listFooter: {
+    gap: 24,
+    marginVertical: 24,
+    alignItems: "center",
   },
 });
