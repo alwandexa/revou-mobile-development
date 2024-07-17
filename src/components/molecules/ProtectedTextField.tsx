@@ -1,4 +1,4 @@
-import {WithAuthInteraction} from "../../contexts/AuthContext";
+import {WithAuthInteraction} from "@contexts/AuthContext";
 import TextField from "./TextField";
 
 const ProtectedTextField = WithAuthInteraction(TextField);

@@ -18,7 +18,7 @@ const DetailPost = () => {
         <View style={styles.titleContainer}>
           <Button
             variant="outline"
-            style={{borderWidth: 0}}
+            style={styles.backButton}
             icon="chevron-left"
             onPress={() => navigation.goBack()}
           />
@@ -30,11 +30,14 @@ const DetailPost = () => {
           </Typography>
         </View>
       </View>
-      <View style={{flex: 1}}>
+      <View style={styles.feedContainer}>
         <Feed item={selectedItem} />
       </View>
       <View style={styles.bottomBar}>
-        <TextField placeholder="Ketik disini" containerStyle={{flex: 1}} />
+        <TextField
+          placeholder="Ketik disini"
+          containerStyle={styles.textFieldContainer}
+        />
         <Button variant="primary" size="medium" icon="paper-plane" disabled />
       </View>
     </SafeAreaView>
@@ -56,11 +59,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     gap: 24,
   },
+  backButton: {borderWidth: 0},
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 24,
   },
+  feedContainer: {flex: 1},
+  textFieldContainer: {flex: 1},
   bottomBar: {
     borderTopWidth: 1,
     borderTopColor: COLORS.neutral300,

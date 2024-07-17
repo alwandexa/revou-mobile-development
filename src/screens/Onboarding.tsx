@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {FunctionComponent, useRef, useState} from "react";
 import {
   View,
   SafeAreaView,
@@ -35,7 +35,7 @@ const onboardingData = [
   },
 ];
 
-const Onboarding = () => {
+const Onboarding: FunctionComponent = () => {
   const navigation = useNavigation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);

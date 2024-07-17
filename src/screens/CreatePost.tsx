@@ -59,10 +59,10 @@ const CreatePost: FunctionComponent = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <View style={{flexDirection: "row", alignItems: "center", gap: 24}}>
+        <View style={styles.leftHeader}>
           <Button
             variant="outline"
-            style={{borderWidth: 0}}
+            style={styles.backButton}
             icon="chevron-left"
             onPress={() => navigation.goBack()}
           />
@@ -76,7 +76,7 @@ const CreatePost: FunctionComponent = () => {
         <Button
           variant="primary"
           size="small"
-          customStyle={{minWidth: 59}}
+          customStyle={styles.postButton}
           disabled={topic && title && description ? false : true}
           onPress={handlePost}>
           Post
@@ -137,6 +137,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     gap: 24,
   },
+  leftHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+  },
+  backButton: {borderWidth: 0},
+  postButton: {minWidth: 59},
   contentHolder: {
     flex: 1,
     gap: 24,

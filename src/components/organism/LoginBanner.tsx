@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from "react";
 import {Image, StyleSheet, View} from "react-native";
 
-import {COLORS} from "../../constants/colors";
-import Typography from "../atoms/Typography";
-import ProtectedButton from "../molecules/ProtectedButton";
+import {Typography} from "@components/atoms";
+import {ProtectedButton} from "@components/molecules";
+import {COLORS} from "@constants/colors";
 
 const LoginBanner: FunctionComponent = () => (
   <View style={styles.loginBanner}>

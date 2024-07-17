@@ -66,8 +66,8 @@ const Feed = memo(
     const {setSelectedItem} = useAuth();
     const navigation = useNavigation();
 
-    const handleFeedContentClicked = (item: FeedItem) => {
-      setSelectedItem(item);
+    const handleFeedContentClicked = (currentItem: FeedItem) => {
+      setSelectedItem(currentItem);
       // @ts-ignore
       navigation.navigate("Post");
     };
