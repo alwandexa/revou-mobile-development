@@ -2,8 +2,8 @@ import React from "react";
 import {View, TouchableOpacity, StyleSheet} from "react-native";
 import {MaterialTopTabBarProps} from "@react-navigation/material-top-tabs";
 
-import Typography from "../atoms/Typography";
-import {COLORS} from "../../constants/colors";
+import {Typography} from "@components/atoms";
+import {COLORS} from "@constants/colors";
 
 type TabBarProps = Omit<MaterialTopTabBarProps, "insets">;
 
@@ -16,8 +16,8 @@ const TabBar: React.FC<TabBarProps> = ({state, descriptors, navigation}) => {
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 

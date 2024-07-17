@@ -2,12 +2,11 @@ import React from "react";
 import {SafeAreaView, StyleSheet, View} from "react-native";
 
 import {useNavigation} from "@react-navigation/native";
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import TextField from "../components/molecules/TextField";
-import {Feed} from "../components/templates/Feed";
-import {COLORS} from "../constants/colors";
-import {useAuth, WithAuth} from "../contexts/AuthContext";
+import {WithAuth, useAuth} from "@contexts/AuthContext";
+import {Button, TextField} from "@components/molecules";
+import {Typography} from "@components/atoms";
+import {Feed} from "@components/templates";
+import {COLORS} from "@constants/colors";
 
 const DetailPost = () => {
   const {selectedItem} = useAuth();

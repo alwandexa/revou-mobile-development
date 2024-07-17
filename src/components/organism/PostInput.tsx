@@ -1,11 +1,12 @@
 import React, {FunctionComponent} from "react";
 import {NavigationProp} from "@react-navigation/native";
 import {StyleSheet, View} from "react-native";
-
-import {COLORS} from "../../constants/colors";
-import Avatar from "../molecules/Avatar";
-import ProtectedButton from "../molecules/ProtectedButton";
-import ProtectedTextField from "../molecules/ProtectedTextField";
+import {
+  Avatar,
+  ProtectedButton,
+  ProtectedTextField,
+} from "@components/molecules";
+import {COLORS} from "@constants/colors";
 
 export type PostInputSectionProps = {
   avatar: string;
@@ -23,7 +24,7 @@ const PostInput: FunctionComponent<PostInputSectionProps> = ({
       <Avatar source={{uri: avatar}} />
       <ProtectedTextField
         placeholder="Apa yang ingin kamu tanyakan?"
-        containerStyle={{flex: 1}}
+        containerStyle={styles.textFieldContainer}
         onPress={() => navigation.navigate("Post")}
       />
     </View>
@@ -38,7 +39,7 @@ const PostInput: FunctionComponent<PostInputSectionProps> = ({
           Pertanyaan
         </ProtectedButton>
       </SectionSeparator>
-      <View style={{flex: 2, height: 20, justifyContent: "center"}}>
+      <View style={styles.postButton}>
         <ProtectedButton
           icon="plus"
           iconColor={COLORS.green600}
@@ -55,18 +56,7 @@ const PostInput: FunctionComponent<PostInputSectionProps> = ({
 
 const SectionSeparator: FunctionComponent<{children: React.ReactNode}> = ({
   children,
-}) => (
-  <View
-    style={{
-      flex: 2,
-      height: 20,
-      borderRightWidth: 1,
-      borderColor: COLORS.neutral300,
-      justifyContent: "center",
-    }}>
-    {children}
-  </View>
-);
+}) => <View style={styles.sectionSeparator}>{children}</View>;
 
 export default PostInput;
 
@@ -83,6 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  textFieldContainer: {flex: 1},
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -93,5 +84,17 @@ const styles = StyleSheet.create({
     borderColor: COLORS.neutral300,
     height: 20,
     flex: 1,
+  },
+  postButton: {
+    flex: 2,
+    height: 20,
+    justifyContent: "center",
+  },
+  sectionSeparator: {
+    flex: 2,
+    height: 20,
+    borderRightWidth: 1,
+    borderColor: COLORS.neutral300,
+    justifyContent: "center",
   },
 });

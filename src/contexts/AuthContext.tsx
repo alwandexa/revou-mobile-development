@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import {ActivityIndicator, View} from "react-native";
 
-import {FeedItem} from "../components/templates/Feed";
+import {FeedItem} from "@components/templates/Feed";
 
 type AuthContextType = {
   user: string | null;

@@ -3,12 +3,11 @@ import React, {FunctionComponent, useState} from "react";
 import {Image, SafeAreaView, StyleSheet, View} from "react-native";
 import Toast from "react-native-toast-message";
 
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import CustomToast from "../components/molecules/CustomToast";
-import TextField, {TextFieldState} from "../components/molecules/TextField";
-import {COLORS} from "../constants/colors";
-import {useAuth} from "../contexts/AuthContext";
+import {Button, CustomToast} from "@components/molecules";
+import {Typography} from "@components/atoms";
+import TextField, {TextFieldState} from "@components/molecules/TextField";
+import {useAuth} from "@contexts/AuthContext";
+import {COLORS} from "@constants/colors";
 
 export const LoginHeader: FunctionComponent = () => {
   const navigation = useNavigation();
@@ -146,11 +145,11 @@ const Login: FunctionComponent = () => {
   };
 
   const handleSubmit = () => {
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
+    const isCurrentEmailValid = validateEmail(email);
+    const isCurrentPasswordValid = validatePassword(password);
     const isCredentialValid = validateCredential();
 
-    if (isEmailValid && isPasswordValid) {
+    if (isCurrentEmailValid && isCurrentPasswordValid) {
       if (isCredentialValid) {
         login("Alwan Wirawan", getUserData());
         // @ts-ignore

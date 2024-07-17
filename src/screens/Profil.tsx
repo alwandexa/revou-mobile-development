@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from "react";
 import {Image, SafeAreaView, StyleSheet} from "react-native";
 
-import Typography from "../components/atoms/Typography";
-import {COLORS} from "../constants/colors";
-import {WithAuth} from "../contexts/AuthContext";
+import {Typography} from "@components/atoms";
+import {COLORS} from "@constants/colors";
+import {WithAuth} from "@contexts/AuthContext";
 
 const Profil: FunctionComponent = () => {
   return (

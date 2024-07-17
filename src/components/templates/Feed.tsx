@@ -1,14 +1,12 @@
-import {useNavigation} from "@react-navigation/native";
 import React, {memo, useState} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 
-import {COLORS} from "../../constants/colors";
-import {useAuth} from "../../contexts/AuthContext";
-import {formatRelativeTime} from "../../utils";
-import Typography from "../atoms/Typography";
-import Avatar from "../molecules/Avatar";
-import Label from "../molecules/Label";
-import ProtectedButton from "../molecules/ProtectedButton";
+import {Typography} from "@components/atoms";
+import {Avatar, Label, ProtectedButton} from "@components/molecules";
+import {COLORS} from "@constants/colors";
+import {useAuth} from "@contexts/AuthContext";
+import {formatRelativeTime} from "@utils/index";
 
 export type FeedItem = {
   avatar_url: string;

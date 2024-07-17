@@ -9,12 +9,11 @@ import {
 import {useNavigation} from "@react-navigation/native";
 import dayjs from "dayjs";
 
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import TextField from "../components/molecules/TextField";
-import {COLORS} from "../constants/colors";
-import {FeedItem} from "../components/templates/Feed";
-import {useAuth} from "../contexts/AuthContext";
+import {useAuth} from "@contexts/AuthContext";
+import {Typography} from "@components/atoms";
+import {FeedItem} from "@components/templates/Feed";
+import {Button, TextField} from "@components/molecules";
+import {COLORS} from "@constants/colors";
 
 const CreatePost: FunctionComponent = () => {
   const {user} = useAuth();
@@ -60,7 +59,7 @@ const CreatePost: FunctionComponent = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <View style={{flexDirection: "row", alignItems: "center", gap: 24}}>
+        <View style={styles.leftHeader}>
           <Button
             variant="outline"
             style={{borderWidth: 0}}
@@ -136,6 +135,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 24,
+    gap: 24,
+  },
+  leftHeader: {
+    flexDirection: "row",
+    alignItems: "center",
     gap: 24,
   },
   contentHolder: {

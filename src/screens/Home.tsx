@@ -5,16 +5,13 @@ import React, {FunctionComponent, useCallback, useMemo, useState} from "react";
 import {FlatList, Image, SafeAreaView, StyleSheet, View} from "react-native";
 import dayjs from "dayjs";
 
-import Typography from "../components/atoms/Typography";
-import Button from "../components/molecules/Button";
-import TabBar from "../components/molecules/TabBar";
-import TabBarIcon from "../components/molecules/TabBarIcon";
-import LoginBanner from "../components/organism/LoginBanner";
-import PostInput from "../components/organism/PostInput";
-import {Feed, FeedItem} from "../components/templates/Feed";
-import {COLORS} from "../constants/colors";
-import {useAuth} from "../contexts/AuthContext";
-import {generateFeedData} from "../utils";
+import {Button, TabBar, TabBarIcon} from "@components/molecules";
+import {useAuth} from "@contexts/AuthContext";
+import Feed, {FeedItem} from "@components/templates/Feed";
+import {generateFeedData} from "@utils/index";
+import {Typography} from "@components/atoms";
+import {LoginBanner, PostInput} from "@components/organism";
+import {COLORS} from "@constants/colors";
 import Profil from "./Profil";
 
 const TopTab = createMaterialTopTabNavigator();
