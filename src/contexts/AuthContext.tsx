@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {ActivityIndicator, View} from "react-native";
+import {ActivityIndicator, StyleSheet, View} from "react-native";
 
 import {FeedItem} from "@components/templates/Feed";
 
@@ -34,9 +34,9 @@ export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
 
   const [selectedItem, setSelectedItem] = useState<FeedItem>({} as FeedItem);
 
-  const login = (user: string, avatar: string) => {
-    setUser(user);
-    setAvatar(avatar);
+  const login = (currentUser: string, currentAvatar: string) => {
+    setUser(currentUser);
+    setAvatar(currentAvatar);
   };
 
   const logout = () => {
@@ -61,7 +61,6 @@ export const useAuth = () => {
 };
 
 export const WithAuth = (WrappedComponent: React.ComponentType<any>) => {
-  // This is the wrapper component that uses hooks
   const AuthWrapper: React.FC<any> = props => {
     const {user} = useAuth();
     const navigation = useNavigation();
@@ -69,7 +68,6 @@ export const WithAuth = (WrappedComponent: React.ComponentType<any>) => {
 
     useEffect(() => {
       const checkAuthAndNavigate = async () => {
-        // Simulate a brief delay to allow for any necessary data fetching
         await new Promise(resolve => setTimeout(resolve, 100));
 
         if (!user) {
@@ -84,20 +82,19 @@ export const WithAuth = (WrappedComponent: React.ComponentType<any>) => {
 
     if (isChecking) {
       return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+        <View style={styles.loading}>
           <ActivityIndicator size="large" />
         </View>
       );
     }
 
     if (!user) {
-      return null; // Don't render anything if there's no user
+      return null;
     }
 
     return <WrappedComponent {...props} />;
   };
 
-  // This is the HOC that returns our wrapper
   return (props: any) => <AuthWrapper {...props} />;
 };
 
@@ -137,3 +134,11 @@ export const WithAuthInteraction = <P extends object>(
     );
   };
 };
+
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

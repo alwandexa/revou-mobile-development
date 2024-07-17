@@ -62,7 +62,7 @@ const CreatePost: FunctionComponent = () => {
         <View style={styles.leftHeader}>
           <Button
             variant="outline"
-            style={{borderWidth: 0}}
+            style={styles.backButton}
             icon="chevron-left"
             onPress={() => navigation.goBack()}
           />
@@ -76,7 +76,7 @@ const CreatePost: FunctionComponent = () => {
         <Button
           variant="primary"
           size="small"
-          customStyle={{minWidth: 59}}
+          customStyle={styles.postButton}
           disabled={topic && title && description ? false : true}
           onPress={handlePost}>
           Post
@@ -142,6 +142,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 24,
   },
+  backButton: {borderWidth: 0},
+  postButton: {minWidth: 59},
   contentHolder: {
     flex: 1,
     gap: 24,

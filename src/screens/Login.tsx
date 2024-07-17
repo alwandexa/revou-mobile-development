@@ -30,14 +30,7 @@ export const LoginHeader: FunctionComponent = () => {
           Lewati
         </Button>
       </View>
-      <Typography
-        type="heading"
-        size="large"
-        style={{
-          color: COLORS.neutral700,
-          justifyContent: "center",
-          textAlign: "center",
-        }}>
+      <Typography type="heading" size="large" style={styles.title}>
         Masuk ke Investly
       </Typography>
     </View>
@@ -59,24 +52,25 @@ const Login: FunctionComponent = () => {
 
   const {login} = useAuth();
 
-  const validateEmail = (email: string) => {
-    email = email.trim().toLowerCase();
+  const validateEmail = (currentEmail: string) => {
+    currentEmail = currentEmail.trim().toLowerCase();
 
-    if (email.length > 254) {
+    if (currentEmail.length > 254) {
       setEmailState("negative");
       setEmailMessage("Email terlalu panjang (max 254 karakter)");
       return false;
     }
 
+    // eslint-disable-next-line no-useless-escape
     const illegalChars = /[(),<>:;\[\]"]/;
-    if (illegalChars.test(email)) {
+    if (illegalChars.test(currentEmail)) {
       setEmailState("negative");
       setEmailMessage("Email mengandung karakter ilegal ((),<>:;[])");
       return false;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    if (!emailPattern.test(currentEmail)) {
       setEmailState("negative");
       setEmailMessage("Format email salah (nama@domain.com)");
       return false;
@@ -89,16 +83,17 @@ const Login: FunctionComponent = () => {
     return true;
   };
 
-  const validatePassword = (password: string) => {
+  const validatePassword = (currentPassword: string) => {
     const MIN_LENGTH = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
+    const hasUpperCase = /[A-Z]/.test(currentPassword);
+    const hasLowerCase = /[a-z]/.test(currentPassword);
+    const hasNumbers = /\d/.test(currentPassword);
+    // eslint-disable-next-line no-useless-escape
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-      password,
+      currentPassword,
     );
 
-    if (password.length < MIN_LENGTH) {
+    if (currentPassword.length < MIN_LENGTH) {
       setPasswordState("negative");
       setPasswordMessage(`Password minimal ${MIN_LENGTH} karakter`);
       return false;
@@ -170,7 +165,7 @@ const Login: FunctionComponent = () => {
 
   return (
     <SafeAreaView style={styles.bodyContainer}>
-      <View style={{gap: 24}}>
+      <View style={styles.formContainer}>
         <TextField
           label="Email"
           placeholder="Email"
@@ -188,10 +183,7 @@ const Login: FunctionComponent = () => {
           value={password}
           onChangeText={handlePasswordChange}
         />
-        <Button
-          variant="link"
-          size="small"
-          style={{alignContent: "flex-start"}}>
+        <Button variant="link" size="small" style={styles.forgetPasswordButton}>
           Lupa Password
         </Button>
       </View>
@@ -227,6 +219,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+  formContainer: {gap: 24},
+  title: {
+    color: COLORS.neutral700,
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  forgetPasswordButton: {alignContent: "flex-start"},
   backButton: {
     borderColor: COLORS.neutral100,
     minHeight: 44,

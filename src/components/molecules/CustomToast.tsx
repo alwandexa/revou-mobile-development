@@ -1,5 +1,5 @@
 import React from "react";
-import {TextStyle, ViewStyle} from "react-native";
+import {StyleSheet, TextStyle, ViewStyle} from "react-native";
 import Toast, {
   BaseToast,
   ErrorToast,
@@ -7,6 +7,7 @@ import Toast, {
 } from "react-native-toast-message";
 
 import {COLORS} from "@constants/colors";
+
 interface ToastStyles {
   borderLeftColor: string;
   backgroundColor: string;
@@ -28,7 +29,7 @@ const toastConfig: ToastConfig = {
     <BaseToast
       {...props}
       style={baseStyles as ViewStyle}
-      contentContainerStyle={{paddingHorizontal: 15}}
+      contentContainerStyle={styles.contentContainer}
       text1Style={textStyles as TextStyle}
       text2Style={
         {...textStyles, fontSize: 13, color: COLORS.neutral600} as TextStyle
@@ -62,3 +63,7 @@ const CustomToast: React.FC = () => {
 };
 
 export default CustomToast;
+
+const styles = StyleSheet.create({
+  contentContainer: {paddingHorizontal: 15},
+});
