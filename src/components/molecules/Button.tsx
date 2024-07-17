@@ -11,7 +11,6 @@ import {Typography} from "@components/atoms";
 import Icon, {IconName} from "@components/atoms/icon/Icon";
 import {COLORS} from "@constants/colors";
 import {WithAuthInteractionProps} from "contexts/AuthContext";
-import Icon, {IconName} from "@components/atoms/icon/Icon";
 
 export type ButtonProps = TouchableOpacityProps &
   WithAuthInteractionProps & {
