@@ -1,8 +1,8 @@
-import React, {memo, useState, useCallback} from "react";
+import React, {memo, useCallback, useState} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 
-import {Typography} from "@components/atoms";
-import {Avatar, Label, ProtectedButton} from "@components/molecules";
+import {Avatar, Typography} from "@components/atoms";
+import {Label, ProtectedButton} from "@components/molecules";
 import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
 import {useNavigation} from "@react-navigation/native";

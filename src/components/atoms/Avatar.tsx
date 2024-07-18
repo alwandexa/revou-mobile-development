@@ -1,4 +1,4 @@
-import React from "react";
+import React, {FunctionComponent} from "react";
 import {Image, ImageSourcePropType, StyleSheet, View} from "react-native";
 
 import {Icon} from "@components/atoms";
@@ -9,7 +9,7 @@ type AvatarProps = {
   size?: "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall";
 };
 
-const Avatar: React.FC<AvatarProps> = ({source, size = "medium"}) => {
+const Avatar: FunctionComponent<AvatarProps> = ({source, size = "medium"}) => {
   const componentSize = size as keyof typeof personStyles;
 
   const hasValidSource = () => {

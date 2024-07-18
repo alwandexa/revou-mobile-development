@@ -1,12 +1,9 @@
 import React, {FunctionComponent} from "react";
 import {NavigationProp} from "@react-navigation/native";
 import {StyleSheet, View} from "react-native";
-import {
-  Avatar,
-  ProtectedButton,
-  ProtectedTextField,
-} from "@components/molecules";
+import {ProtectedButton, ProtectedTextField} from "@components/molecules";
 import {COLORS} from "@constants/colors";
+import {Avatar} from "@components/atoms";
 
 export type PostInputSectionProps = {
   avatar: string;
