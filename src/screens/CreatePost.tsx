@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 
 import {useAuth} from "@contexts/AuthContext";
 import {Typography} from "@components/atoms";
-import {FeedItem} from "@components/templates/Feed";
+import {FeedItem} from "@components/organism/Feed";
 import {Button, TextField} from "@components/molecules";
 import {COLORS} from "@constants/colors";
 

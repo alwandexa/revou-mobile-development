@@ -1,4 +1,4 @@
-import React from "react";
+import React, {FunctionComponent} from "react";
 import {SafeAreaView, StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 
@@ -6,9 +6,9 @@ import {WithAuth, useAuth} from "@contexts/AuthContext";
 import {Button, TextField} from "@components/molecules";
 import {Typography} from "@components/atoms";
 import {COLORS} from "@constants/colors";
-import {Feed} from "@components/templates";
+import {Feed} from "@components/organism";
 
-const DetailPost = () => {
+const DetailPost: FunctionComponent = () => {
   const {selectedItem} = useAuth();
   const navigation = useNavigation();
 

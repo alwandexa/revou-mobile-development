@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 
 import {Button, TabBar, TabBarIcon} from "@components/molecules";
 import {useAuth} from "@contexts/AuthContext";
-import Feed, {FeedItem} from "@components/templates/Feed";
+import Feed, {FeedItem} from "@components/organism/Feed";
 import {generateFeedData} from "@utils/index";
 import {Typography} from "@components/atoms";
 import {LoginBanner, PostInput} from "@components/organism";
