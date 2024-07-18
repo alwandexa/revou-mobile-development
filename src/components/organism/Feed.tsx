@@ -34,7 +34,8 @@ const FeedContent = memo(({item, ...props}: {item: FeedItem}) => {
   const shouldShowReadMore = item.post_content?.length > MAX_CONTENT_LENGTH;
   const displayContent = expanded
     ? item.post_content
-    : item.post_content.slice(0, MAX_CONTENT_LENGTH) + "...";
+    : item.post_content.slice(0, MAX_CONTENT_LENGTH) +
+      (shouldShowReadMore ? "..." : "");
 
   return (
     <View style={styles.postContent} {...props}>
