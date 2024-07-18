@@ -1,10 +1,3 @@
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
-import {
-  NavigationProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
 import React, {
   FunctionComponent,
   useCallback,
@@ -13,6 +6,13 @@ import React, {
   useState,
 } from "react";
 import {FlatList, Image, SafeAreaView, StyleSheet, View} from "react-native";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import dayjs from "dayjs";
 
 import {Button, TabBar, TabBarIcon} from "@components/molecules";
@@ -39,7 +39,7 @@ const profilTabBarIcon = ({focused}: TabBarIconProps) => (
   <TabBarIcon name="person" label="Profil" focused={focused} />
 );
 
-export const HomeTab: React.FC = () => (
+export const HomeTab: FunctionComponent = () => (
   <BottomTab.Navigator screenOptions={{tabBarShowLabel: false}}>
     <BottomTab.Screen
       name="Home"
@@ -67,9 +67,9 @@ const Home: FunctionComponent = () => {
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
 
-  const handlePostOnPress = () => {
+  const handlePostOnPress = useCallback(() => {
     navigation.navigate("Create Post");
-  };
+  }, [navigation]);
 
   const FeedFooter = useMemo(
     () => (
@@ -90,7 +90,7 @@ const Home: FunctionComponent = () => {
     const newFeed = generateFeedData(100);
     setFeedData(newFeed);
     setRefreshing(false);
-  }, [setRefreshing, setFeedData]);
+  }, []);
 
   const route = useRoute();
 

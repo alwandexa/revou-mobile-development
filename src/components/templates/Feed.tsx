@@ -1,4 +1,4 @@
-import React, {memo, useState} from "react";
+import React, {memo, useState, useCallback} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 
 import {Typography} from "@components/atoms";
@@ -24,14 +24,14 @@ export type FeedItem = {
 
 const MAX_CONTENT_LENGTH = 120;
 
-const FeedContent = ({item, ...props}: {item: FeedItem}) => {
+const FeedContent = memo(({item, ...props}: {item: FeedItem}) => {
   const [expanded, setExpanded] = useState(false);
 
-  const toggleExpand = () => {
+  const toggleExpand = useCallback(() => {
     setExpanded(!expanded);
-  };
+  }, [expanded]);
 
-  const shouldShowReadMore = item.post_content.length > MAX_CONTENT_LENGTH;
+  const shouldShowReadMore = item.post_content?.length > MAX_CONTENT_LENGTH;
   const displayContent = expanded
     ? item.post_content
     : item.post_content.slice(0, MAX_CONTENT_LENGTH) + "...";
@@ -59,18 +59,21 @@ const FeedContent = ({item, ...props}: {item: FeedItem}) => {
       )}
     </View>
   );
-};
+});
 
 const Feed = memo(
   ({item}: {item: FeedItem}) => {
     const {setSelectedItem} = useAuth();
     const navigation = useNavigation();
 
-    const handleFeedContentClicked = (currentItem: FeedItem) => {
-      setSelectedItem(currentItem);
-      // @ts-ignore
-      navigation.navigate("Post");
-    };
+    const handleFeedContentClicked = useCallback(
+      (currentItem: FeedItem) => {
+        setSelectedItem(currentItem);
+        // @ts-ignore
+        navigation.navigate("Post");
+      },
+      [navigation, setSelectedItem],
+    );
 
     return (
       <TouchableOpacity
