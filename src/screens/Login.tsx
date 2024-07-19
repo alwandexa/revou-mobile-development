@@ -147,8 +147,12 @@ const Login: FunctionComponent = () => {
     if (isCurrentEmailValid && isCurrentPasswordValid) {
       if (isCredentialValid) {
         login("Alwan Wirawan", getUserData());
-        // @ts-ignore
-        navigation.navigate("HomeTab");
+
+        navigation.reset({
+          index: 0,
+          // @ts-ignore
+          routes: [{name: "HomeTab"}],
+        });
       } else {
         Toast.show({
           type: "error",
