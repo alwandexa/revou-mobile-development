@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   loginBanner: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     height: 52,
     gap: 12,
     paddingHorizontal: 16,

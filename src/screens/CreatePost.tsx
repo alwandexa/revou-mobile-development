@@ -1,5 +1,6 @@
 import React, {FunctionComponent, useState} from "react";
 import {
+  Pressable,
   SafeAreaView,
   StyleSheet,
   TextInput,
@@ -10,7 +11,7 @@ import {useNavigation} from "@react-navigation/native";
 import dayjs from "dayjs";
 
 import {useAuth} from "@contexts/AuthContext";
-import {Typography} from "@components/atoms";
+import {Icon, Typography} from "@components/atoms";
 import {FeedItem} from "@components/organism/Feed";
 import {Button, TextField} from "@components/molecules";
 import {COLORS} from "@constants/colors";
@@ -60,12 +61,16 @@ const CreatePost: FunctionComponent = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.leftHeader}>
-          <Button
-            variant="outline"
+          <Pressable
             style={styles.backButton}
-            icon="chevron-left"
-            onPress={() => navigation.goBack()}
-          />
+            onPress={() => navigation.goBack()}>
+            <Icon
+              name="chevron-left"
+              fill={COLORS.neutral400}
+              height={20}
+              width={20}
+            />
+          </Pressable>
           <Typography
             type="heading"
             size="medium"

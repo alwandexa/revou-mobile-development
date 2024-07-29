@@ -1,12 +1,12 @@
-import React, {FunctionComponent} from "react";
-import {SafeAreaView, StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import React, {FunctionComponent} from "react";
+import {Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 
-import {WithAuth, useAuth} from "@contexts/AuthContext";
+import {Icon, Typography} from "@components/atoms";
 import {Button, TextField} from "@components/molecules";
-import {Typography} from "@components/atoms";
-import {COLORS} from "@constants/colors";
 import {Feed} from "@components/organism";
+import {COLORS} from "@constants/colors";
+import {WithAuth, useAuth} from "@contexts/AuthContext";
 
 const DetailPost: FunctionComponent = () => {
   const {selectedItem} = useAuth();
@@ -16,12 +16,14 @@ const DetailPost: FunctionComponent = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <Button
-            variant="outline"
-            style={styles.backButton}
-            icon="chevron-left"
-            onPress={() => navigation.goBack()}
-          />
+          <Pressable onPress={() => navigation.goBack()}>
+            <Icon
+              name="chevron-left"
+              fill={COLORS.neutral400}
+              height={20}
+              width={20}
+            />
+          </Pressable>
           <Typography
             type="heading"
             size="medium"
@@ -59,7 +61,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     gap: 24,
   },
-  backButton: {borderWidth: 0},
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",

@@ -18,11 +18,11 @@ const PostInput: FunctionComponent<PostInputSectionProps> = ({
 }) => (
   <View style={styles.inputContainer}>
     <View style={styles.inputRow}>
-      <Avatar source={{uri: avatar}} />
+      <Avatar source={{uri: avatar}} size="large" />
       <ProtectedTextField
         placeholder="Apa yang ingin kamu tanyakan?"
         containerStyle={styles.textFieldContainer}
-        onPress={() => navigation.navigate("Post")}
+        onPress={() => navigation.navigate("CreatePost")}
       />
     </View>
     <View style={styles.buttonRow}>

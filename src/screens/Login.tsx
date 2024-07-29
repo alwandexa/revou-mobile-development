@@ -1,10 +1,10 @@
 import {useNavigation} from "@react-navigation/native";
 import React, {FunctionComponent, useState} from "react";
-import {Image, SafeAreaView, StyleSheet, View} from "react-native";
+import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import Toast from "react-native-toast-message";
 
 import {Button, CustomToast} from "@components/molecules";
-import {Typography} from "@components/atoms";
+import {Icon, Typography} from "@components/atoms";
 import {COLORS} from "@constants/colors";
 import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {useAuth} from "@contexts/AuthContext";
@@ -15,12 +15,16 @@ export const LoginHeader: FunctionComponent = () => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.titleContainer}>
-        <Button
-          icon="chevron-left"
-          variant="outline"
+        <Pressable
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        />
+          onPress={() => navigation.goBack()}>
+          <Icon
+            name="chevron-left"
+            fill={COLORS.neutral400}
+            height={20}
+            width={20}
+          />
+        </Pressable>
         <Image source={require("../assets/images/ic_investly.png")} />
         <Button
           variant="link"
@@ -169,24 +173,26 @@ const Login: FunctionComponent = () => {
 
   return (
     <SafeAreaView style={styles.bodyContainer}>
-      <View style={styles.formContainer}>
-        <TextField
-          label="Email"
-          placeholder="Email"
-          state={emailState}
-          message={emailMessage}
-          value={email}
-          onChangeText={handleEmailChange}
-        />
-        <TextField
-          label="Password"
-          placeholder="Masukkan password"
-          type="password"
-          state={passwordState}
-          message={passwordMessage}
-          value={password}
-          onChangeText={handlePasswordChange}
-        />
+      <View style={styles.contentContainer}>
+        <View style={styles.formContainer}>
+          <TextField
+            label="Email"
+            placeholder="Email"
+            state={emailState}
+            message={emailMessage}
+            value={email}
+            onChangeText={handleEmailChange}
+          />
+          <TextField
+            label="Password"
+            placeholder="Masukkan password"
+            type="password"
+            state={passwordState}
+            message={passwordMessage}
+            value={password}
+            onChangeText={handlePasswordChange}
+          />
+        </View>
         <Button variant="link" size="small" style={styles.forgetPasswordButton}>
           Lupa Password
         </Button>
@@ -223,13 +229,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  formContainer: {gap: 24},
+  contentContainer: {
+    gap: 16,
+  },
+  formContainer: {
+    gap: 24,
+  },
   title: {
     color: COLORS.neutral700,
     justifyContent: "center",
     textAlign: "center",
   },
-  forgetPasswordButton: {alignContent: "flex-start"},
+  forgetPasswordButton: {
+    alignContent: "flex-start",
+  },
   backButton: {
     borderColor: COLORS.neutral100,
     minHeight: 44,

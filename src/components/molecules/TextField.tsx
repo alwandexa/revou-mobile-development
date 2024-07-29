@@ -87,14 +87,14 @@ const TextField = ({
                 name="eye-slash"
                 width={16}
                 height={16}
-                fill={COLORS.neutral700}
+                fill={COLORS.neutral500}
               />
             ) : (
               <Icon
                 name="eye"
                 width={16}
                 height={16}
-                fill={COLORS.neutral700}
+                fill={COLORS.neutral500}
               />
             )}
           </TouchableOpacity>

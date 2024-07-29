@@ -1,11 +1,3 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {FlatList, Image, SafeAreaView, StyleSheet, View} from "react-native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {
@@ -14,14 +6,29 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import dayjs from "dayjs";
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native";
 
-import {Button, TabBar, TabBarIcon} from "@components/molecules";
-import {useAuth} from "@contexts/AuthContext";
-import Feed, {FeedItem} from "@components/organism/Feed";
-import {generateFeedData} from "@utils/index";
-import {Typography} from "@components/atoms";
+import {Icon, Typography} from "@components/atoms";
+import {TabBar, TabBarIcon} from "@components/molecules";
 import {LoginBanner, PostInput} from "@components/organism";
+import Feed, {FeedItem} from "@components/organism/Feed";
 import {COLORS} from "@constants/colors";
+import {useAuth} from "@contexts/AuthContext";
+import {generateFeedData} from "@utils/index";
 import Profil from "./Profil";
 
 const TopTab = createMaterialTopTabNavigator();
@@ -40,7 +47,11 @@ const profilTabBarIcon = ({focused}: TabBarIconProps) => (
 );
 
 export const HomeTab: FunctionComponent = () => (
-  <BottomTab.Navigator screenOptions={{tabBarShowLabel: false}}>
+  <BottomTab.Navigator
+    screenOptions={{
+      tabBarShowLabel: false,
+      tabBarStyle: styles.homeTabBar,
+    }}>
     <BottomTab.Screen
       name="Home"
       component={Home}
@@ -68,7 +79,7 @@ const Home: FunctionComponent = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const handlePostOnPress = useCallback(() => {
-    navigation.navigate("Create Post");
+    navigation.navigate("CreatePost");
   }, [navigation]);
 
   const FeedFooter = useMemo(
@@ -106,12 +117,15 @@ const Home: FunctionComponent = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <Image source={require("../assets/images/investly-logo.png")} />
-        <Button
+        {/* <Button
           icon="bell"
           variant="outline"
           size="large"
           customStyle={styles.bellButton}
-        />
+        /> */}
+        <Pressable style={styles.bellButton}>
+          <Icon name="bell" width={20} height={20} fill={COLORS.purple500} />
+        </Pressable>
       </View>
       <View style={styles.modalContainer}>
         <PostInput
@@ -174,11 +188,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     backgroundColor: COLORS.neutral100,
+    height: 48,
   },
   bellButton: {
     width: 44,
     height: 44,
-    borderWidth: 0,
+    alignContent: "center",
+    justifyContent: "center",
   },
   modalContainer: {
     padding: 10,
@@ -193,5 +209,9 @@ const styles = StyleSheet.create({
     gap: 24,
     marginVertical: 24,
     alignItems: "center",
+  },
+  homeTabBar: {
+    paddingBottom: 32,
+    minHeight: 89,
   },
 });
