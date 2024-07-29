@@ -10,11 +10,12 @@ import {
 import {useNavigation} from "@react-navigation/native";
 import dayjs from "dayjs";
 
-import {useAuth} from "@contexts/AuthContext";
+import {WithAuth, useAuth} from "@contexts/AuthContext";
 import {Icon, Typography} from "@components/atoms";
 import {FeedItem} from "@components/organism/Feed";
 import {Button, TextField} from "@components/molecules";
 import {COLORS} from "@constants/colors";
+import {TypographySize, TypographyType} from "@components/atoms/Typography";
 
 const CreatePost: FunctionComponent = () => {
   const {user} = useAuth();
@@ -26,8 +27,8 @@ const CreatePost: FunctionComponent = () => {
   const navigation = useNavigation();
 
   const getTypographyStyle = (
-    typographyType: any,
-    typographySize: any,
+    typographyType: TypographyType,
+    typographySize: TypographySize,
   ): TextStyle => {
     const typographyStyle = Typography({
       type: typographyType,
@@ -82,7 +83,7 @@ const CreatePost: FunctionComponent = () => {
           variant="primary"
           size="small"
           customStyle={styles.postButton}
-          disabled={topic && title && description ? false : true}
+          disabled={!(topic && title && description)}
           onPress={handlePost}>
           Post
         </Button>
@@ -127,7 +128,7 @@ const CreatePost: FunctionComponent = () => {
   );
 };
 
-export default CreatePost;
+export default WithAuth(CreatePost);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from "react";
+import React, {FunctionComponent, useMemo} from "react";
 import {Image, ImageSourcePropType, StyleSheet, View} from "react-native";
 
 import {Icon} from "@components/atoms";
@@ -12,15 +12,18 @@ type AvatarProps = {
 const Avatar: FunctionComponent<AvatarProps> = ({source, size = "medium"}) => {
   const componentSize = size as keyof typeof personStyles;
 
-  const hasValidSource = () => {
-    if (!source) return false;
-    if (typeof source === "number") return true;
-    if (typeof source === "object" && "uri" in source) {
-      return !!source.uri;
-    }
+  const hasValidSource = useMemo(
+    () => () => {
+      if (!source) return false;
+      if (typeof source === "number") return true;
+      if (typeof source === "object" && "uri" in source) {
+        return !!source.uri;
+      }
 
-    return false;
-  };
+      return false;
+    },
+    [source],
+  );
 
   return (
     <View style={styles[componentSize]}>

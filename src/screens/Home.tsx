@@ -73,7 +73,7 @@ export const HomeTab: FunctionComponent = () => (
 
 const Home: FunctionComponent = () => {
   const {user, avatar} = useAuth();
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation<NavigationProp<Pages>>();
 
   const [feedData, setFeedData] = useState<FeedItem[]>(generateFeedData(100));
   const [refreshing, setRefreshing] = useState(false);
@@ -117,12 +117,6 @@ const Home: FunctionComponent = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <Image source={require("../assets/images/investly-logo.png")} />
-        {/* <Button
-          icon="bell"
-          variant="outline"
-          size="large"
-          customStyle={styles.bellButton}
-        /> */}
         <Pressable style={styles.bellButton}>
           <Icon name="bell" width={20} height={20} fill={COLORS.purple500} />
         </Pressable>

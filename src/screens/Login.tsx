@@ -1,16 +1,16 @@
-import {useNavigation} from "@react-navigation/native";
-import React, {FunctionComponent, useState} from "react";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
+import React, {FunctionComponent, useMemo, useState} from "react";
 import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import Toast from "react-native-toast-message";
 
-import {Button, CustomToast} from "@components/molecules";
 import {Icon, Typography} from "@components/atoms";
-import {COLORS} from "@constants/colors";
+import {Button, CustomToast} from "@components/molecules";
 import TextField, {TextFieldState} from "@components/molecules/TextField";
+import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
 
 export const LoginHeader: FunctionComponent = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<Pages>>();
 
   return (
     <View style={styles.headerContainer}>
@@ -29,7 +29,6 @@ export const LoginHeader: FunctionComponent = () => {
         <Button
           variant="link"
           size="small"
-          // @ts-ignore
           onPress={() => navigation.navigate("HomeTab")}>
           Lewati
         </Button>
@@ -89,6 +88,7 @@ const Login: FunctionComponent = () => {
 
   const validatePassword = (currentPassword: string) => {
     const MIN_LENGTH = 8;
+    const MAX_LENGTH = 64;
     const hasUpperCase = /[A-Z]/.test(currentPassword);
     const hasLowerCase = /[a-z]/.test(currentPassword);
     const hasNumbers = /\d/.test(currentPassword);
@@ -100,6 +100,12 @@ const Login: FunctionComponent = () => {
     if (currentPassword.length < MIN_LENGTH) {
       setPasswordState("negative");
       setPasswordMessage(`Password minimal ${MIN_LENGTH} karakter`);
+      return false;
+    }
+
+    if (currentPassword.length > MAX_LENGTH) {
+      setPasswordState("negative");
+      setPasswordMessage(`Password maksimal ${MAX_LENGTH} karakter`);
       return false;
     }
 
@@ -119,7 +125,7 @@ const Login: FunctionComponent = () => {
   };
 
   const handleEmailChange = (text: string) => {
-    setEmail(text);
+    setEmail(text.toLowerCase().trim());
     validateEmail(text);
   };
 
@@ -128,9 +134,12 @@ const Login: FunctionComponent = () => {
     validatePassword(text);
   };
 
-  const isLoginEnabled = () => {
-    return isEmailValid && isPasswordValid ? false : true;
-  };
+  const isLoginEnabled = useMemo(
+    () => () => {
+      return isEmailValid && isPasswordValid ? false : true;
+    },
+    [isEmailValid, isPasswordValid],
+  );
 
   const validateCredential = () => {
     return email === "alwanwirawan@test.app" && password === "TestApp123!";
@@ -154,8 +163,7 @@ const Login: FunctionComponent = () => {
 
         navigation.reset({
           index: 0,
-          // @ts-ignore
-          routes: [{name: "HomeTab"}],
+          routes: [{name: "HomeTab" as never}],
         });
       } else {
         Toast.show({

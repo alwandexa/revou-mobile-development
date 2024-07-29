@@ -7,7 +7,7 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
-import {useNavigation} from "@react-navigation/native";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {Typography} from "@components/atoms";
 import {Button} from "@components/molecules";
 import {COLORS} from "@constants/colors";
@@ -36,7 +36,7 @@ const onboardingData = [
 ];
 
 const Onboarding: FunctionComponent = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<Pages>>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
@@ -64,7 +64,6 @@ const Onboarding: FunctionComponent = () => {
       return;
     }
 
-    // @ts-ignore
     navigation.navigate("Login");
   };
 

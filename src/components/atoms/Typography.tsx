@@ -1,6 +1,7 @@
 import {Text, StyleSheet, TextStyle} from "react-native";
 import React from "react";
 
+export type TypographyType = "heading" | "paragraph" | "special";
 type HeadingSize =
   | "xxlarge"
   | "xlarge"
@@ -10,11 +11,12 @@ type HeadingSize =
   | "xsmall"
   | "xxsmall";
 type ParagraphSize = "large" | "medium" | "small" | "xsmall" | "xxsmall";
-type SpecialSize = "large" | "medium" | "small" | "xsmall" | "xxsmall";
+type SpecialSize = ParagraphSize;
+export type TypographySize = HeadingSize | ParagraphSize | SpecialSize;
 
 type TypographyProps = {
-  type: "heading" | "paragraph" | "special";
-  size: HeadingSize | ParagraphSize | SpecialSize;
+  type: TypographyType;
+  size: TypographySize;
   style?: TextStyle;
   children: React.ReactNode;
 };

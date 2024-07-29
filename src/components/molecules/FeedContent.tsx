@@ -5,15 +5,15 @@ import Typography from "@components/atoms/Typography";
 import {COLORS} from "@constants/colors";
 
 export type FeedContentProps = {
-  postHeader: string;
-  postContent: string;
+  post_header: string;
+  post_content: string;
 };
 
 const MAX_CONTENT_LENGTH = 120;
 
 const FeedContent: FunctionComponent<FeedContentProps> = ({
-  postHeader,
-  postContent,
+  post_header,
+  post_content,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -21,15 +21,15 @@ const FeedContent: FunctionComponent<FeedContentProps> = ({
     setExpanded(!expanded);
   }, [expanded]);
 
-  const shouldShowReadMore = postContent.length > MAX_CONTENT_LENGTH;
+  const shouldShowReadMore = post_content.length > MAX_CONTENT_LENGTH;
   const displayContent = expanded
-    ? postContent
-    : `${postContent.slice(0, MAX_CONTENT_LENGTH)}...`;
+    ? post_content
+    : `${post_content.slice(0, MAX_CONTENT_LENGTH)}...`;
 
   return (
     <View style={styles.postContent}>
       <Typography type="heading" size="medium" style={styles.postHeader}>
-        {postHeader}
+        {post_header}
       </Typography>
       <Typography type="paragraph" size="medium" style={styles.contentText}>
         {displayContent}

@@ -1,4 +1,4 @@
-import {useNavigation} from "@react-navigation/native";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
 import React, {
   createContext,
   FunctionComponent,
@@ -105,11 +105,10 @@ export const WithAuthInteraction = <P extends object>(
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {user} = useAuth();
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<Pages>>();
 
     const handlePress = () => {
       if (!user) {
-        // @ts-ignore
         navigation.navigate("Login");
       } else if (onPress) {
         onPress();
@@ -118,7 +117,6 @@ export const WithAuthInteraction = <P extends object>(
 
     const handleFocus = () => {
       if (!user) {
-        // @ts-ignore
         navigation.navigate("Login");
       } else if (onFocus) {
         onFocus();

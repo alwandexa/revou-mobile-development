@@ -1,12 +1,14 @@
-import React, {memo, useCallback, useState} from "react";
+import React, {memo, useCallback} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 
 import {Avatar, Typography} from "@components/atoms";
 import {Label, ProtectedButton} from "@components/molecules";
+import FeedContent from "@components/molecules/FeedContent";
 import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
-import {useNavigation} from "@react-navigation/native";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {formatRelativeTime} from "@utils/index";
+// import {Pages} from "types";
 
 export type FeedItem = {
   avatar_url: string;
@@ -22,150 +24,106 @@ export type FeedItem = {
   post_retweet: number;
 };
 
-const MAX_CONTENT_LENGTH = 120;
+const Feed = memo(({item}: {item: FeedItem}) => {
+  const {setSelectedItem} = useAuth();
+  const navigation = useNavigation<NavigationProp<Pages>>();
 
-const FeedContent = memo(({item, ...props}: {item: FeedItem}) => {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpand = useCallback(() => {
-    setExpanded(!expanded);
-  }, [expanded]);
-
-  const shouldShowReadMore = item.post_content?.length > MAX_CONTENT_LENGTH;
-  const displayContent = expanded
-    ? item.post_content
-    : item.post_content.slice(0, MAX_CONTENT_LENGTH) +
-      (shouldShowReadMore ? "..." : "");
+  const handleFeedContentClicked = useCallback(() => {
+    setSelectedItem(item);
+    navigation.navigate("Post");
+  }, [navigation, setSelectedItem, item]);
 
   return (
-    <View style={styles.postContent} {...props}>
-      <Typography type="heading" size="medium" style={styles.postHeader}>
-        {item.post_header}
-      </Typography>
-      <Typography
-        type="paragraph"
-        size="medium"
-        style={{color: COLORS.neutral700}}>
-        {displayContent}
-      </Typography>
-      {shouldShowReadMore && (
-        <TouchableOpacity onPress={toggleExpand} style={styles.readMoreButton}>
+    <TouchableOpacity
+      style={styles.postContainer}
+      onPress={handleFeedContentClicked}>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Avatar size="large" source={{uri: item.avatar_url}} />
+          <View style={styles.headerText}>
+            <Typography type="heading" size="xsmall" style={styles.name}>
+              {item.name}
+            </Typography>
+            <Typography type="paragraph" size="small">
+              {item.headline}
+            </Typography>
+            <Typography type="paragraph" size="xsmall">
+              {formatRelativeTime(item.created_at)}
+            </Typography>
+          </View>
+          <View>
+            <ProtectedButton
+              icon="ellipsis"
+              variant="outline"
+              size="medium"
+              style={styles.ellipsisButton}
+              textStyle={styles.ellipsisButtonText}
+            />
+          </View>
+        </View>
+      </View>
+      <FeedContent
+        post_header={item.post_header}
+        post_content={item.post_content}
+      />
+      <View style={styles.footer}>
+        <Label variant="tertiary" color="green">
+          {item.post_topic}
+        </Label>
+      </View>
+      <View style={styles.footerActions}>
+        <View style={[styles.actionButton, styles.groupActionButton]}>
+          <ProtectedButton
+            variant="link"
+            size="medium"
+            icon="arrow-up"
+            textStyle={styles.actionButtonText}>
+            <Typography
+              type="paragraph"
+              size="small"
+              style={styles.actionButtonText}>
+              {item.post_upvote}
+            </Typography>
+          </ProtectedButton>
+          <View style={styles.divider} />
+          <ProtectedButton
+            variant="link"
+            size="medium"
+            icon="arrow-down"
+            textStyle={styles.actionButtonText}>
+            {" "}
+          </ProtectedButton>
+        </View>
+        <ProtectedButton
+          variant="link"
+          size="medium"
+          icon="comment"
+          style={styles.actionButton}
+          textStyle={styles.actionButtonText}>
           <Typography
             type="paragraph"
-            size="medium"
-            style={styles.readMoreText}>
-            {expanded ? "Baca Lebih Sedikit" : "Baca Lebih Lanjut"}
+            size="small"
+            style={styles.actionButtonText}>
+            {item.post_comment}
           </Typography>
-        </TouchableOpacity>
-      )}
-    </View>
+        </ProtectedButton>
+        <ProtectedButton
+          variant="link"
+          size="medium"
+          icon="retweet"
+          style={styles.actionButton}
+          textStyle={styles.actionButtonText}>
+          <Typography
+            type="paragraph"
+            size="small"
+            style={styles.actionButtonText}>
+            {item.post_retweet}
+          </Typography>
+        </ProtectedButton>
+      </View>
+    </TouchableOpacity>
   );
 });
-
-const Feed = memo(
-  ({item}: {item: FeedItem}) => {
-    const {setSelectedItem} = useAuth();
-    const navigation = useNavigation();
-
-    const handleFeedContentClicked = useCallback(
-      (currentItem: FeedItem) => {
-        setSelectedItem(currentItem);
-        // @ts-ignore
-        navigation.navigate("Post");
-      },
-      [navigation, setSelectedItem],
-    );
-
-    return (
-      <TouchableOpacity
-        style={styles.postContainer}
-        onPress={() => handleFeedContentClicked(item)}>
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <Avatar size="large" source={{uri: item.avatar_url}} />
-            <View style={styles.headerText}>
-              <Typography type="heading" size="xsmall" style={styles.name}>
-                {item.name}
-              </Typography>
-              <Typography type="paragraph" size="small">
-                {item.headline}
-              </Typography>
-              <Typography type="paragraph" size="xsmall">
-                {formatRelativeTime(item.created_at)}
-              </Typography>
-            </View>
-            <View>
-              <ProtectedButton
-                icon="ellipsis"
-                variant="outline"
-                size="medium"
-                style={styles.ellipsisButton}
-                textStyle={styles.ellipsisButtonText}
-              />
-            </View>
-          </View>
-        </View>
-        <FeedContent item={item} />
-        <View style={styles.footer}>
-          <Label variant="tertiary" color="green">
-            {item.post_topic}
-          </Label>
-        </View>
-        <View style={styles.footerActions}>
-          <View style={[styles.actionButton, styles.groupActionButton]}>
-            <ProtectedButton
-              variant="link"
-              size="medium"
-              icon="arrow-up"
-              textStyle={styles.actionButtonText}>
-              <Typography
-                type="paragraph"
-                size="small"
-                style={styles.actionButtonText}>
-                {item.post_upvote}
-              </Typography>
-            </ProtectedButton>
-            <View style={styles.divider} />
-            <ProtectedButton
-              variant="link"
-              size="medium"
-              icon="arrow-down"
-              textStyle={styles.actionButtonText}>
-              {" "}
-            </ProtectedButton>
-          </View>
-          <ProtectedButton
-            variant="link"
-            size="medium"
-            icon="comment"
-            style={styles.actionButton}
-            textStyle={styles.actionButtonText}>
-            <Typography
-              type="paragraph"
-              size="small"
-              style={styles.actionButtonText}>
-              {item.post_comment}
-            </Typography>
-          </ProtectedButton>
-          <ProtectedButton
-            variant="link"
-            size="medium"
-            icon="retweet"
-            style={styles.actionButton}
-            textStyle={styles.actionButtonText}>
-            <Typography
-              type="paragraph"
-              size="small"
-              style={styles.actionButtonText}>
-              {item.post_retweet}
-            </Typography>
-          </ProtectedButton>
-        </View>
-      </TouchableOpacity>
-    );
-  },
-  (prevProps, nextProps) => prevProps.item === nextProps.item,
-);
 
 export default Feed;
 

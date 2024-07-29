@@ -7,7 +7,7 @@ import {Avatar} from "@components/atoms";
 
 export type PostInputSectionProps = {
   avatar: string;
-  navigation: NavigationProp<any>;
+  navigation: NavigationProp<Pages>;
   onPress: () => void;
 };
 
