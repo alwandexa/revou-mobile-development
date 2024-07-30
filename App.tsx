@@ -8,6 +8,7 @@ import DetailPost from "./src/screens/DetailPost";
 import {HomeTab} from "./src/screens/Home";
 import Login, {LoginHeader} from "./src/screens/Login";
 import Onboarding from "./src/screens/Onboarding";
+import Register from "@screens/Register";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,13 @@ const App: FunctionComponent = () => {
             options={{
               headerShown: true,
               header: LoginHeader,
+            }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              headerShown: false,
             }}
           />
           <Stack.Screen

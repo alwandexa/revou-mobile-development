@@ -2,6 +2,7 @@
 type Pages = {
   Onboarding: unknown;
   Login: unknown;
+  Register: unknown;
   HomeTab: unknown;
   Post: unknown;
   CreatePost: unknown;
