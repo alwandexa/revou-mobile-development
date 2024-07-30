@@ -41,7 +41,7 @@ export const LoginHeader: FunctionComponent = () => {
 };
 
 const Login: FunctionComponent = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<Pages>>();
 
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<TextFieldState>("default");
@@ -134,6 +134,10 @@ const Login: FunctionComponent = () => {
     validatePassword(text);
   };
 
+  const handleDaftar = () => {
+    navigation.navigate("Register");
+  };
+
   const isLoginEnabled = useMemo(
     () => () => {
       return isEmailValid && isPasswordValid ? false : true;
@@ -163,7 +167,7 @@ const Login: FunctionComponent = () => {
 
         navigation.reset({
           index: 0,
-          routes: [{name: "HomeTab" as never}],
+          routes: [{name: "HomeTab"}],
         });
       } else {
         Toast.show({
@@ -204,13 +208,16 @@ const Login: FunctionComponent = () => {
         <Button variant="link" size="small" style={styles.forgetPasswordButton}>
           Lupa Password
         </Button>
+        <Button
+          variant="primary"
+          size="large"
+          onPress={handleSubmit}
+          disabled={isLoginEnabled()}>
+          Masuk
+        </Button>
       </View>
-      <Button
-        variant="primary"
-        size="medium"
-        onPress={handleSubmit}
-        disabled={isLoginEnabled()}>
-        Masuk
+      <Button variant="outline" size="large" onPress={handleDaftar}>
+        Daftar
       </Button>
       <CustomToast />
     </SafeAreaView>
