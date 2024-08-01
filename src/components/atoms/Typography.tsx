@@ -1,4 +1,4 @@
-import {Text, StyleSheet, TextStyle} from "react-native";
+import {Text, StyleSheet, TextStyle, TextProps} from "react-native";
 import React from "react";
 
 export type TypographyType = "heading" | "paragraph" | "special";
@@ -19,13 +19,14 @@ type TypographyProps = {
   size: TypographySize;
   style?: TextStyle;
   children: React.ReactNode;
-};
+} & Omit<TextProps, "style">;
 
 export default function Typography({
   type = "paragraph",
   size = "medium",
   style,
   children,
+  ...props
 }: TypographyProps) {
   const getStyle = (): TextStyle => {
     const baseStyle = baseStyles[type] || {};
@@ -43,7 +44,11 @@ export default function Typography({
     return {...baseStyle, ...sizeStyle};
   };
 
-  return <Text style={[getStyle(), style]}>{children}</Text>;
+  return (
+    <Text style={[getStyle(), style]} {...props}>
+      {children}
+    </Text>
+  );
 }
 
 const baseStyles = StyleSheet.create({
