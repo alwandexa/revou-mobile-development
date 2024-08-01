@@ -1,6 +1,14 @@
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import React, {FunctionComponent, useMemo, useState} from "react";
-import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import React, {FunctionComponent, useEffect, useMemo, useState} from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native";
+import axios from "axios";
 
 import {Icon, Typography} from "@components/atoms";
 import {Button, CustomToast} from "@components/molecules";
@@ -8,10 +16,22 @@ import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {COLORS} from "@constants/colors";
 import ProgressBar from "@components/molecules/ProgressBar";
 
+interface Topic {
+  id: string;
+  file: {
+    name_display: string;
+    full_path: string;
+    size: number;
+    mime_type: string;
+  };
+  label: string;
+}
+
 const Register: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
 
+  // Step 1 states
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<TextFieldState>("default");
   const [emailMessage, setEmailMessage] = useState("");
@@ -25,10 +45,45 @@ const Register: FunctionComponent = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [passwordConfirmationState, setPasswordConfirmationState] =
     useState<TextFieldState>("default");
-  const [passworConfirmationdMessage, setPasswordConfirmationMessage] =
+  const [passwordConfirmationMessage, setPasswordConfirmationMessage] =
     useState("");
   const [isPasswordConfirmationValid, setIsPasswordConfirmationValid] =
     useState(false);
+
+  // Step 2 states
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+
+  // Step 3 states
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (currentStep === 3) {
+      fetchTopics();
+    }
+  }, [currentStep]);
+
+  const fetchTopics = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(
+        "https://develop.investly.id/api/social/v1/public/masterdata/topic",
+      );
+      if (response.data.status) {
+        setTopics(response.data.data);
+      } else {
+        setError("Failed to fetch topics");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching topics");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const validateEmail = (currentEmail: string) => {
     currentEmail = currentEmail.trim().toLowerCase();
@@ -130,69 +185,58 @@ const Register: FunctionComponent = () => {
     validatePasswordConfirmation(password, text);
   };
 
-  const isRegisterEnabled = useMemo(
-    () => () => {
-      return isEmailValid && isPasswordValid && isPasswordConfirmationValid
-        ? false
-        : false;
-    },
-    [isEmailValid, isPasswordValid, isPasswordConfirmationValid],
-  );
-
-  const handleSubmit = () => {
-    const isCurrentEmailValid = validateEmail(email);
-    const isCurrentPasswordValid = validatePassword(password);
-    const isCurrentPasswordConfirmationValid = validatePasswordConfirmation(
-      password,
-      passwordConfirmation,
-    );
-
-    if (
-      isCurrentEmailValid &&
-      isCurrentPasswordValid &&
-      isCurrentPasswordConfirmationValid
-    ) {
-      setCurrentIndex(prev => prev + 1);
-    }
-    setCurrentIndex(prev => prev + 1);
+  const handleNameChange = (text: string) => {
+    setName(text);
   };
 
-  return (
-    <SafeAreaView style={styles.screenContainer}>
-      <View style={styles.headerContainer}>
-        <View style={styles.titleContainer}>
-          <View style={{flex: 1}}>
-            <Pressable
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}>
-              <Icon
-                name="chevron-left"
-                fill={COLORS.neutral400}
-                height={20}
-                width={20}
-              />
-            </Pressable>
-          </View>
-          <View style={{flex: 6, alignContent: "center", alignItems: "center"}}>
-            <Image source={require("../assets/images/ic_investly.png")} />
-          </View>
-          <View style={{flex: 1, height: 32}}>
-            {currentIndex === 1 && (
-              <Button
-                variant="link"
-                size="small"
-                onPress={() => navigation.navigate("Login")}>
-                Masuk
-              </Button>
-            )}
-          </View>
-        </View>
-        <Typography type="heading" size="large" style={styles.title}>
-          Buat Akun
-        </Typography>
-      </View>
-      <View style={styles.bodyContainer}>
-        <View style={styles.contentContainer}>
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+  };
+
+  const handleTopicSelection = (topic: string) => {
+    setSelectedTopics(prevTopics => {
+      if (prevTopics.includes(topic)) {
+        return prevTopics.filter(t => t !== topic);
+      } else if (prevTopics.length < 3) {
+        return [...prevTopics, topic];
+      }
+      return prevTopics;
+    });
+  };
+
+  const isNextEnabled = useMemo(() => {
+    switch (currentStep) {
+      case 1:
+        return isEmailValid && isPasswordValid && isPasswordConfirmationValid;
+      case 2:
+        return name.trim() !== "" && username.trim() !== "";
+      case 3:
+        return selectedTopics.length === 3;
+      default:
+        return false;
+    }
+  }, [
+    currentStep,
+    isEmailValid,
+    isPasswordValid,
+    isPasswordConfirmationValid,
+    name,
+    username,
+    selectedTopics,
+  ]);
+
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(prev => prev + 1);
+    } else {
+      console.log("Registration complete");
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
           <View style={styles.formContainer}>
             <TextField
               label="Email"
@@ -216,23 +260,133 @@ const Register: FunctionComponent = () => {
               placeholder="Masukkan konfirmasi password"
               type="password"
               state={passwordConfirmationState}
-              message={passworConfirmationdMessage}
+              message={passwordConfirmationMessage}
               value={passwordConfirmation}
               onChangeText={handlePasswordConfirmationChange}
             />
           </View>
+        );
+      case 2:
+        return (
+          <View style={styles.formContainer}>
+            <TextField
+              label="Nama"
+              placeholder="Nama"
+              value={name}
+              onChangeText={handleNameChange}
+            />
+            <TextField
+              label="Username"
+              placeholder="Username"
+              value={username}
+              onChangeText={handleUsernameChange}
+            />
+          </View>
+        );
+      case 3:
+        return (
+          <View style={styles.topicContainer}>
+            {isLoading ? (
+              <Typography type="special" size="large">
+                Loading topics...
+              </Typography>
+            ) : error ? (
+              <Typography type="special" size="large">
+                {error}
+              </Typography>
+            ) : (
+              <FlatList
+                data={topics}
+                keyExtractor={item => item.id}
+                numColumns={3}
+                renderItem={({item}) => (
+                  <View style={styles.topicCard}>
+                    <Pressable
+                      style={[
+                        selectedTopics.includes(item.id) &&
+                          styles.selectedTopic,
+                      ]}
+                      onPress={() => handleTopicSelection(item.id)}>
+                      <Image
+                        source={{uri: item.file.full_path}}
+                        style={[
+                          styles.topicImage,
+                          selectedTopics.includes(item.id) &&
+                            styles.selectedImage,
+                        ]}
+                      />
+                    </Pressable>
+                    <Typography type="heading" size="xsmall">
+                      {item.label}
+                    </Typography>
+                  </View>
+                )}
+              />
+            )}
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.screenContainer}>
+      <View style={styles.headerContainer}>
+        <View style={styles.titleContainer}>
+          <View style={{flex: 1}}>
+            <Pressable
+              style={styles.backButton}
+              onPress={() =>
+                currentStep > 1
+                  ? setCurrentStep(prev => prev - 1)
+                  : navigation.goBack()
+              }>
+              <Icon
+                name="chevron-left"
+                fill={COLORS.neutral400}
+                height={20}
+                width={20}
+              />
+            </Pressable>
+          </View>
+          <View style={{flex: 6, alignContent: "center", alignItems: "center"}}>
+            {currentStep !== 2 && (
+              <Image source={require("../assets/images/ic_investly.png")} />
+            )}
+          </View>
+          <View style={{flex: 1, height: 32}}>
+            {currentStep === 1 && (
+              <Button
+                variant="link"
+                size="small"
+                onPress={() => navigation.navigate("Login")}>
+                Masuk
+              </Button>
+            )}
+          </View>
         </View>
-        <View style={styles.bottomSection}>
-          <ProgressBar current={currentIndex} total={3} height={4} />
-          <Button
-            variant="primary"
-            size="large"
-            onPress={handleSubmit}
-            disabled={isRegisterEnabled()}>
-            Selanjutnya
-          </Button>
-        </View>
+        <Typography type="heading" size="large" style={styles.title}>
+          {currentStep === 1
+            ? "Buat Akun"
+            : currentStep === 2
+              ? "Tambahkan Nama & Username"
+              : "Pilih 3 Topik Favorit"}
+        </Typography>
+      </View>
+      <View style={styles.bodyContainer}>
+        <View style={styles.contentContainer}>{renderStep()}</View>
         <CustomToast />
+      </View>
+      <View style={styles.bottomSection}>
+        <ProgressBar current={currentStep} total={3} height={4} />
+        <Button
+          variant="primary"
+          size="large"
+          onPress={handleNext}
+          disabled={false}>
+          {currentStep < 3 ? "Selanjutnya" : "Daftar"}
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -243,18 +397,17 @@ export default Register;
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
+    backgroundColor: COLORS.neutral100,
   },
   headerContainer: {
     gap: 24,
     padding: 20,
-    backgroundColor: COLORS.neutral100,
   },
   bodyContainer: {
     flex: 1,
     justifyContent: "space-between",
     padding: 24,
     gap: 24,
-    backgroundColor: COLORS.neutral100,
   },
   titleContainer: {
     alignContent: "center",
@@ -286,5 +439,32 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     gap: 12,
+    paddingTop: 8,
+    paddingBottom: 32,
+    paddingHorizontal: 24,
+  },
+  topicContainer: {
+    gap: 16,
+  },
+  topicCard: {
+    flex: 1,
+    justifyContent: "space-evenly",
+    alignContent: "center",
+    alignItems: "center",
+    gap: 4,
+    height: 140,
+  },
+  selectedTopic: {
+    borderColor: COLORS.purple500,
+    borderWidth: 4,
+    borderRadius: 8,
+  },
+  topicImage: {
+    borderRadius: 8,
+    width: 97.33,
+    height: 96,
+  },
+  selectedImage: {
+    borderRadius: 0,
   },
 });
