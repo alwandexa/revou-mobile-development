@@ -6,6 +6,7 @@ import {
   View,
   TextInputProps,
   ViewStyle,
+  ActivityIndicator,
 } from "react-native";
 
 import {COLORS} from "@constants/colors";
@@ -25,6 +26,7 @@ type TextFieldProps = TextInputProps & {
   disabled?: boolean;
   label?: string;
   message?: string;
+  loading?: boolean;
   containerStyle?: ViewStyle;
 };
 
@@ -36,6 +38,7 @@ const TextField = ({
   label,
   message,
   containerStyle,
+  loading,
   ...rest
 }: TextFieldProps) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -78,6 +81,11 @@ const TextField = ({
           style={styles.textInput}
           {...rest}
         />
+        {loading === true && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator />
+          </View>
+        )}
         {type === "password" && (
           <TouchableOpacity
             style={styles.eyeButton}
@@ -139,6 +147,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
+  },
+  loadingContainer: {
+    padding: 8,
   },
 });
 

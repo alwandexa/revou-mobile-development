@@ -1,5 +1,11 @@
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import React, {FunctionComponent, useEffect, useMemo, useState} from "react";
+import React, {
+  FunctionComponent,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,6 +15,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import debounce from "lodash/debounce";
 
 import {Icon, Typography} from "@components/atoms";
 import {Button, CustomToast} from "@components/molecules";
@@ -54,7 +61,12 @@ const Register: FunctionComponent = () => {
 
   // Step 2 states
   const [name, setName] = useState("");
+
   const [username, setUsername] = useState("");
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
+  const [usernameState, setUsernameState] = useState<TextFieldState>("default");
+  const [usernameMessage, setUsernameMessage] = useState("");
+  const [isUsernameLoading, setIsUsernameLoading] = useState(false);
 
   // Step 3 states
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -209,9 +221,59 @@ const Register: FunctionComponent = () => {
     setName(text);
   };
 
-  const handleUsernameChange = (text: string) => {
-    setUsername(text);
-  };
+  const validateUsername = useCallback(
+    async (currentUsername: string) => {
+      currentUsername = currentUsername.trim();
+      if (currentUsername.length === 0) {
+        setUsernameState("default");
+        setUsernameMessage("");
+        setIsUsernameValid(false);
+        return;
+      }
+
+      try {
+        setIsUsernameLoading(true);
+        const checkUserRequest = {username: currentUsername};
+        const response = await InvestlyServices.checkUsername(checkUserRequest);
+
+        if (response.data.status) {
+          console.log("validateUsername", response.data);
+          setUsernameState("negative");
+          setUsernameMessage(response.data.messages);
+          setIsUsernameValid(false);
+        }
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          const axiosError = err as AxiosError<CheckEmailResponse>;
+          setUsernameState("positive");
+          setUsernameMessage(
+            axiosError.response?.data.messages || "Validasi error",
+          );
+          setIsUsernameValid(true);
+        } else {
+          console.error("Unexpected error:", err);
+          setUsernameState("negative");
+          setUsernameMessage("Terjadi kesalahan yang tidak terduga");
+        }
+      } finally {
+        setIsUsernameLoading(false);
+      }
+    },
+    [setUsernameState, setUsernameMessage, setIsUsernameValid],
+  );
+
+  const debouncedValidateUsername = useMemo(
+    () => debounce(validateUsername, 200),
+    [validateUsername],
+  );
+
+  const handleUsernameChange = useCallback(
+    (text: string) => {
+      setUsername(text);
+      debouncedValidateUsername(text);
+    },
+    [debouncedValidateUsername],
+  );
 
   const handleTopicSelection = (topic: string) => {
     setSelectedTopics(prevTopics => {
@@ -229,7 +291,7 @@ const Register: FunctionComponent = () => {
       case 1:
         return isEmailValid && isPasswordValid && isPasswordConfirmationValid;
       case 2:
-        return name.trim() !== "" && username.trim() !== "";
+        return name.trim() !== "" && isUsernameValid;
       case 3:
         return selectedTopics.length === 3;
       default:
@@ -241,8 +303,8 @@ const Register: FunctionComponent = () => {
     isPasswordValid,
     isPasswordConfirmationValid,
     name,
-    username,
     selectedTopics,
+    isUsernameValid,
   ]);
 
   const handleNext = () => {
@@ -300,6 +362,9 @@ const Register: FunctionComponent = () => {
               placeholder="Username"
               value={username}
               onChangeText={handleUsernameChange}
+              state={usernameState}
+              message={usernameMessage}
+              loading={isUsernameLoading}
             />
           </View>
         );
