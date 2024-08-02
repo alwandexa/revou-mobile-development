@@ -1,6 +1,7 @@
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import React, {FunctionComponent, useEffect, useMemo, useState} from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -8,13 +9,14 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import axios from "axios";
 
 import {Icon, Typography} from "@components/atoms";
 import {Button, CustomToast} from "@components/molecules";
 import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {COLORS} from "@constants/colors";
 import ProgressBar from "@components/molecules/ProgressBar";
+import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
+import axios, {AxiosError} from "axios";
 
 interface Topic {
   id: string;
@@ -70,9 +72,7 @@ const Register: FunctionComponent = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        "https://develop.investly.id/api/social/v1/public/masterdata/topic",
-      );
+      const response = await InvestlyServices.getTopics();
       if (response.data.status) {
         setTopics(response.data.data);
       } else {
@@ -85,7 +85,7 @@ const Register: FunctionComponent = () => {
     }
   };
 
-  const validateEmail = (currentEmail: string) => {
+  const validateEmail = async (currentEmail: string) => {
     currentEmail = currentEmail.trim().toLowerCase();
 
     if (currentEmail.length > 254) {
@@ -109,11 +109,31 @@ const Register: FunctionComponent = () => {
       return false;
     }
 
-    setEmailState("positive");
-    setEmailMessage("");
-    setIsEmailValid(true);
+    try {
+      const checkEmailRequest = {email: currentEmail};
+      const response = await InvestlyServices.checkEmail(checkEmailRequest);
 
-    return true;
+      if (response.data.status) {
+        setEmailState("positive");
+        setEmailMessage("");
+        setIsEmailValid(true);
+      }
+      return true;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<CheckEmailResponse>;
+        setEmailState("negative");
+        setEmailMessage(
+          axiosError.response?.data.messages || "Email sudah digunakan",
+        );
+      } else {
+        console.error("Unexpected error:", err);
+        setEmailState("negative");
+        setEmailMessage("Terjadi kesalahan yang tidak terduga");
+      }
+      setIsEmailValid(false);
+      return false;
+    }
   };
 
   const validatePassword = (currentPassword: string) => {
@@ -287,9 +307,7 @@ const Register: FunctionComponent = () => {
         return (
           <View style={styles.topicContainer}>
             {isLoading ? (
-              <Typography type="special" size="large">
-                Loading topics...
-              </Typography>
+              <ActivityIndicator />
             ) : error ? (
               <Typography type="special" size="large">
                 {error}
@@ -303,6 +321,7 @@ const Register: FunctionComponent = () => {
                   <View style={styles.topicCard}>
                     <Pressable
                       style={[
+                        styles.topic,
                         selectedTopics.includes(item.id) &&
                           styles.selectedTopic,
                       ]}
@@ -316,7 +335,12 @@ const Register: FunctionComponent = () => {
                         ]}
                       />
                     </Pressable>
-                    <Typography type="heading" size="xsmall">
+                    <Typography
+                      type="heading"
+                      size="xsmall"
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                      style={styles.topicLabel}>
                       {item.label}
                     </Typography>
                   </View>
@@ -334,7 +358,7 @@ const Register: FunctionComponent = () => {
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.titleContainer}>
-          <View style={{flex: 1}}>
+          <View style={styles.leftContainer}>
             <Pressable
               style={styles.backButton}
               onPress={() =>
@@ -350,12 +374,12 @@ const Register: FunctionComponent = () => {
               />
             </Pressable>
           </View>
-          <View style={{flex: 6, alignContent: "center", alignItems: "center"}}>
+          <View style={styles.middleContainer}>
             {currentStep !== 2 && (
               <Image source={require("../assets/images/ic_investly.png")} />
             )}
           </View>
-          <View style={{flex: 1, height: 32}}>
+          <View style={styles.rightContainer}>
             {currentStep === 1 && (
               <Button
                 variant="link"
@@ -384,7 +408,7 @@ const Register: FunctionComponent = () => {
           variant="primary"
           size="large"
           onPress={handleNext}
-          disabled={false}>
+          disabled={isNextEnabled}>
           {currentStep < 3 ? "Selanjutnya" : "Daftar"}
         </Button>
       </View>
@@ -402,6 +426,18 @@ const styles = StyleSheet.create({
   headerContainer: {
     gap: 24,
     padding: 20,
+  },
+  leftContainer: {
+    flex: 1,
+  },
+  middleContainer: {
+    flex: 6,
+    alignContent: "center",
+    alignItems: "center",
+  },
+  rightContainer: {
+    flex: 1,
+    height: 32,
   },
   bodyContainer: {
     flex: 1,
@@ -444,15 +480,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   topicContainer: {
-    gap: 16,
+    gap: 1,
+    rowGap: 16,
+    columnGap: 10,
   },
   topicCard: {
     flex: 1,
-    justifyContent: "space-evenly",
     alignContent: "center",
     alignItems: "center",
     gap: 4,
-    height: 140,
+    minHeight: 120,
+    maxHeight: 140,
+    marginTop: 16,
+  },
+  topic: {
+    borderWidth: 4,
+    borderColor: COLORS.neutral100,
+  },
+  topicLabel: {
+    textAlign: "center",
+    width: 97.33,
   },
   selectedTopic: {
     borderColor: COLORS.purple500,

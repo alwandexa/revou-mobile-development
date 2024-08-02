@@ -8,7 +8,8 @@
       "@constants/*": ["constants/*"],
       "@contexts/*": ["contexts/*"],
       "@screens/*": ["screens/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@services/*": ["services/*"]
     }
   }
 }

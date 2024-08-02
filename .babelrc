@@ -11,7 +11,8 @@
           "@constants": "./src/constants",
           "@contexts": "./src/contexts",
           "@screens": "./src/screens",
-          "@utils": "./src/utils"
+          "@utils": "./src/utils",
+          "@services": "./src/services"
         }
       }
     ]
