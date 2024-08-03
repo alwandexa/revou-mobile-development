@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "889991167859",
+    "project_id": "revou-mobile-dev",
+    "storage_bucket": "revou-mobile-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889991167859:android:afde2ba00311ec9501cf06",
+        "android_client_info": {
+          "package_name": "com.revou.alwan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ0D2aMsOnqFc2yQmTGWMcbsp1Gg8nvPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

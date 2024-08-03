@@ -24,6 +24,7 @@ import {COLORS} from "@constants/colors";
 import ProgressBar from "@components/molecules/ProgressBar";
 import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
+import analytics from "@react-native-firebase/analytics";
 
 interface Topic {
   id: string;
@@ -307,7 +308,8 @@ const Register: FunctionComponent = () => {
     isUsernameValid,
   ]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    await analytics().logEvent("test");
     if (currentStep < 3) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -405,7 +407,11 @@ const Register: FunctionComponent = () => {
                       size="xsmall"
                       numberOfLines={2}
                       ellipsizeMode="tail"
-                      style={styles.topicLabel}>
+                      style={[
+                        styles.topicLabel,
+                        selectedTopics.includes(item.id) &&
+                          styles.selectedTopicLabel,
+                      ]}>
                       {item.label}
                     </Typography>
                   </View>
@@ -578,5 +584,8 @@ const styles = StyleSheet.create({
   },
   selectedImage: {
     borderRadius: 0,
+  },
+  selectedTopicLabel: {
+    color: COLORS.purple700,
   },
 });
