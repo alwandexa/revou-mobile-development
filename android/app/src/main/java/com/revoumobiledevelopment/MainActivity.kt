@@ -1,4 +1,4 @@
-package com.revoumobiledevelopment
+package com.revou.alwan
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -1,4 +1,4 @@
-package com.revoumobiledevelopment
+package com.revou.alwan
 
 import android.app.Application
 import com.facebook.react.PackageList
