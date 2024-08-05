@@ -64,6 +64,9 @@ const Register: FunctionComponent = () => {
 
   // Step 2 states
   const [name, setName] = useState("");
+  const [nameState, setNameState] = useState<TextFieldState>("default");
+  const [nameMessage, setNameMessage] = useState("");
+  const [isNameValid, setIsNameValid] = useState(false);
 
   const [username, setUsername] = useState("");
   const [isUsernameValid, setIsUsernameValid] = useState(false);
@@ -228,6 +231,28 @@ const Register: FunctionComponent = () => {
 
   const handleNameChange = (text: string) => {
     setName(text);
+    validateName(text);
+  };
+
+  const validateName = (currentName: string) => {
+    if (currentName.trim().length === 0) {
+      setNameState("negative");
+      setNameMessage("Nama tidak boleh kosong");
+      setIsNameValid(false);
+      return false;
+    }
+
+    if (currentName.trim().length < 3) {
+      setNameState("negative");
+      setNameMessage("Nama minimal 3 karakter");
+      setIsNameValid(false);
+      return false;
+    }
+
+    setNameState("positive");
+    setNameMessage("");
+    setIsNameValid(true);
+    return true;
   };
 
   const validateUsername = useCallback(
@@ -317,7 +342,7 @@ const Register: FunctionComponent = () => {
       case 1:
         return isEmailValid && isPasswordValid && isPasswordConfirmationValid;
       case 2:
-        return name.trim() !== "" && isUsernameValid;
+        return isNameValid && isUsernameValid;
       case 3:
         return selectedTopics.length === 3;
       default:
@@ -328,9 +353,9 @@ const Register: FunctionComponent = () => {
     isEmailValid,
     isPasswordValid,
     isPasswordConfirmationValid,
-    name,
-    selectedTopics,
+    isNameValid,
     isUsernameValid,
+    selectedTopics,
   ]);
 
   const handleNext = async () => {
@@ -353,16 +378,6 @@ const Register: FunctionComponent = () => {
         username: username,
         name: name,
       };
-
-      Toast.show({
-        type: "error",
-        text1: "test",
-        text1Style: {color: COLORS.red600},
-        visibilityTime: 3000,
-        autoHide: true,
-        position: "bottom",
-        bottomOffset: 50,
-      });
 
       const analyticsParams = {
         email,
@@ -457,6 +472,8 @@ const Register: FunctionComponent = () => {
               placeholder="Nama"
               value={name}
               onChangeText={handleNameChange}
+              state={nameState}
+              message={nameMessage}
             />
             <TextField
               label="Username"
@@ -578,7 +595,7 @@ const Register: FunctionComponent = () => {
           variant="primary"
           size="large"
           onPress={handleNext}
-          disabled={isNextEnabled}>
+          disabled={!isNextEnabled}>
           {currentStep < 3 ? "Selanjutnya" : "Daftar"}
         </Button>
       </View>
