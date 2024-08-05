@@ -189,6 +189,9 @@ const Login: FunctionComponent = () => {
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<LoginResponse>;
           errorMessage = axiosError.response?.data.messages || errorMessage;
+        } else {
+          const otherError = error as Error;
+          errorMessage = otherError.message;
         }
 
         Toast.show({
