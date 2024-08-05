@@ -271,7 +271,6 @@ const Register: FunctionComponent = () => {
         const response = await InvestlyServices.checkUsername(checkUserRequest);
 
         if (response.data.status) {
-          console.log("validateUsername", response.data);
           setUsernameState("negative");
           setUsernameMessage(response.data.messages);
           setIsUsernameValid(false);
