@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ActivityIndicator,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -21,6 +22,7 @@ export type ButtonProps = TouchableOpacityProps &
     iconColor?: string;
     textStyle?: TextStyle;
     customStyle?: ViewStyle;
+    loading?: boolean;
     children?: React.ReactNode;
   };
 
@@ -35,6 +37,7 @@ const Button = ({
   disabled,
   textStyle,
   customStyle,
+  loading,
   children,
   ...props
 }: ButtonProps) => {
@@ -101,7 +104,7 @@ const Button = ({
         getDisabledStyle(),
         customStyle,
       ]}
-      disabled={disabled}
+      disabled={disabled || loading}
       {...props}>
       {icon && iconPosition === "left" && (
         <Icon
@@ -127,6 +130,7 @@ const Button = ({
           fill={iconColor ? iconColor : (getTextStyle().color as string)}
         />
       )}
+      {loading && <ActivityIndicator />}
     </TouchableOpacity>
   );
 };
