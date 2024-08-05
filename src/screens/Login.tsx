@@ -8,6 +8,8 @@ import {Button, CustomToast} from "@components/molecules";
 import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
+import InvestlyServices, {LoginResponse} from "@services/InvestlyServices";
+import axios, {AxiosError} from "axios";
 
 export const LoginHeader: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
@@ -52,6 +54,8 @@ const Login: FunctionComponent = () => {
   const [passwordState, setPasswordState] = useState<TextFieldState>("default");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {login} = useAuth();
 
@@ -140,45 +144,64 @@ const Login: FunctionComponent = () => {
 
   const isLoginEnabled = useMemo(
     () => () => {
-      return isEmailValid && isPasswordValid ? false : true;
+      return !(isEmailValid && isPasswordValid) || isLoading;
     },
-    [isEmailValid, isPasswordValid],
+    [isEmailValid, isPasswordValid, isLoading],
   );
 
-  const validateCredential = () => {
-    return email === "alwanwirawan@test.app" && password === "TestApp123!";
-  };
-
-  const getUserData = () => {
-    const avatar =
-      "https://lwfiles.mycourse.app/656ef73b8e59fa6dfcddbe98-public/3073ed5d42a0e38174e311a1a0cb0800.png";
-
-    return avatar;
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isCurrentEmailValid = validateEmail(email);
     const isCurrentPasswordValid = validatePassword(password);
-    const isCredentialValid = validateCredential();
 
     if (isCurrentEmailValid && isCurrentPasswordValid) {
-      if (isCredentialValid) {
-        login("Alwan Wirawan", getUserData());
+      setIsLoading(true);
+      try {
+        const response = await InvestlyServices.login({email, password});
+        const loginResponse = response.data as LoginResponse;
 
-        navigation.reset({
-          index: 0,
-          routes: [{name: "HomeTab"}],
-        });
-      } else {
+        if (loginResponse.status && loginResponse.data) {
+          // Login successful
+          login(
+            loginResponse.data.access_token,
+            loginResponse.data.refresh_token,
+          );
+
+          Toast.show({
+            type: "success",
+            text1: loginResponse.messages,
+            visibilityTime: 3000,
+            autoHide: true,
+            position: "bottom",
+            bottomOffset: 100,
+          });
+
+          navigation.reset({
+            index: 0,
+            routes: [{name: "HomeTab"}],
+          });
+        } else {
+          // Login failed
+          throw new Error(loginResponse.messages);
+        }
+      } catch (error) {
+        let errorMessage = "Login error";
+
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<LoginResponse>;
+          errorMessage = axiosError.response?.data.messages || errorMessage;
+        }
+
         Toast.show({
           type: "error",
-          text1: "Email atau password salah. Silakan coba lagi.",
+          text1: errorMessage,
           text1Style: {color: COLORS.red600},
           visibilityTime: 3000,
           autoHide: true,
           position: "bottom",
           bottomOffset: 100,
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -212,8 +235,9 @@ const Login: FunctionComponent = () => {
           variant="primary"
           size="large"
           onPress={handleSubmit}
-          disabled={isLoginEnabled()}>
-          Masuk
+          disabled={isLoginEnabled()}
+          loading={isLoading}>
+          {isLoading ? "Sedang Masuk..." : "Masuk"}
         </Button>
       </View>
       <Button variant="outline" size="large" onPress={handleDaftar}>
