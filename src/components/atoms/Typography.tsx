@@ -17,9 +17,8 @@ export type TypographySize = HeadingSize | ParagraphSize | SpecialSize;
 type TypographyProps = {
   type: TypographyType;
   size: TypographySize;
-  style?: TextStyle;
   children: React.ReactNode;
-} & Omit<TextProps, "style">;
+} & TextProps;
 
 export default function Typography({
   type = "paragraph",
