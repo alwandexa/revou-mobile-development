@@ -5,6 +5,14 @@ export type LoginRequest = {
   password: string;
 };
 
+export type RegisterRequest = {
+  email: string;
+  password: string;
+  favorite_topic_ids: [string];
+  username: string;
+  name: string;
+};
+
 export type CheckEmailRequest = {
   email: string;
 };
@@ -21,8 +29,13 @@ export type CheckUsernameRequest = {
 export const BASE_URL = "https://develop.investly.id/";
 
 const InvestlyServices = {
-  login: async (body: LoginRequest) => {
+  login: async (body: RegisterRequest) => {
     return await axios.post(`${BASE_URL}api/auth/v2/login`, body, {
+      headers: {"Content-Type": "application/json"},
+    });
+  },
+  register: async (body: LoginRequest) => {
+    return await axios.post(`${BASE_URL}api/auth/v4/register`, body, {
       headers: {"Content-Type": "application/json"},
     });
   },

@@ -15,6 +15,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import debounce from "lodash/debounce";
 
 import {Icon, Typography} from "@components/atoms";
@@ -139,6 +140,9 @@ const Register: FunctionComponent = () => {
         setEmailMessage(
           axiosError.response?.data.messages || "Email sudah digunakan",
         );
+        analytics().logEvent("failed_validate_register_email", {
+          email: currentEmail,
+        });
       } else {
         console.error("Unexpected error:", err);
         setEmailState("negative");
@@ -242,6 +246,9 @@ const Register: FunctionComponent = () => {
           setUsernameState("negative");
           setUsernameMessage(response.data.messages);
           setIsUsernameValid(false);
+          analytics().logEvent("failed_validate_register_username", {
+            username: currentUsername,
+          });
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -276,12 +283,26 @@ const Register: FunctionComponent = () => {
     [debouncedValidateUsername],
   );
 
-  const handleTopicSelection = (topic: string) => {
+  const handleTopicSelection = (topic: Topic) => {
     setSelectedTopics(prevTopics => {
-      if (prevTopics.includes(topic)) {
-        return prevTopics.filter(t => t !== topic);
+      if (prevTopics.includes(topic.id)) {
+        analytics().logEvent("click_register_unselect_topic", {
+          email,
+          name,
+          username,
+          topic_id: topic.id,
+          topic_name: topic.label,
+        });
+        return prevTopics.filter(t => t !== topic.id);
       } else if (prevTopics.length < 3) {
-        return [...prevTopics, topic];
+        analytics().logEvent("click_register_select_topic", {
+          email,
+          name,
+          username,
+          topic_id: topic.id,
+          topic_name: topic.label,
+        });
+        return [...prevTopics, topic.id];
       }
       return prevTopics;
     });
@@ -309,11 +330,84 @@ const Register: FunctionComponent = () => {
   ]);
 
   const handleNext = async () => {
-    await analytics().logEvent("test");
     if (currentStep < 3) {
+      if (currentStep === 1) {
+        analytics().logEvent("click_register_button_step_1", {email});
+      } else if (currentStep === 2) {
+        analytics().logEvent("click_register_button_step_2", {
+          email,
+          name,
+          username,
+        });
+      }
       setCurrentStep(prev => prev + 1);
     } else {
-      console.log("Registration complete");
+      const params = {
+        email: email,
+        password: password,
+        favorite_topic_ids: selectedTopics,
+        username: username,
+        name: name,
+      };
+
+      Toast.show({
+        type: "error",
+        text1: "test",
+        text1Style: {color: COLORS.red600},
+        visibilityTime: 3000,
+        autoHide: true,
+        position: "bottom",
+        bottomOffset: 50,
+      });
+
+      const analyticsParams = {
+        email,
+        name,
+        username,
+        topic_id: selectedTopics.join(","),
+        topic_name: topics
+          .filter(t => selectedTopics.includes(t.id))
+          .map(t => t.label)
+          .join(","),
+      };
+
+      analytics().logEvent("click_register_button_step_3", analyticsParams);
+
+      setIsLoading(true);
+      await InvestlyServices.register(params)
+        .then(() => {
+          analytics().logEvent("success_register_account", analyticsParams);
+          navigation.reset({
+            index: 0,
+            routes: [{name: "HomeTab"}],
+          });
+        })
+        .catch(err => {
+          analytics().logEvent("failed_register_account", {
+            ...analyticsParams,
+            error_message: err.message,
+          });
+
+          let errorMessage = "";
+
+          if (axios.isAxiosError(err)) {
+            const axiosError = err as AxiosError<CheckEmailResponse>;
+            errorMessage =
+              axiosError.response?.data.messages || "Register gagal";
+          } else {
+            errorMessage = err.message;
+          }
+          Toast.show({
+            type: "error",
+            text1: errorMessage,
+            text1Style: {color: COLORS.red600},
+            visibilityTime: 3000,
+            autoHide: true,
+            position: "bottom",
+            bottomOffset: 50,
+          });
+        })
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -392,7 +486,7 @@ const Register: FunctionComponent = () => {
                         selectedTopics.includes(item.id) &&
                           styles.selectedTopic,
                       ]}
-                      onPress={() => handleTopicSelection(item.id)}>
+                      onPress={() => handleTopicSelection(item)}>
                       <Image
                         source={{uri: item.file.full_path}}
                         style={[
