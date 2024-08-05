@@ -47,6 +47,7 @@ const Register: FunctionComponent = () => {
   const [emailState, setEmailState] = useState<TextFieldState>("default");
   const [emailMessage, setEmailMessage] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const [password, setPassword] = useState("");
   const [passwordState, setPasswordState] = useState<TextFieldState>("default");
@@ -124,6 +125,7 @@ const Register: FunctionComponent = () => {
     }
 
     try {
+      setIsEmailLoading(true);
       const checkEmailRequest = {email: currentEmail};
       const response = await InvestlyServices.checkEmail(checkEmailRequest);
 
@@ -150,6 +152,8 @@ const Register: FunctionComponent = () => {
       }
       setIsEmailValid(false);
       return false;
+    } finally {
+      setIsEmailLoading(false);
     }
   };
 
@@ -422,6 +426,7 @@ const Register: FunctionComponent = () => {
               state={emailState}
               message={emailMessage}
               value={email}
+              loading={isEmailLoading}
               onChangeText={handleEmailChange}
             />
             <TextField
