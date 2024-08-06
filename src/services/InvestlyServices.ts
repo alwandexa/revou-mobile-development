@@ -55,6 +55,17 @@ export type getPostListResponse = {
   };
   data: FeedItem[];
 };
+
+export type getPostDetailRequest = {
+  id: string;
+};
+
+export type getPostDetailResponse = {
+  status: boolean;
+  messages: string;
+  data: FeedItem;
+};
+
 export const BASE_URL = "https://develop.investly.id/";
 
 const InvestlyServices = {
@@ -85,6 +96,11 @@ const InvestlyServices = {
     return await axios.get<getPostListResponse>(
       `${BASE_URL}api/social/v2/feed`,
       {params},
+    );
+  },
+  getPostDetail: async (params: getPostDetailRequest) => {
+    return await axios.get<getPostDetailResponse>(
+      `${BASE_URL}/api/social/v1/public/post/${params.id}`,
     );
   },
 };

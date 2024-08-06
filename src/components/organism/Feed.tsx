@@ -5,7 +5,6 @@ import {Avatar, Typography} from "@components/atoms";
 import {Label, ProtectedButton} from "@components/molecules";
 import FeedContent from "@components/molecules/FeedContent";
 import {COLORS} from "@constants/colors";
-import {useAuth} from "@contexts/AuthContext";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 
 export type FeedItem = {
@@ -36,13 +35,11 @@ export type FeedItem = {
 };
 
 const Feed = memo(({item}: {item: FeedItem}) => {
-  const {setSelectedItem} = useAuth();
   const navigation = useNavigation<NavigationProp<Pages>>();
 
   const handleFeedContentClicked = useCallback(() => {
-    setSelectedItem(item);
-    navigation.navigate("Post");
-  }, [navigation, setSelectedItem, item]);
+    navigation.navigate("Post", {id: item.id});
+  }, [navigation, item]);
 
   return (
     <TouchableOpacity
