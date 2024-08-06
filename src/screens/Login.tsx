@@ -2,6 +2,7 @@ import {NavigationProp, useNavigation} from "@react-navigation/native";
 import React, {FunctionComponent, useMemo, useState} from "react";
 import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {Icon, Typography} from "@components/atoms";
 import {Button, CustomToast} from "@components/molecules";
@@ -160,7 +161,15 @@ const Login: FunctionComponent = () => {
         const loginResponse = response.data as LoginResponse;
 
         if (loginResponse.status && loginResponse.data) {
-          // Login successful
+          await AsyncStorage.setItem(
+            "access_token",
+            loginResponse.data.access_token,
+          );
+          await AsyncStorage.setItem(
+            "refresh_token",
+            loginResponse.data.refresh_token,
+          );
+
           login(
             loginResponse.data.access_token,
             loginResponse.data.refresh_token,

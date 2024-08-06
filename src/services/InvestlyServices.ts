@@ -1,4 +1,5 @@
 import {FeedItem} from "@components/organism/Feed";
+import {getAccessToken} from "@utils/index";
 import axios from "axios";
 
 export type LoginRequest = {
@@ -101,6 +102,20 @@ const InvestlyServices = {
   getPostDetail: async (params: getPostDetailRequest) => {
     return await axios.get<getPostDetailResponse>(
       `${BASE_URL}/api/social/v1/public/post/${params.id}`,
+    );
+  },
+  setPostUpvote: async (params: getPostDetailRequest) => {
+    const accessToken = await getAccessToken();
+    console.log("setPostUpvote", `Bearer ${accessToken}`);
+    console.log(accessToken);
+    return await axios.post(
+      `${BASE_URL}api/social/v2/post/${params.id}/up-vote`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
     );
   },
 };

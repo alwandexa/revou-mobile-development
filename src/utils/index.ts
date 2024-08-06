@@ -1,4 +1,5 @@
 import {faker} from "@faker-js/faker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -55,4 +56,14 @@ export const generateFeedData = (count = 5) => {
   };
 
   return Array.from({length: count}, generateFeedItem);
+};
+
+export const getAccessToken = async () => {
+  try {
+    const accessToken = await AsyncStorage.getItem("access_token");
+    return accessToken;
+  } catch (error) {
+    console.error("Error getting access token", error);
+    return null;
+  }
 };

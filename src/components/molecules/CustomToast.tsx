@@ -14,8 +14,14 @@ interface ToastStyles {
 }
 
 const baseStyles: ToastStyles = {
-  borderLeftColor: COLORS.green600,
-  backgroundColor: COLORS.neutral100,
+  borderLeftColor: COLORS.purple600,
+  backgroundColor: COLORS.purple600,
+};
+
+const textStylesSuccess = {
+  fontSize: 14,
+  fontWeight: "400",
+  color: COLORS.neutral100,
 };
 
 const textStyles = {
@@ -30,7 +36,7 @@ const toastConfig: ToastConfig = {
       {...props}
       style={baseStyles as ViewStyle}
       contentContainerStyle={styles.contentContainer}
-      text1Style={textStyles as TextStyle}
+      text1Style={textStylesSuccess as TextStyle}
       text2Style={
         {...textStyles, fontSize: 13, color: COLORS.neutral600} as TextStyle
       }
