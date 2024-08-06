@@ -1,5 +1,13 @@
-import React, {FunctionComponent, useState} from "react";
+import {Icon, Typography} from "@components/atoms";
+import {TypographySize, TypographyType} from "@components/atoms/Typography";
+import {Button} from "@components/molecules";
+import {COLORS} from "@constants/colors";
+import {WithAuth, useAuth} from "@contexts/AuthContext";
+import {NavigationProp, useNavigation} from "@react-navigation/native";
+import axios, {AxiosError} from "axios";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import {
+  ActivityIndicator,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -7,24 +15,40 @@ import {
   TextStyle,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import dayjs from "dayjs";
-
-import {WithAuth, useAuth} from "@contexts/AuthContext";
-import {Icon, Typography} from "@components/atoms";
-import {FeedItem} from "@components/organism/Feed";
-import {Button, TextField} from "@components/molecules";
-import {COLORS} from "@constants/colors";
-import {TypographySize, TypographyType} from "@components/atoms/Typography";
+import DropDownPicker from "react-native-dropdown-picker";
+import analytics from "@react-native-firebase/analytics";
+import {getAccessToken} from "@utils/index";
+import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
 
 const CreatePost: FunctionComponent = () => {
   const {user} = useAuth();
 
+  const email = "dummys";
+
   const [topic, setTopic] = useState("");
+  const [topics, setTopics] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<Pages>>();
+
+  useEffect(() => {
+    axios
+      .get("https://develop.investly.id/api/social/v1/public/masterdata/topic")
+      .then(response => {
+        setTopics(
+          response.data.data.map(topic => ({
+            label: topic.label,
+            value: topic.id,
+          })),
+        );
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   const getTypographyStyle = (
     typographyType: TypographyType,
@@ -39,23 +63,107 @@ const CreatePost: FunctionComponent = () => {
     return typographyStyle as TextStyle;
   };
 
-  const handlePost = () => {
-    const feed: FeedItem = {
-      avatar_url:
-        "https://lwfiles.mycourse.app/656ef73b8e59fa6dfcddbe98-public/3073ed5d42a0e38174e311a1a0cb0800.png",
-      name: user as string,
-      headline: "Mobile Engineer Expert",
-      created_at: dayjs().toISOString(),
-      post_header: topic,
-      post_content: description,
-      post_topic: topic,
-      post_upvote: 0,
-      post_downvote: 0,
-      post_comment: 0,
-      post_retweet: 0,
+  const handlePost = async () => {
+    setLoading(true);
+    const data = new FormData();
+    data.append("content", description);
+    data.append("header", title);
+    data.append("is_anonim", "false");
+    data.append("topic_id", topic);
+
+    const accessToken = await getAccessToken();
+
+    const config = {
+      method: "post",
+      url: "https://develop.investly.id/api/social/v2/post",
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
     };
 
-    navigation.navigate("Home" as never, feed as never);
+    console.log(data);
+
+    await InvestlyServices.createPost(data)
+      .then(response => {
+        console.log(response);
+        setLoading(false);
+        navigation.navigate("HomeTab");
+        analytics().logEvent("success_create_post", {
+          username: user,
+          email: email,
+        });
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log(JSON.stringify(error));
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<CheckEmailResponse>;
+          // console.log(axiosError.response);
+        }
+        analytics().logEvent("failed_create_post", {
+          username: user,
+          email: email,
+          // error_message: error.response.data.message,
+        });
+      });
+
+    // await axios
+    //   .post("https://develop.investly.id/api/social/v2/post", data, {
+    //     headers: {
+    //       // accept: "application/json",
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   })
+    //   .then(response => {
+    //     console.log(response);
+    //     setLoading(false);
+    //     navigation.navigate("HomeTab");
+    //     analytics().logEvent("success_create_post", {
+    //       username: user,
+    //       email: email,
+    //     });
+    //   })
+    //   .catch(error => {
+    //     setLoading(false);
+    //     console.log(JSON.stringify(error));
+    //     if (axios.isAxiosError(error)) {
+    //       const axiosError = error as AxiosError<CheckEmailResponse>;
+    //       // console.log(axiosError.response);
+    //     }
+    //     analytics().logEvent("failed_create_post", {
+    //       username: user,
+    //       email: email,
+    //       // error_message: error.response.data.message,
+    //     });
+    //   });
+
+    // await axios
+    //   .request(config)
+    //   .then(response => {
+    //     console.log(response);
+    //     setLoading(false);
+    //     navigation.navigate("HomeTab");
+    //     // Toast.show("Success Create Post", {type: "success"});
+    //     analytics().logEvent("success_create_post", {
+    //       username: user,
+    //       email: email,
+    //     });
+    //   })
+    //   .catch(error => {
+    //     setLoading(false);
+    //     // Toast.show(error.response.data.message, {type: "error"});
+    //     if (axios.isAxiosError(error)) {
+    //       const axiosError = error as AxiosError<CheckEmailResponse>;
+    //       console.log(axiosError.response);
+    //     }
+    //     analytics().logEvent("failed_create_post", {
+    //       username: user,
+    //       email: email,
+    //       // error_message: error.response.data.message,
+    //     });
+    //   });
   };
 
   return (
@@ -83,14 +191,23 @@ const CreatePost: FunctionComponent = () => {
           variant="primary"
           size="small"
           customStyle={styles.postButton}
-          disabled={!(topic && title && description)}
+          disabled={!(topic && title && description) || loading}
           onPress={handlePost}>
-          Post
+          {loading ? <ActivityIndicator color={COLORS.neutral100} /> : "Post"}
         </Button>
       </View>
 
       <View style={styles.contentHolder}>
-        <TextField placeholder="Topic" value={topic} onChangeText={setTopic} />
+        <DropDownPicker
+          open={dropdownOpen}
+          value={topic}
+          items={topics}
+          setOpen={setDropdownOpen}
+          setValue={setTopic}
+          placeholder="Select a topic"
+          style={getTypographyStyle("heading", "xlarge")}
+          dropDownContainerStyle={{borderColor: COLORS.neutral300}}
+        />
         <TextInput
           placeholder="Judul"
           value={title}

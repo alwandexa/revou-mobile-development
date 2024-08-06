@@ -67,6 +67,10 @@ export type getPostDetailResponse = {
   data: FeedItem;
 };
 
+export type createPostRequest = {
+  id: string;
+};
+
 export const BASE_URL = "https://develop.investly.id/";
 
 const InvestlyServices = {
@@ -106,8 +110,6 @@ const InvestlyServices = {
   },
   setPostUpvote: async (params: getPostDetailRequest) => {
     const accessToken = await getAccessToken();
-    console.log("setPostUpvote", `Bearer ${accessToken}`);
-    console.log(accessToken);
     return await axios.post(
       `${BASE_URL}api/social/v2/post/${params.id}/up-vote`,
       {},
@@ -117,6 +119,15 @@ const InvestlyServices = {
         },
       },
     );
+  },
+  createPost: async (body: FormData) => {
+    console.log("create post");
+    const accessToken = await getAccessToken();
+    return await axios.post(`${BASE_URL}api/social/v2/post`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   },
 };
 
