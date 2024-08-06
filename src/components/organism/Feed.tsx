@@ -1,5 +1,5 @@
 import {Avatar, Typography} from "@components/atoms";
-import {CustomToast, Label, ProtectedButton} from "@components/molecules";
+import {Label, ProtectedButton} from "@components/molecules";
 import FeedContent from "@components/molecules/FeedContent";
 import {COLORS} from "@constants/colors";
 import analytics from "@react-native-firebase/analytics";
@@ -71,7 +71,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
         const axiosError = err as AxiosError<CheckEmailResponse>;
         errorMessage = axiosError.response?.data.messages || "Register gagal";
       } else {
-        errorMessage = err.message;
+        errorMessage = err?.message;
       }
 
       Toast.show({
@@ -177,7 +177,6 @@ const Feed = memo(({item}: {item: FeedItem}) => {
           </ProtectedButton>
         </View>
       </TouchableOpacity>
-      <CustomToast />
     </>
   );
 });

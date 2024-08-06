@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import {Icon, Typography} from "@components/atoms";
-import {Button, TextField} from "@components/molecules";
+import {Button, CustomToast, TextField} from "@components/molecules";
 import {Feed} from "@components/organism";
 import {FeedItem} from "@components/organism/Feed";
 import {COLORS} from "@constants/colors";
@@ -81,6 +81,7 @@ const DetailPost: FunctionComponent = () => {
         />
         <Button variant="primary" size="medium" icon="paper-plane" disabled />
       </View>
+      <CustomToast />
     </SafeAreaView>
   );
 };

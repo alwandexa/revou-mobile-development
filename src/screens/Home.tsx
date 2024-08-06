@@ -22,7 +22,7 @@ import {
 } from "react-native";
 
 import {Icon, Typography} from "@components/atoms";
-import {TabBar, TabBarIcon} from "@components/molecules";
+import {CustomToast, TabBar, TabBarIcon} from "@components/molecules";
 import {LoginBanner, PostInput} from "@components/organism";
 import Feed, {FeedItem} from "@components/organism/Feed";
 import {COLORS} from "@constants/colors";
@@ -278,6 +278,7 @@ const Home: FunctionComponent = () => {
         </TopTab.Navigator>
       </View>
       {!user && <LoginBanner />}
+      <CustomToast />
     </SafeAreaView>
   );
 };
