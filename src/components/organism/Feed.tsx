@@ -7,21 +7,32 @@ import FeedContent from "@components/molecules/FeedContent";
 import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import {formatRelativeTime} from "@utils/index";
-// import {Pages} from "types";
 
 export type FeedItem = {
-  avatar_url: string;
-  name: string;
-  headline: string;
+  id: string;
+  header: string;
+  content: string;
+  attachments: string[];
   created_at: string;
-  post_header: string;
-  post_content: string;
-  post_topic: string;
-  post_upvote: number;
-  post_downvote: number;
-  post_comment: number;
-  post_retweet: number;
+  is_upvoted: boolean;
+  is_downvoted: boolean;
+  is_reposted: boolean;
+  total_comments: number;
+  upvotes: number;
+  reposts: number;
+  time: string;
+  topic: {
+    id: string;
+    label: string;
+  };
+  user: {
+    user_id: string;
+    name: string;
+    username: string;
+    profile_path: string | null;
+    bio: string;
+    headline: string;
+  };
 };
 
 const Feed = memo(({item}: {item: FeedItem}) => {
@@ -39,16 +50,16 @@ const Feed = memo(({item}: {item: FeedItem}) => {
       onPress={handleFeedContentClicked}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Avatar size="large" source={{uri: item.avatar_url}} />
+          <Avatar size="large" source={{uri: item?.user.profile_path || ""}} />
           <View style={styles.headerText}>
             <Typography type="heading" size="xsmall" style={styles.name}>
-              {item.name}
+              {item.user.name}
             </Typography>
             <Typography type="paragraph" size="small">
-              {item.headline}
+              {item.user.headline}
             </Typography>
             <Typography type="paragraph" size="xsmall">
-              {formatRelativeTime(item.created_at)}
+              {item.time}
             </Typography>
           </View>
           <View>
@@ -62,13 +73,10 @@ const Feed = memo(({item}: {item: FeedItem}) => {
           </View>
         </View>
       </View>
-      <FeedContent
-        post_header={item.post_header}
-        post_content={item.post_content}
-      />
+      <FeedContent post_header={item.header} post_content={item.content} />
       <View style={styles.footer}>
         <Label variant="tertiary" color="green">
-          {item.post_topic}
+          {item.topic.label}
         </Label>
       </View>
       <View style={styles.footerActions}>
@@ -82,7 +90,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
               type="paragraph"
               size="small"
               style={styles.actionButtonText}>
-              {item.post_upvote}
+              {item.upvotes}
             </Typography>
           </ProtectedButton>
           <View style={styles.divider} />
@@ -104,7 +112,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
             type="paragraph"
             size="small"
             style={styles.actionButtonText}>
-            {item.post_comment}
+            {item.total_comments}
           </Typography>
         </ProtectedButton>
         <ProtectedButton
@@ -117,7 +125,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
             type="paragraph"
             size="small"
             style={styles.actionButtonText}>
-            {item.post_retweet}
+            {item.reposts}
           </Typography>
         </ProtectedButton>
       </View>

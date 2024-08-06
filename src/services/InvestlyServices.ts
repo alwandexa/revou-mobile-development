@@ -1,3 +1,4 @@
+import {FeedItem} from "@components/organism/Feed";
 import axios from "axios";
 
 export type LoginRequest = {
@@ -37,6 +38,23 @@ export type CheckUsernameRequest = {
   username: string;
 };
 
+export type getPostListRequest = {
+  sort_by: string;
+  page: number;
+  perpage: number;
+};
+
+export type getPostListResponse = {
+  status: boolean;
+  messages: string;
+  meta: {
+    per_page: number;
+    current_page: number;
+    last_page: number;
+    is_load_more: boolean;
+  };
+  data: FeedItem[];
+};
 export const BASE_URL = "https://develop.investly.id/";
 
 const InvestlyServices = {
@@ -56,13 +74,18 @@ const InvestlyServices = {
     });
   },
   checkUsername: async (body: CheckUsernameRequest) => {
-    console.log(`${BASE_URL}api/social/v1/public/username/${body.username}`);
     return await axios.get(
       `${BASE_URL}api/social/v1/public/username/${body.username}`,
     );
   },
   getTopics: async () => {
     return await axios.get(`${BASE_URL}api/social/v1/public/masterdata/topic`);
+  },
+  getPostList: async (params: getPostListRequest) => {
+    return await axios.get<getPostListResponse>(
+      `${BASE_URL}api/social/v2/feed`,
+      {params},
+    );
   },
 };
 

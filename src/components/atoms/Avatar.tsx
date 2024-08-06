@@ -12,22 +12,18 @@ type AvatarProps = {
 const Avatar: FunctionComponent<AvatarProps> = ({source, size = "medium"}) => {
   const componentSize = size as keyof typeof personStyles;
 
-  const hasValidSource = useMemo(
-    () => () => {
-      if (!source) return false;
-      if (typeof source === "number") return true;
-      if (typeof source === "object" && "uri" in source) {
-        return !!source.uri;
-      }
-
-      return false;
-    },
-    [source],
-  );
+  const hasValidSource = useMemo(() => {
+    if (!source) return false;
+    if (typeof source === "number") return true;
+    if (typeof source === "object" && "uri" in source) {
+      return !!source.uri;
+    }
+    return false;
+  }, [source]);
 
   return (
     <View style={styles[componentSize]}>
-      {hasValidSource() ? (
+      {hasValidSource ? (
         <Image
           source={source}
           style={[styles.imageStyle, styles[componentSize]]}
