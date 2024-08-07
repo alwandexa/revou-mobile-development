@@ -2,7 +2,6 @@ import {NavigationProp, useNavigation} from "@react-navigation/native";
 import React, {FunctionComponent, useMemo, useState} from "react";
 import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import Toast from "react-native-toast-message";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {Icon, Typography} from "@components/atoms";
 import {Button, CustomToast} from "@components/molecules";
@@ -10,6 +9,7 @@ import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
 import InvestlyServices, {LoginResponse} from "@services/InvestlyServices";
+import {setUserData} from "@utils/index";
 import axios, {AxiosError} from "axios";
 
 export const LoginHeader: FunctionComponent = () => {
@@ -161,22 +161,12 @@ const Login: FunctionComponent = () => {
         const loginResponse = response.data as LoginResponse;
 
         if (loginResponse.status && loginResponse.data) {
-          await AsyncStorage.setItem(
-            "access_token",
+          const userData = await setUserData(
             loginResponse.data.access_token,
-          );
-          await AsyncStorage.setItem(
-            "refresh_token",
             loginResponse.data.refresh_token,
           );
-          const getUserResponse = await InvestlyServices.getUserProfile();
 
-          await AsyncStorage.setItem(
-            "user_data",
-            JSON.stringify(getUserResponse.data.data),
-          );
-
-          login(getUserResponse.data.data);
+          login(userData);
 
           Toast.show({
             type: "success",
@@ -220,7 +210,6 @@ const Login: FunctionComponent = () => {
       }
     }
   };
-
   return (
     <SafeAreaView style={styles.bodyContainer}>
       <View style={styles.contentContainer}>

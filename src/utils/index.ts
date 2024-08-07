@@ -1,5 +1,6 @@
 import {faker} from "@faker-js/faker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InvestlyServices from "@services/InvestlyServices";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -66,4 +67,26 @@ export const getAccessToken = async () => {
     console.error("Error getting access token", error);
     return null;
   }
+};
+
+export const setUserData = async (
+  access_token: string,
+  refresh_token: string,
+) => {
+  await AsyncStorage.setItem("access_token", access_token);
+  await AsyncStorage.setItem("refresh_token", refresh_token);
+  const getUserResponse = await InvestlyServices.getUserProfile();
+
+  await AsyncStorage.setItem(
+    "user_data",
+    JSON.stringify(getUserResponse.data.data),
+  );
+
+  return getUserResponse.data.data;
+};
+
+export const getUserData = async () => {
+  const userData = (await AsyncStorage.getItem("user_data")) as string;
+
+  return JSON.parse(userData);
 };

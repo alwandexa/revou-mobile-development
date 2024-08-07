@@ -30,10 +30,14 @@ import InvestlyServices, {
 import axios, {AxiosError} from "axios";
 import analytics from "@react-native-firebase/analytics";
 import notifee from "@notifee/react-native";
+import {setUserData} from "@utils/index";
+import {useAuth} from "@contexts/AuthContext";
 
 const Register: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
   const [currentStep, setCurrentStep] = useState(1);
+
+  const {setUser} = useAuth();
 
   // Step 1 states
   const [email, setEmail] = useState("");
@@ -350,12 +354,89 @@ const Register: FunctionComponent = () => {
     selectedTopics,
   ]);
 
-  const handleNext = async () => {
+  const register = async () => {
+    const params = {
+      email: email,
+      password: password,
+      favorite_topic_ids: selectedTopics,
+      username: username,
+      name: name,
+    };
+
+    const analyticsParams = {
+      email,
+      name,
+      username,
+      topic_id: selectedTopics.join(","),
+      topic_name: topics
+        .filter(t => selectedTopics.includes(t.id))
+        .map(t => t.label)
+        .join(","),
+    };
+
     const channelId = await notifee.createChannel({
       id: "default",
       name: "Default Channel",
     });
 
+    analytics().logEvent("click_register_button_step_3", analyticsParams);
+
+    setIsLoading(true);
+    await InvestlyServices.register(params)
+      .then(async response => {
+        const data = response.data.data;
+
+        const userData = await setUserData(
+          data.access_token,
+          data.refresh_token,
+        );
+        setUser(userData);
+
+        analytics().logEvent("success_register_account", analyticsParams);
+        await notifee.requestPermission();
+        await notifee.displayNotification({
+          title: "Horrrayy!",
+          body: "Daftar Berhasil!",
+          android: {
+            channelId,
+            pressAction: {
+              id: "default",
+            },
+          },
+        });
+        navigation.reset({
+          index: 0,
+          routes: [{name: "HomeTab", params: {isRegister: true}}],
+        });
+      })
+      .catch(err => {
+        analytics().logEvent("failed_register_account", {
+          ...analyticsParams,
+          error_message: err.message,
+        });
+
+        let errorMessage = "";
+
+        if (axios.isAxiosError(err)) {
+          const axiosError = err as AxiosError<CheckEmailResponse>;
+          errorMessage = axiosError.response?.data.messages || "Register gagal";
+        } else {
+          errorMessage = err.message;
+        }
+        Toast.show({
+          type: "error",
+          text1: errorMessage,
+          text1Style: {color: COLORS.red600},
+          visibilityTime: 3000,
+          autoHide: true,
+          position: "bottom",
+          bottomOffset: 50,
+        });
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  const handleNext = async () => {
     if (currentStep < 3) {
       if (currentStep === 1) {
         analytics().logEvent("click_register_button_step_1", {email});
@@ -368,73 +449,7 @@ const Register: FunctionComponent = () => {
       }
       setCurrentStep(prev => prev + 1);
     } else {
-      const params = {
-        email: email,
-        password: password,
-        favorite_topic_ids: selectedTopics,
-        username: username,
-        name: name,
-      };
-
-      const analyticsParams = {
-        email,
-        name,
-        username,
-        topic_id: selectedTopics.join(","),
-        topic_name: topics
-          .filter(t => selectedTopics.includes(t.id))
-          .map(t => t.label)
-          .join(","),
-      };
-
-      analytics().logEvent("click_register_button_step_3", analyticsParams);
-
-      setIsLoading(true);
-      await InvestlyServices.register(params)
-        .then(async () => {
-          analytics().logEvent("success_register_account", analyticsParams);
-          await notifee.requestPermission();
-          await notifee.displayNotification({
-            title: "Horrrayy!",
-            body: "Daftar Berhasil!",
-            android: {
-              channelId,
-              pressAction: {
-                id: "default",
-              },
-            },
-          });
-          navigation.reset({
-            index: 0,
-            routes: [{name: "HomeTab", params: {isRegister: true}}],
-          });
-        })
-        .catch(err => {
-          analytics().logEvent("failed_register_account", {
-            ...analyticsParams,
-            error_message: err.message,
-          });
-
-          let errorMessage = "";
-
-          if (axios.isAxiosError(err)) {
-            const axiosError = err as AxiosError<CheckEmailResponse>;
-            errorMessage =
-              axiosError.response?.data.messages || "Register gagal";
-          } else {
-            errorMessage = err.message;
-          }
-          Toast.show({
-            type: "error",
-            text1: errorMessage,
-            text1Style: {color: COLORS.red600},
-            visibilityTime: 3000,
-            autoHide: true,
-            position: "bottom",
-            bottomOffset: 50,
-          });
-        })
-        .finally(() => setIsLoading(false));
+      await register();
     }
   };
 

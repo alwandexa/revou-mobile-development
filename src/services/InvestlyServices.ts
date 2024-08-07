@@ -26,6 +26,17 @@ export type RegisterRequest = {
   name: string;
 };
 
+export type RegisterResponse = {
+  status: boolean;
+  messages: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
+    is_verified: boolean;
+    expired_at: string;
+  };
+};
+
 export type CheckEmailRequest = {
   email: string;
 };
@@ -98,9 +109,13 @@ const InvestlyServices = {
     );
   },
   register: async (body: RegisterRequest) => {
-    return await axios.post(`${BASE_URL}api/auth/v4/register`, body, {
-      headers: {"Content-Type": "application/json"},
-    });
+    return await axios.post<RegisterResponse>(
+      `${BASE_URL}api/auth/v4/register`,
+      body,
+      {
+        headers: {"Content-Type": "application/json"},
+      },
+    );
   },
   getUserProfile: async () => {
     const accessToken = await getAccessToken();
