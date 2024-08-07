@@ -102,6 +102,14 @@ const InvestlyServices = {
       headers: {"Content-Type": "application/json"},
     });
   },
+  getUserProfile: async () => {
+    const accessToken = await getAccessToken();
+    return await axios.get(`${BASE_URL}api/social/v2/profile`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  },
   checkEmail: async (body: CheckEmailRequest) => {
     return await axios.post(`${BASE_URL}api/auth/v1/email/check`, body, {
       headers: {"Content-Type": "application/json"},
@@ -139,7 +147,6 @@ const InvestlyServices = {
     );
   },
   createPost: async (body: FormData) => {
-    console.log("create post");
     const accessToken = await getAccessToken();
     return await axios.post(`${BASE_URL}api/social/v2/post`, body, {
       headers: {

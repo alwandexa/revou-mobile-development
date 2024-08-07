@@ -80,7 +80,7 @@ type FeedState = {
 type TabName = "Trending" | "Terbaru";
 
 const Home: FunctionComponent = () => {
-  const {user, avatar} = useAuth();
+  const {user} = useAuth();
   const navigation = useNavigation<NavigationProp<Pages>>();
 
   const [trendingFeed, setTrendingFeed] = useState<FeedState>({
@@ -226,7 +226,7 @@ const Home: FunctionComponent = () => {
       </View>
       <View style={styles.modalContainer}>
         <PostInput
-          avatar={avatar}
+          avatar={user?.profile_path as string}
           navigation={navigation}
           onPress={handlePostOnPress}
         />

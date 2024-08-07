@@ -169,11 +169,14 @@ const Login: FunctionComponent = () => {
             "refresh_token",
             loginResponse.data.refresh_token,
           );
+          const getUserResponse = await InvestlyServices.getUserProfile();
 
-          login(
-            loginResponse.data.access_token,
-            loginResponse.data.refresh_token,
+          await AsyncStorage.setItem(
+            "user_data",
+            JSON.stringify(getUserResponse.data.data),
           );
+
+          login(getUserResponse.data.data);
 
           Toast.show({
             type: "success",
