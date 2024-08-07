@@ -5,15 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import analytics from "@react-native-firebase/analytics";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import InvestlyServices from "@services/InvestlyServices";
-import {getAccessToken} from "@utils/index";
 import React, {FunctionComponent} from "react";
 import {SafeAreaView, StyleSheet} from "react-native";
 
 const Profil: FunctionComponent = () => {
   const {user, setUser} = useAuth();
   const navigation = useNavigation<NavigationProp<Pages>>();
-
-  console.log(getAccessToken());
 
   const handleLogout = async () => {
     try {
