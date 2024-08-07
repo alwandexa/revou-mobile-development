@@ -1,3 +1,4 @@
+import CryptoJS from "react-native-crypto-js";
 import {faker} from "@faker-js/faker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InvestlyServices from "@services/InvestlyServices";
@@ -5,6 +6,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
+
+const ENCRYPTION_KEY = "qR9WpNeTFrptmW8oYiZA78v4DbF8iuEt";
 
 export const capitalizeFirstChar = (text: string) => {
   return `${text.charAt(0).toUpperCase() + text.slice(1)}`;
@@ -69,24 +72,51 @@ export const getAccessToken = async () => {
   }
 };
 
+export const encryptData = (data: string) => {
+  return CryptoJS.AES.encrypt(data, ENCRYPTION_KEY).toString();
+};
+
+export const decryptData = (encryptedData: string) => {
+  const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+  return bytes.toString(CryptoJS.enc.Utf8);
+};
+
 export const setUserData = async (
   access_token: string,
   refresh_token: string,
 ) => {
-  await AsyncStorage.setItem("access_token", access_token);
-  await AsyncStorage.setItem("refresh_token", refresh_token);
-  const getUserResponse = await InvestlyServices.getUserProfile();
+  try {
+    const encryptedAccessToken = encryptData(access_token);
+    const encryptedRefreshToken = encryptData(refresh_token);
 
-  await AsyncStorage.setItem(
-    "user_data",
-    JSON.stringify(getUserResponse.data.data),
-  );
+    await AsyncStorage.setItem("access_token", encryptedAccessToken);
+    await AsyncStorage.setItem("refresh_token", encryptedRefreshToken);
 
-  return getUserResponse.data.data;
+    const getUserResponse = await InvestlyServices.getUserProfile();
+
+    const encryptedUserData = encryptData(
+      JSON.stringify(getUserResponse.data.data),
+    );
+
+    await AsyncStorage.setItem("user_data", encryptedUserData);
+
+    return getUserResponse.data.data;
+  } catch (error) {
+    console.error("Error setting user data: ", error);
+    throw error;
+  }
 };
 
 export const getUserData = async () => {
-  const userData = (await AsyncStorage.getItem("user_data")) as string;
+  try {
+    const encryptedUserData = (await AsyncStorage.getItem(
+      "user_data",
+    )) as string;
+    const userData = decryptData(encryptedUserData);
 
-  return JSON.parse(userData);
+    return JSON.parse(userData);
+  } catch (error) {
+    console.error("Error getting user data: ", error);
+    throw error;
+  }
 };
