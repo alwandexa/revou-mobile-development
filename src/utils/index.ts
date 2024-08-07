@@ -64,7 +64,10 @@ export const generateFeedData = (count = 5) => {
 
 export const getAccessToken = async () => {
   try {
-    const accessToken = await AsyncStorage.getItem("access_token");
+    const encryptedAccessToken = (await AsyncStorage.getItem(
+      "access_token",
+    )) as string;
+    const accessToken = decryptData(encryptedAccessToken);
     return accessToken;
   } catch (error) {
     console.error("Error getting access token", error);
