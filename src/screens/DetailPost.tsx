@@ -43,14 +43,6 @@ const DetailPost: FunctionComponent = () => {
     fetchPostDetail();
   }, [params.id]);
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" />
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -72,6 +64,7 @@ const DetailPost: FunctionComponent = () => {
         </View>
       </View>
       <View style={styles.feedContainer}>
+        {loading && <ActivityIndicator />}
         {postDetail && <Feed item={postDetail} />}
       </View>
       <View style={styles.bottomBar}>
