@@ -3,7 +3,9 @@ import {TypographySize, TypographyType} from "@components/atoms/Typography";
 import {Button} from "@components/molecules";
 import {COLORS} from "@constants/colors";
 import {WithAuth, useAuth} from "@contexts/AuthContext";
+import analytics from "@react-native-firebase/analytics";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
+import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {
@@ -16,9 +18,7 @@ import {
   View,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import analytics from "@react-native-firebase/analytics";
-import {getAccessToken} from "@utils/index";
-import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
+import {Toast} from "react-native-toast-message/lib/src/Toast";
 
 const CreatePost: FunctionComponent = () => {
   const {user} = useAuth();
@@ -71,23 +71,8 @@ const CreatePost: FunctionComponent = () => {
     data.append("is_anonim", "false");
     data.append("topic_id", topic);
 
-    const accessToken = await getAccessToken();
-
-    const config = {
-      method: "post",
-      url: "https://develop.investly.id/api/social/v2/post",
-      headers: {
-        accept: "application/json",
-        authorization: `Bearer ${accessToken}`,
-      },
-      data: data,
-    };
-
-    console.log(data);
-
     await InvestlyServices.createPost(data)
-      .then(response => {
-        console.log(response);
+      .then(_ => {
         setLoading(false);
         navigation.navigate("HomeTab");
         analytics().logEvent("success_create_post", {
@@ -96,74 +81,29 @@ const CreatePost: FunctionComponent = () => {
         });
       })
       .catch(error => {
-        setLoading(false);
-        console.log(JSON.stringify(error));
+        let errorMessage = "";
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<CheckEmailResponse>;
-          // console.log(axiosError.response);
+          errorMessage = axiosError.response?.data.messages || "Error api";
+        } else {
+          errorMessage = error.message;
         }
+        Toast.show({
+          type: "error",
+          text1: errorMessage,
+          text1Style: {color: COLORS.red600},
+          visibilityTime: 3000,
+          autoHide: true,
+          position: "bottom",
+          bottomOffset: 50,
+        });
         analytics().logEvent("failed_create_post", {
           username: user,
           email: email,
-          // error_message: error.response.data.message,
+          error_message: error.response.data.message,
         });
-      });
-
-    // await axios
-    //   .post("https://develop.investly.id/api/social/v2/post", data, {
-    //     headers: {
-    //       // accept: "application/json",
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   })
-    //   .then(response => {
-    //     console.log(response);
-    //     setLoading(false);
-    //     navigation.navigate("HomeTab");
-    //     analytics().logEvent("success_create_post", {
-    //       username: user,
-    //       email: email,
-    //     });
-    //   })
-    //   .catch(error => {
-    //     setLoading(false);
-    //     console.log(JSON.stringify(error));
-    //     if (axios.isAxiosError(error)) {
-    //       const axiosError = error as AxiosError<CheckEmailResponse>;
-    //       // console.log(axiosError.response);
-    //     }
-    //     analytics().logEvent("failed_create_post", {
-    //       username: user,
-    //       email: email,
-    //       // error_message: error.response.data.message,
-    //     });
-    //   });
-
-    // await axios
-    //   .request(config)
-    //   .then(response => {
-    //     console.log(response);
-    //     setLoading(false);
-    //     navigation.navigate("HomeTab");
-    //     // Toast.show("Success Create Post", {type: "success"});
-    //     analytics().logEvent("success_create_post", {
-    //       username: user,
-    //       email: email,
-    //     });
-    //   })
-    //   .catch(error => {
-    //     setLoading(false);
-    //     // Toast.show(error.response.data.message, {type: "error"});
-    //     if (axios.isAxiosError(error)) {
-    //       const axiosError = error as AxiosError<CheckEmailResponse>;
-    //       console.log(axiosError.response);
-    //     }
-    //     analytics().logEvent("failed_create_post", {
-    //       username: user,
-    //       email: email,
-    //       // error_message: error.response.data.message,
-    //     });
-    //   });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (

@@ -125,6 +125,7 @@ const InvestlyServices = {
     const accessToken = await getAccessToken();
     return await axios.post(`${BASE_URL}api/social/v2/post`, body, {
       headers: {
+        "Content-Type": "multipart/form-data;",
         Authorization: `Bearer ${accessToken}`,
       },
     });
