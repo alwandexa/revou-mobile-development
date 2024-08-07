@@ -29,6 +29,7 @@ import InvestlyServices, {
 } from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
 import analytics from "@react-native-firebase/analytics";
+import notifee from "@notifee/react-native";
 
 const Register: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
@@ -350,6 +351,11 @@ const Register: FunctionComponent = () => {
   ]);
 
   const handleNext = async () => {
+    const channelId = await notifee.createChannel({
+      id: "default",
+      name: "Default Channel",
+    });
+
     if (currentStep < 3) {
       if (currentStep === 1) {
         analytics().logEvent("click_register_button_step_1", {email});
@@ -385,11 +391,22 @@ const Register: FunctionComponent = () => {
 
       setIsLoading(true);
       await InvestlyServices.register(params)
-        .then(() => {
+        .then(async () => {
           analytics().logEvent("success_register_account", analyticsParams);
+          await notifee.requestPermission();
+          await notifee.displayNotification({
+            title: "Horrrayy!",
+            body: "Daftar Berhasil!",
+            android: {
+              channelId,
+              pressAction: {
+                id: "default",
+              },
+            },
+          });
           navigation.reset({
             index: 0,
-            routes: [{name: "HomeTab"}],
+            routes: [{name: "HomeTab", params: {isRegister: true}}],
           });
         })
         .catch(err => {
