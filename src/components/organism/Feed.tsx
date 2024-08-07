@@ -1,14 +1,15 @@
-import {Avatar, Typography} from "@components/atoms";
-import {Label, ProtectedButton} from "@components/molecules";
-import FeedContent from "@components/molecules/FeedContent";
-import {COLORS} from "@constants/colors";
 import analytics from "@react-native-firebase/analytics";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
-import React, {memo, useCallback} from "react";
+import React, {memo, useCallback, useState} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import {Toast} from "react-native-toast-message/lib/src/Toast";
+
+import {Avatar, Typography} from "@components/atoms";
+import {Label, ProtectedButton} from "@components/molecules";
+import FeedContent from "@components/molecules/FeedContent";
+import {COLORS} from "@constants/colors";
 
 export type FeedItem = {
   id: string;
@@ -39,22 +40,19 @@ export type FeedItem = {
 
 const Feed = memo(({item}: {item: FeedItem}) => {
   const navigation = useNavigation<NavigationProp<Pages>>();
-  // const [globalState, dispatch] = useGlobalState();
+  const [upVoteCount, setUpVoteCount] = useState(item.upvotes);
 
   const handleFeedContentClicked = useCallback(() => {
     navigation.navigate("Post", {id: item.id});
+    console.log(item.id);
   }, [navigation, item]);
 
   const handleUpvote = async () => {
-    // dispatch({type: "INCREMENT_UPVOTE", payload: item.id});
-
     try {
       const response = await InvestlyServices.setPostUpvote({id: item.id});
       Toast.show({
         type: "success",
-        // text1: JSON.stringify(response),
         text1: response.data.messages,
-        // text1Style: {color: COLORS.purple600},
         visibilityTime: 3000,
         autoHide: true,
         position: "bottom",
@@ -64,12 +62,13 @@ const Feed = memo(({item}: {item: FeedItem}) => {
         username: item.user.username,
         post_id: item.id,
       });
+      setUpVoteCount(upVoteCount + 1);
     } catch (err) {
-      // dispatch({type: "DECREMENT_UPVOTE", payload: item.id});
       let errorMessage = "";
       if (axios.isAxiosError(err)) {
         const axiosError = err as AxiosError<CheckEmailResponse>;
-        errorMessage = axiosError.response?.data.messages || "Register gagal";
+        errorMessage = axiosError.response?.data.messages || "Upvote Gagal";
+        setUpVoteCount(upVoteCount - 1);
       } else {
         errorMessage = err?.message;
       }
@@ -137,7 +136,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
                 type="paragraph"
                 size="small"
                 style={styles.actionButtonText}>
-                {item.upvotes}
+                {upVoteCount}
               </Typography>
             </ProtectedButton>
             <View style={styles.divider} />
