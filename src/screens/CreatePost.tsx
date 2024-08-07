@@ -146,8 +146,10 @@ const CreatePost: FunctionComponent = () => {
           items={topics}
           setOpen={setDropdownOpen}
           setValue={setTopic}
-          placeholder="Select a topic"
-          style={getTypographyStyle("heading", "xlarge")}
+          placeholder="Topic"
+          style={{borderColor: COLORS.neutral300}}
+          placeholderStyle={{color: COLORS.neutral400}}
+          textStyle={[getTypographyStyle("paragraph", "medium")]}
           dropDownContainerStyle={{borderColor: COLORS.neutral300}}
         />
         <TextInput
