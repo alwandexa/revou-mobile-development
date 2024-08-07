@@ -3,7 +3,11 @@ import {COLORS} from "@constants/colors";
 import {useAuth} from "@contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import analytics from "@react-native-firebase/analytics";
-import {NavigationProp, useNavigation} from "@react-navigation/native";
+import {
+  CommonActions,
+  NavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
 import InvestlyServices from "@services/InvestlyServices";
 import React, {FunctionComponent} from "react";
 import {SafeAreaView, StyleSheet} from "react-native";
@@ -17,13 +21,17 @@ const Profil: FunctionComponent = () => {
       await InvestlyServices.logout();
 
       await AsyncStorage.removeItem("access_token");
+      await AsyncStorage.removeItem("refresh_token");
+      await AsyncStorage.removeItem("user_data");
 
       setUser(null);
 
-      navigation.reset({
-        index: 0,
-        routes: [{name: "Login"}],
-      });
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: "Login"}],
+        }),
+      );
 
       await analytics().logEvent("click_logout", {
         username: user?.username || "username",

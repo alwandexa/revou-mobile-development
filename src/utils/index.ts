@@ -112,14 +112,18 @@ export const setUserData = async (
 
 export const getUserData = async () => {
   try {
-    const encryptedUserData = (await AsyncStorage.getItem(
-      "user_data",
-    )) as string;
+    const encryptedUserData = await AsyncStorage.getItem("user_data");
+
+    if (!encryptedUserData) {
+      console.log("No user data found in AsyncStorage");
+      return null;
+    }
+
     const userData = decryptData(encryptedUserData);
 
     return JSON.parse(userData);
   } catch (error) {
     console.error("Error getting user data: ", error);
-    throw error;
+    return null;
   }
 };

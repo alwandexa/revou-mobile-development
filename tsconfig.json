@@ -9,7 +9,8 @@
       "@contexts/*": ["contexts/*"],
       "@screens/*": ["screens/*"],
       "@utils/*": ["utils/*"],
-      "@services/*": ["services/*"]
+      "@services/*": ["services/*"],
+      "@navigators/*": ["navigators/*"]
     }
   }
 }

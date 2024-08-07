@@ -12,7 +12,8 @@
           "@contexts": "./src/contexts",
           "@screens": "./src/screens",
           "@utils": "./src/utils",
-          "@services": "./src/services"
+          "@services": "./src/services",
+          "@navigators": "./src/navigators"
         }
       }
     ]
