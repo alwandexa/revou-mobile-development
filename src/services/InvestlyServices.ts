@@ -79,6 +79,13 @@ const InvestlyServices = {
       headers: {"Content-Type": "application/json"},
     });
   },
+  logout: async () => {
+    return await axios.post(
+      `${BASE_URL}/api/auth/v2/logout`,
+      {},
+      {headers: {Authorization: `Bearer ${await getAccessToken()}`}},
+    );
+  },
   register: async (body: RegisterRequest) => {
     return await axios.post(`${BASE_URL}api/auth/v4/register`, body, {
       headers: {"Content-Type": "application/json"},

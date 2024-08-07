@@ -11,11 +11,12 @@ import {ActivityIndicator, StyleSheet, View} from "react-native";
 import {FeedItem} from "@components/organism/Feed";
 
 type AuthContextType = {
-  user: string | null;
+  user: Object;
+  setUser: Function;
   avatar: string;
   selectedItem: FeedItem;
   setSelectedItem: Function;
-  login: (user: string, avatar: string) => void;
+  login: (user: Object, avatar: string) => void;
   logout: () => void;
 };
 
@@ -29,23 +30,31 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: FunctionComponent<{children: React.ReactNode}> = ({
   children,
 }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<Object>({});
   const [avatar, setAvatar] = useState<string>("");
 
   const [selectedItem, setSelectedItem] = useState<FeedItem>({} as FeedItem);
 
-  const login = (currentUser: string, currentAvatar: string) => {
+  const login = (currentUser: object, currentAvatar: string) => {
     setUser(currentUser);
     setAvatar(currentAvatar);
   };
 
   const logout = () => {
-    setUser(null);
+    setUser({});
   };
 
   return (
     <AuthContext.Provider
-      value={{user, avatar, selectedItem, setSelectedItem, login, logout}}>
+      value={{
+        user,
+        setUser,
+        avatar,
+        selectedItem,
+        setSelectedItem,
+        login,
+        logout,
+      }}>
       {children}
     </AuthContext.Provider>
   );
