@@ -23,20 +23,12 @@ import {Button, CustomToast} from "@components/molecules";
 import TextField, {TextFieldState} from "@components/molecules/TextField";
 import {COLORS} from "@constants/colors";
 import ProgressBar from "@components/molecules/ProgressBar";
-import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
+import InvestlyServices, {
+  CheckEmailResponse,
+  Topic,
+} from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
 import analytics from "@react-native-firebase/analytics";
-
-interface Topic {
-  id: string;
-  file: {
-    name_display: string;
-    full_path: string;
-    size: number;
-    mime_type: string;
-  };
-  label: string;
-}
 
 const Register: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();

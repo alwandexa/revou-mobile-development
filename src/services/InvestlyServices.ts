@@ -71,6 +71,17 @@ export type createPostRequest = {
   id: string;
 };
 
+export type Topic = {
+  id: string;
+  file: {
+    name_display: string;
+    full_path: string;
+    size: number;
+    mime_type: string;
+  };
+  label: string;
+};
+
 export const BASE_URL = "https://develop.investly.id/";
 
 const InvestlyServices = {

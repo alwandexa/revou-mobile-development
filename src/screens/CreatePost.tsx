@@ -5,7 +5,10 @@ import {COLORS} from "@constants/colors";
 import {WithAuth, useAuth} from "@contexts/AuthContext";
 import analytics from "@react-native-firebase/analytics";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
+import InvestlyServices, {
+  CheckEmailResponse,
+  Topic,
+} from "@services/InvestlyServices";
 import axios, {AxiosError} from "axios";
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {
@@ -35,13 +38,12 @@ const CreatePost: FunctionComponent = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
 
   useEffect(() => {
-    axios
-      .get("https://develop.investly.id/api/social/v1/public/masterdata/topic")
+    InvestlyServices.getTopics()
       .then(response => {
         setTopics(
-          response.data.data.map(topic => ({
-            label: topic.label,
-            value: topic.id,
+          response.data.data.map((topicData: Topic) => ({
+            label: topicData.label,
+            value: topicData.id,
           })),
         );
       })
