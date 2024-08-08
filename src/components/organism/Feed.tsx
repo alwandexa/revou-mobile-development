@@ -44,7 +44,6 @@ const Feed = memo(({item}: {item: FeedItem}) => {
 
   const handleFeedContentClicked = useCallback(() => {
     navigation.navigate("Post", {id: item.id});
-    console.log(item.id);
   }, [navigation, item]);
 
   const handleUpvote = async () => {
@@ -70,7 +69,8 @@ const Feed = memo(({item}: {item: FeedItem}) => {
         errorMessage = axiosError.response?.data.messages || "Upvote Gagal";
         setUpVoteCount(upVoteCount - 1);
       } else {
-        errorMessage = err?.message;
+        const otherError = err as Error;
+        errorMessage = otherError.message;
       }
 
       Toast.show({
