@@ -58,7 +58,7 @@ const Feed = memo(({item}: {item: FeedItem}) => {
         bottomOffset: 0,
       });
       analytics().logEvent("click_upvote", {
-        username: item.user.username,
+        username: item.user?.username ?? "unknown",
         post_id: item.id,
       });
       setUpVoteCount(upVoteCount + 1);
@@ -86,97 +86,92 @@ const Feed = memo(({item}: {item: FeedItem}) => {
   };
 
   return (
-    <>
-      <TouchableOpacity
-        style={styles.postContainer}
-        onPress={handleFeedContentClicked}>
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <Avatar
-              size="large"
-              source={{uri: item?.user.profile_path || ""}}
+    <TouchableOpacity
+      style={styles.postContainer}
+      onPress={handleFeedContentClicked}>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Avatar size="large" source={{uri: item.user?.profile_path || ""}} />
+          <View style={styles.headerText}>
+            <Typography type="heading" size="xsmall" style={styles.name}>
+              {item.user?.name || "Unknown User"}
+            </Typography>
+            <Typography type="paragraph" size="small">
+              {item.user?.headline || ""}
+            </Typography>
+            <Typography type="paragraph" size="xsmall">
+              {item.time}
+            </Typography>
+          </View>
+          <View>
+            <ProtectedButton
+              icon="ellipsis"
+              variant="outline"
+              size="medium"
+              style={styles.ellipsisButton}
+              textStyle={styles.ellipsisButtonText}
             />
-            <View style={styles.headerText}>
-              <Typography type="heading" size="xsmall" style={styles.name}>
-                {item.user.name}
-              </Typography>
-              <Typography type="paragraph" size="small">
-                {item.user.headline}
-              </Typography>
-              <Typography type="paragraph" size="xsmall">
-                {item.time}
-              </Typography>
-            </View>
-            <View>
-              <ProtectedButton
-                icon="ellipsis"
-                variant="outline"
-                size="medium"
-                style={styles.ellipsisButton}
-                textStyle={styles.ellipsisButtonText}
-              />
-            </View>
           </View>
         </View>
-        <FeedContent post_header={item.header} post_content={item.content} />
-        <View style={styles.footer}>
-          <Label variant="tertiary" color="green">
-            {item.topic.label}
-          </Label>
-        </View>
-        <View style={styles.footerActions}>
-          <View style={[styles.actionButton, styles.groupActionButton]}>
-            <ProtectedButton
-              variant="link"
-              size="medium"
-              icon="arrow-up"
-              textStyle={styles.actionButtonText}
-              onPress={handleUpvote}>
-              <Typography
-                type="paragraph"
-                size="small"
-                style={styles.actionButtonText}>
-                {upVoteCount}
-              </Typography>
-            </ProtectedButton>
-            <View style={styles.divider} />
-            <ProtectedButton
-              variant="link"
-              size="medium"
-              icon="arrow-down"
-              textStyle={styles.actionButtonText}>
-              {" "}
-            </ProtectedButton>
-          </View>
+      </View>
+      <FeedContent post_header={item.header} post_content={item.content} />
+      <View style={styles.footer}>
+        <Label variant="tertiary" color="green">
+          {item.topic.label}
+        </Label>
+      </View>
+      <View style={styles.footerActions}>
+        <View style={[styles.actionButton, styles.groupActionButton]}>
           <ProtectedButton
             variant="link"
             size="medium"
-            icon="comment"
-            style={styles.actionButton}
-            textStyle={styles.actionButtonText}>
+            icon="arrow-up"
+            textStyle={styles.actionButtonText}
+            onPress={handleUpvote}>
             <Typography
               type="paragraph"
               size="small"
               style={styles.actionButtonText}>
-              {item.total_comments}
+              {upVoteCount}
             </Typography>
           </ProtectedButton>
+          <View style={styles.divider} />
           <ProtectedButton
             variant="link"
             size="medium"
-            icon="retweet"
-            style={styles.actionButton}
+            icon="arrow-down"
             textStyle={styles.actionButtonText}>
-            <Typography
-              type="paragraph"
-              size="small"
-              style={styles.actionButtonText}>
-              {item.reposts}
-            </Typography>
+            {" "}
           </ProtectedButton>
         </View>
-      </TouchableOpacity>
-    </>
+        <ProtectedButton
+          variant="link"
+          size="medium"
+          icon="comment"
+          style={styles.actionButton}
+          textStyle={styles.actionButtonText}>
+          <Typography
+            type="paragraph"
+            size="small"
+            style={styles.actionButtonText}>
+            {item.total_comments}
+          </Typography>
+        </ProtectedButton>
+        <ProtectedButton
+          variant="link"
+          size="medium"
+          icon="retweet"
+          style={styles.actionButton}
+          textStyle={styles.actionButtonText}>
+          <Typography
+            type="paragraph"
+            size="small"
+            style={styles.actionButtonText}>
+            {item.reposts}
+          </Typography>
+        </ProtectedButton>
+      </View>
+    </TouchableOpacity>
   );
 });
 
