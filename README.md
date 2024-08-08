@@ -2,7 +2,7 @@
 
 ## Project Description
 
-This project is a simple social media app built using React Native. It features a Login page, Home page, Detail post page, and Create post page. The app demonstrates proficiency in React Native layouts, components, state management, routing, and performance optimization.
+This project is a simple social media app built using React Native. It features a Login page, Register Page, Home page, Detail post page, and Create post page. The app demonstrates proficiency in React Native layouts, components, state management, routing, and performance optimization.
 
 ## Features
 
@@ -18,7 +18,6 @@ This project is a simple social media app built using React Native. It features 
 - **Register Page**:
   - Unique email and username validation
   - Multiple step form
-  - 
 
 - **Home Page**:
   - Guest and Logged-in modes
@@ -37,10 +36,21 @@ This project is a simple social media app built using React Native. It features 
 - **Routing**:
   - Navigation between Onboarding, Login, and Home screens
 
+- **Analytics**:
+  - Integration with firebase analytics on various events
+
+- **OTA Update**:
+  - Use codepush to do Over The Air(OTA) update
+
+- **Security**:
+  - Implement encryption to store user data
+  - Obfuscated app on build 
+
 ## Technical Stack
 
 - React Native
 - React Navigation
+- Axios
 
 ## Installation
 
