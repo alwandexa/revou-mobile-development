@@ -15,6 +15,11 @@ This project is a simple social media app built using React Native. It features 
   - Toggle password visibility
   - Conditional navigation based on credentials
 
+- **Register Page**:
+  - Unique email and username validation
+  - Multiple step form
+  - 
+
 - **Home Page**:
   - Guest and Logged-in modes
   - Display of 100 dummy posts
@@ -36,7 +41,6 @@ This project is a simple social media app built using React Native. It features 
 
 - React Native
 - React Navigation
-- Faker.js (for generating dummy data)
 
 ## Installation
 
@@ -46,6 +50,7 @@ This project is a simple social media app built using React Native. It features 
 
 ## Usage
 
+- Create new account through register page
 - Launch the app to view the Onboarding screen
 - Navigate through the Login process
 - Explore the Home page in both Guest and Logged-in modes
