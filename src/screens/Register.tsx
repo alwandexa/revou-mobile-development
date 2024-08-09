@@ -1,564 +1,154 @@
+import React, {useState} from "react";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
-import React, {
-  FunctionComponent,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-} from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from "react-native";
-import Toast from "react-native-toast-message";
-import debounce from "lodash/debounce";
-
-import {Icon, Typography} from "@components/atoms";
-import {Button, CustomToast} from "@components/molecules";
-import TextField, {TextFieldState} from "@components/molecules/TextField";
+import {SafeAreaView, View, StyleSheet, Pressable, Image} from "react-native";
 import {COLORS} from "@constants/colors";
-import ProgressBar from "@components/molecules/ProgressBar";
-import InvestlyServices, {
-  CheckEmailResponse,
-  Topic,
-} from "@services/InvestlyServices";
-import axios, {AxiosError} from "axios";
+import {useAuth} from "@contexts/AuthContext";
+import Step1 from "./Step1";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
+import Toast from "react-native-toast-message";
 import analytics from "@react-native-firebase/analytics";
 import notifee from "@notifee/react-native";
+import {Icon, Typography} from "@components/atoms";
+import {Button, CustomToast} from "@components/molecules";
+import ProgressBar from "@components/molecules/ProgressBar";
+import InvestlyServices, {CheckEmailResponse} from "@services/InvestlyServices";
 import {setUserData} from "@utils/index";
-import {useAuth} from "@contexts/AuthContext";
+import axios, {AxiosError} from "axios";
 
-const Register: FunctionComponent = () => {
+const Register: React.FC = () => {
   const navigation = useNavigation<NavigationProp<Pages>>();
   const [currentStep, setCurrentStep] = useState(1);
-
   const {setUser} = useAuth();
 
-  // Step 1 states
-  const [email, setEmail] = useState("");
-  const [emailState, setEmailState] = useState<TextFieldState>("default");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+    name: "",
+    username: "",
+    selectedTopics: [] as string[],
+  });
 
-  const [password, setPassword] = useState("");
-  const [passwordState, setPasswordState] = useState<TextFieldState>("default");
-  const [passwordMessage, setPasswordMessage] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [passwordConfirmationState, setPasswordConfirmationState] =
-    useState<TextFieldState>("default");
-  const [passwordConfirmationMessage, setPasswordConfirmationMessage] =
-    useState("");
-  const [isPasswordConfirmationValid, setIsPasswordConfirmationValid] =
-    useState(false);
-
-  // Step 2 states
-  const [name, setName] = useState("");
-  const [nameState, setNameState] = useState<TextFieldState>("default");
-  const [nameMessage, setNameMessage] = useState("");
-  const [isNameValid, setIsNameValid] = useState(false);
-
-  const [username, setUsername] = useState("");
-  const [isUsernameValid, setIsUsernameValid] = useState(false);
-  const [usernameState, setUsernameState] = useState<TextFieldState>("default");
-  const [usernameMessage, setUsernameMessage] = useState("");
-  const [isUsernameLoading, setIsUsernameLoading] = useState(false);
-
-  // Step 3 states
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (currentStep === 3) {
-      fetchTopics();
-    }
-  }, [currentStep]);
-
-  const fetchTopics = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await InvestlyServices.getTopics();
-      if (response.data.status) {
-        setTopics(response.data.data);
-      } else {
-        setError("Failed to fetch topics");
-      }
-    } catch (err) {
-      setError("An error occurred while fetching topics");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const validateEmail = async (currentEmail: string) => {
-    currentEmail = currentEmail.trim().toLowerCase();
-
-    if (currentEmail.length > 254) {
-      setEmailState("negative");
-      setEmailMessage("Email terlalu panjang (max 254 karakter)");
-      return false;
-    }
-
-    // eslint-disable-next-line no-useless-escape
-    const illegalChars = /[(),<>:;\[\]"]/;
-    if (illegalChars.test(currentEmail)) {
-      setEmailState("negative");
-      setEmailMessage("Email mengandung karakter ilegal ((),<>:;[])");
-      return false;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(currentEmail)) {
-      setEmailState("negative");
-      setEmailMessage("Format email salah (nama@domain.com)");
-      return false;
-    }
-
-    try {
-      setIsEmailLoading(true);
-      const checkEmailRequest = {email: currentEmail};
-      const response = await InvestlyServices.checkEmail(checkEmailRequest);
-
-      if (response.data.status) {
-        setEmailState("positive");
-        setEmailMessage("");
-        setIsEmailValid(true);
-      }
-      return true;
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<CheckEmailResponse>;
-        setEmailState("negative");
-        setEmailMessage(
-          axiosError.response?.data.messages || "Email sudah digunakan",
-        );
-        analytics().logEvent("failed_validate_register_email", {
-          email: currentEmail,
-        });
-      } else {
-        console.error("Unexpected error:", err);
-        setEmailState("negative");
-        setEmailMessage("Terjadi kesalahan yang tidak terduga");
-      }
-      setIsEmailValid(false);
-      return false;
-    } finally {
-      setIsEmailLoading(false);
-    }
-  };
-
-  const validatePassword = (currentPassword: string) => {
-    const MIN_LENGTH = 8;
-    const MAX_LENGTH = 64;
-    const hasUpperCase = /[A-Z]/.test(currentPassword);
-    const hasLowerCase = /[a-z]/.test(currentPassword);
-    const hasNumbers = /\d/.test(currentPassword);
-    // eslint-disable-next-line no-useless-escape
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-      currentPassword,
-    );
-
-    if (currentPassword.length < MIN_LENGTH) {
-      setPasswordState("negative");
-      setPasswordMessage(`Password minimal ${MIN_LENGTH} karakter`);
-      return false;
-    }
-
-    if (currentPassword.length > MAX_LENGTH) {
-      setPasswordState("negative");
-      setPasswordMessage(`Password maksimal ${MAX_LENGTH} karakter`);
-      return false;
-    }
-
-    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
-      setPasswordState("negative");
-      setPasswordMessage(
-        "Password harus mengandung huruf besar-kecil, angka, dan karakter khusus",
-      );
-      return false;
-    }
-
-    setPasswordState("positive");
-    setPasswordMessage("");
-    setIsPasswordValid(true);
-
-    return true;
-  };
-
-  const validatePasswordConfirmation = (
-    currentPassword: string,
-    confirmationPassword: string,
-  ) => {
-    if (currentPassword !== confirmationPassword) {
-      setPasswordConfirmationState("negative");
-      setPasswordConfirmationMessage("Konfirmasi password tidak sesuai");
-      return false;
-    }
-
-    setPasswordConfirmationState("positive");
-    setPasswordConfirmationMessage("");
-    setIsPasswordConfirmationValid(true);
-    return true;
-  };
-
-  const handleEmailChange = (text: string) => {
-    setEmail(text.toLowerCase().trim());
-    validateEmail(text);
-  };
-
-  const handlePasswordChange = (text: string) => {
-    setPassword(text);
-    validatePassword(text);
-  };
-
-  const handlePasswordConfirmationChange = (text: string) => {
-    setPasswordConfirmation(text);
-    validatePasswordConfirmation(password, text);
-  };
-
-  const handleNameChange = (text: string) => {
-    setName(text);
-    validateName(text);
-  };
-
-  const validateName = (currentName: string) => {
-    if (currentName.trim().length === 0) {
-      setNameState("negative");
-      setNameMessage("Nama tidak boleh kosong");
-      setIsNameValid(false);
-      return false;
-    }
-
-    if (currentName.trim().length < 3) {
-      setNameState("negative");
-      setNameMessage("Nama minimal 3 karakter");
-      setIsNameValid(false);
-      return false;
-    }
-
-    setNameState("positive");
-    setNameMessage("");
-    setIsNameValid(true);
-    return true;
-  };
-
-  const validateUsername = useCallback(
-    async (currentUsername: string) => {
-      currentUsername = currentUsername.trim();
-      if (currentUsername.length === 0) {
-        setUsernameState("default");
-        setUsernameMessage("");
-        setIsUsernameValid(false);
-        return;
-      }
-
-      try {
-        setIsUsernameLoading(true);
-        const checkUserRequest = {username: currentUsername};
-        const response = await InvestlyServices.checkUsername(checkUserRequest);
-
-        if (response.data.status) {
-          setUsernameState("negative");
-          setUsernameMessage(response.data.messages);
-          setIsUsernameValid(false);
-          analytics().logEvent("failed_validate_register_username", {
-            username: currentUsername,
-          });
-        }
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          const axiosError = err as AxiosError<CheckEmailResponse>;
-          setUsernameState("positive");
-          setUsernameMessage(
-            axiosError.response?.data.messages || "Validasi error",
-          );
-          setIsUsernameValid(true);
-        } else {
-          console.error("Unexpected error:", err);
-          setUsernameState("negative");
-          setUsernameMessage("Terjadi kesalahan yang tidak terduga");
-        }
-      } finally {
-        setIsUsernameLoading(false);
-      }
-    },
-    [setUsernameState, setUsernameMessage, setIsUsernameValid],
-  );
-
-  const debouncedValidateUsername = useMemo(
-    () => debounce(validateUsername, 200),
-    [validateUsername],
-  );
-
-  const handleUsernameChange = useCallback(
-    (text: string) => {
-      setUsername(text);
-      debouncedValidateUsername(text);
-    },
-    [debouncedValidateUsername],
-  );
-
-  const handleTopicSelection = (topic: Topic) => {
-    setSelectedTopics(prevTopics => {
-      if (prevTopics.includes(topic.id)) {
-        analytics().logEvent("click_register_unselect_topic", {
-          email,
-          name,
-          username,
-          topic_id: topic.id,
-          topic_name: topic.label,
-        });
-        return prevTopics.filter(t => t !== topic.id);
-      } else if (prevTopics.length < 3) {
-        analytics().logEvent("click_register_select_topic", {
-          email,
-          name,
-          username,
-          topic_id: topic.id,
-          topic_name: topic.label,
-        });
-        return [...prevTopics, topic.id];
-      }
-      return prevTopics;
-    });
-  };
-
-  const isNextEnabled = useMemo(() => {
+  const isNextEnabled = () => {
     switch (currentStep) {
       case 1:
-        return isEmailValid && isPasswordValid && isPasswordConfirmationValid;
+        return (
+          formData.email && formData.password && formData.passwordConfirmation
+        );
       case 2:
-        return isNameValid && isUsernameValid;
+        return formData.name && formData.username;
       case 3:
-        return selectedTopics.length === 3;
+        return formData.selectedTopics.length === 3;
       default:
         return false;
     }
-  }, [
-    currentStep,
-    isEmailValid,
-    isPasswordValid,
-    isPasswordConfirmationValid,
-    isNameValid,
-    isUsernameValid,
-    selectedTopics,
-  ]);
-
-  const register = async () => {
-    const params = {
-      email: email,
-      password: password,
-      favorite_topic_ids: selectedTopics,
-      username: username,
-      name: name,
-    };
-
-    const analyticsParams = {
-      email,
-      name,
-      username,
-      topic_id: selectedTopics.join(","),
-      topic_name: topics
-        .filter(t => selectedTopics.includes(t.id))
-        .map(t => t.label)
-        .join(","),
-    };
-
-    const channelId = await notifee.createChannel({
-      id: "default",
-      name: "Default Channel",
-    });
-
-    analytics().logEvent("click_register_button_step_3", analyticsParams);
-
-    setIsLoading(true);
-    await InvestlyServices.register(params)
-      .then(async response => {
-        const data = response.data.data;
-
-        const userData = await setUserData(
-          data.access_token,
-          data.refresh_token,
-        );
-        setUser(userData);
-
-        analytics().logEvent("success_register_account", analyticsParams);
-        await notifee.requestPermission();
-        await notifee.displayNotification({
-          title: "Horrrayy!",
-          body: "Daftar Berhasil!",
-          android: {
-            channelId,
-            pressAction: {
-              id: "default",
-            },
-          },
-        });
-        navigation.reset({
-          index: 0,
-          routes: [{name: "HomeTab", params: {isRegister: true}}],
-        });
-      })
-      .catch(err => {
-        analytics().logEvent("failed_register_account", {
-          ...analyticsParams,
-          error_message: err.message,
-        });
-
-        let errorMessage = "";
-
-        if (axios.isAxiosError(err)) {
-          const axiosError = err as AxiosError<CheckEmailResponse>;
-          errorMessage = axiosError.response?.data.messages || "Register gagal";
-        } else {
-          errorMessage = err.message;
-        }
-        Toast.show({
-          type: "error",
-          text1: errorMessage,
-          text1Style: {color: COLORS.red600},
-          visibilityTime: 3000,
-          autoHide: true,
-          position: "bottom",
-          bottomOffset: 50,
-        });
-      })
-      .finally(() => setIsLoading(false));
   };
 
   const handleNext = async () => {
     if (currentStep < 3) {
       if (currentStep === 1) {
-        analytics().logEvent("click_register_button_step_1", {email});
+        analytics().logEvent("click_register_button_step_1", {
+          email: formData.email,
+        });
       } else if (currentStep === 2) {
         analytics().logEvent("click_register_button_step_2", {
-          email,
-          name,
-          username,
+          email: formData.email,
+          name: formData.name,
+          username: formData.username,
         });
       }
       setCurrentStep(prev => prev + 1);
     } else {
-      await register();
+      await handleRegister();
+    }
+  };
+
+  const registerUser = async (userData: any) => {
+    const response = await InvestlyServices.register(userData);
+    const {access_token, refresh_token} = response.data.data;
+    return setUserData(access_token, refresh_token);
+  };
+
+  const handleRegister = async () => {
+    const channelId = await notifee.createChannel({
+      id: "default",
+      name: "Default Channel",
+    });
+
+    analytics().logEvent("click_register_button_step_3", {
+      email: formData.email,
+      name: formData.name,
+      username: formData.username,
+      topic_id: formData.selectedTopics.join(","),
+    });
+
+    try {
+      const userData = await registerUser(formData);
+      setUser(userData);
+
+      analytics().logEvent("success_register_account", {
+        email: formData.email,
+        name: formData.name,
+        username: formData.username,
+        topic_id: formData.selectedTopics.join(","),
+      });
+
+      await notifee.requestPermission();
+      await notifee.displayNotification({
+        title: "Horrrayy!",
+        body: "Daftar Berhasil!",
+        android: {
+          channelId,
+          pressAction: {
+            id: "default",
+          },
+        },
+      });
+
+      navigation.reset({
+        index: 0,
+        routes: [{name: "HomeTab", params: {isRegister: true}}],
+      });
+    } catch (err) {
+      let errorMessage = "";
+
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<CheckEmailResponse>;
+        errorMessage = axiosError.response?.data.messages || "Register gagal";
+      } else {
+        const otherError = err as Error;
+        errorMessage = otherError?.message as string;
+      }
+
+      analytics().logEvent("failed_register_account", {
+        email: formData.email,
+        name: formData.name,
+        username: formData.username,
+        topic_id: formData.selectedTopics.join(","),
+        error_message: errorMessage,
+      });
+
+      Toast.show({
+        type: "error",
+        text1: errorMessage,
+        text1Style: {color: COLORS.red600},
+        visibilityTime: 3000,
+        autoHide: true,
+        position: "bottom",
+        bottomOffset: 50,
+      });
     }
   };
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <View style={styles.formContainer}>
-            <TextField
-              label="Email"
-              placeholder="Masukkan email kamu"
-              state={emailState}
-              message={emailMessage}
-              value={email}
-              loading={isEmailLoading}
-              onChangeText={handleEmailChange}
-            />
-            <TextField
-              label="Password"
-              placeholder="Masukkan password kamu"
-              type="password"
-              state={passwordState}
-              message={passwordMessage}
-              value={password}
-              onChangeText={handlePasswordChange}
-            />
-            <TextField
-              label="Konfirmasi Password"
-              placeholder="Masukkan konfirmasi password"
-              type="password"
-              state={passwordConfirmationState}
-              message={passwordConfirmationMessage}
-              value={passwordConfirmation}
-              onChangeText={handlePasswordConfirmationChange}
-            />
-          </View>
-        );
+        return <Step1 formData={formData} setFormData={setFormData} />;
       case 2:
-        return (
-          <View style={styles.formContainer}>
-            <TextField
-              label="Nama"
-              placeholder="Nama"
-              value={name}
-              onChangeText={handleNameChange}
-              state={nameState}
-              message={nameMessage}
-            />
-            <TextField
-              label="Username"
-              placeholder="Username"
-              value={username}
-              onChangeText={handleUsernameChange}
-              state={usernameState}
-              message={usernameMessage}
-              loading={isUsernameLoading}
-            />
-          </View>
-        );
+        return <Step2 formData={formData} setFormData={setFormData} />;
       case 3:
-        return (
-          <View style={styles.topicContainer}>
-            {isLoading ? (
-              <ActivityIndicator />
-            ) : error ? (
-              <Typography type="special" size="large">
-                {error}
-              </Typography>
-            ) : (
-              <FlatList
-                data={topics}
-                keyExtractor={item => item.id}
-                numColumns={3}
-                renderItem={({item}) => (
-                  <View style={styles.topicCard}>
-                    <Pressable
-                      style={[
-                        styles.topic,
-                        selectedTopics.includes(item.id) &&
-                          styles.selectedTopic,
-                      ]}
-                      onPress={() => handleTopicSelection(item)}>
-                      <Image
-                        source={{uri: item.file.full_path}}
-                        style={[
-                          styles.topicImage,
-                          selectedTopics.includes(item.id) &&
-                            styles.selectedImage,
-                        ]}
-                      />
-                    </Pressable>
-                    <Typography
-                      type="heading"
-                      size="xsmall"
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={[
-                        styles.topicLabel,
-                        selectedTopics.includes(item.id) &&
-                          styles.selectedTopicLabel,
-                      ]}>
-                      {item.label}
-                    </Typography>
-                  </View>
-                )}
-              />
-            )}
-          </View>
-        );
+        return <Step3 formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }
@@ -618,15 +208,13 @@ const Register: FunctionComponent = () => {
           variant="primary"
           size="large"
           onPress={handleNext}
-          disabled={!isNextEnabled}>
+          disabled={!isNextEnabled()}>
           {currentStep < 3 ? "Selanjutnya" : "Daftar"}
         </Button>
       </View>
     </SafeAreaView>
   );
 };
-
-export default Register;
 
 const styles = StyleSheet.create({
   screenContainer: {
@@ -664,16 +252,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     gap: 16,
   },
-  formContainer: {
-    gap: 24,
-  },
   title: {
     color: COLORS.neutral700,
     justifyContent: "center",
     textAlign: "center",
-  },
-  forgetPasswordButton: {
-    alignContent: "flex-start",
   },
   backButton: {
     flex: 1,
@@ -689,42 +271,6 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     paddingHorizontal: 24,
   },
-  topicContainer: {
-    gap: 1,
-    rowGap: 16,
-    columnGap: 10,
-  },
-  topicCard: {
-    flex: 1,
-    alignContent: "center",
-    alignItems: "center",
-    gap: 4,
-    minHeight: 120,
-    maxHeight: 140,
-    marginTop: 16,
-  },
-  topic: {
-    borderWidth: 4,
-    borderColor: COLORS.neutral100,
-  },
-  topicLabel: {
-    textAlign: "center",
-    width: 97.33,
-  },
-  selectedTopic: {
-    borderColor: COLORS.purple500,
-    borderWidth: 4,
-    borderRadius: 8,
-  },
-  topicImage: {
-    borderRadius: 8,
-    width: 97.33,
-    height: 96,
-  },
-  selectedImage: {
-    borderRadius: 0,
-  },
-  selectedTopicLabel: {
-    color: COLORS.purple700,
-  },
 });
+
+export default Register;
